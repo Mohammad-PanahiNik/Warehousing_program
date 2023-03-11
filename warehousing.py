@@ -1,35 +1,40 @@
 from tkinter import *
 
-
-
 class A(Tk):
     def __init__(self) :
         Tk.__init__(self)
         self.main()
 
     def main(self):
-        self.geometry('300x200+600+150')
-        self.signinFrm = LabelFrame(self,bd=0)
-        self.e_Name=Entry (self.signinFrm , font=('arial',16))
-        self.e_Last=Entry (self.signinFrm,font=('arial',16))
-        self.e_PhoneNum=Entry (self.signinFrm,font=('arial',16))
-        self.e_Email=Entry (self.signinFrm,font=('arial',16))
-        self.b_register=Button (self.signinFrm,text='register',font=('arial',16),width=10,height=1)
+        self.geometry('1000x600+450+200')
 
-        self.signinFrm.grid (row = 1 , column = 1)
-        self.e_Name.grid (row = 1 , column = 1, padx=25 , pady=3)
-        self.e_Last.grid (row = 2 , column = 1, padx=25 , pady=3)
-        self.e_PhoneNum.grid (row = 3 , column = 1, padx=25 , pady=3)
-        self.e_Email.grid (row = 4 , column = 1, padx=25 , pady=3)
-        self.b_register.grid (row = 5 , column = 1, padx=25 , pady=10)
+        # Images
+        self.signin_mainImg = PhotoImage(file='image/signInMainImg.png')
+        self.profileImg_s = PhotoImage(file='image/profile-img.png')
+        self.signInImg_filds = PhotoImage(file='image/signIn_filds.png')
 
-        #bind
+        self.signinImgFrm  = LabelFrame(self,bd=0)
+        self.img_signin = Label(self.signinImgFrm,image=self.signin_mainImg)
+        self.signinFrm  = Label(self,bd=0 ,image=self.signInImg_filds)
+        self.e_Name     = Entry (self.signinFrm,font=('arial',18),bd=0,justify=RIGHT)
+        self.e_Last     = Entry (self.signinFrm,font=('arial',18),bd=0,justify=RIGHT)
+        self.user_name     = Entry (self.signinFrm,font=('arial',18),bd=0,justify=RIGHT)
+        self.password     = Entry (self.signinFrm,font=('arial',18),bd=0,justify=RIGHT)
+
+        self.signinImgFrm.grid  (row=1,column=1)
+        self.img_signin.grid (row=1,column=1)
+        self.signinFrm.grid  (row=1,column=2)
+        self.e_Name.place(x=100,y=175)
+        self.e_Last.place(x=100,y=264)
+        self.user_name.place(x=100,y=353)
+        self.password.place(x=100,y=442)
+
+        # #bind
         self.e_Name.focus()
-        self.e_Name.bind('<Return>',lambda event : self.e_Last.focus())
-        self.e_Last.bind('<Return>',lambda event : self.e_PhoneNum.focus())
-        self.e_PhoneNum.bind('<Return>',lambda event : self.e_Email.focus())
-        self.e_Email.bind('<Return>',lambda event : self.b_register.focus())
-        self.b_register.bind('<Return>',lambda event : self.f_register())
+        self.e_Name.bind     ('<Return>',lambda event : self.e_Last.focus())
+        self.e_Last.bind     ('<Return>',lambda event : self.user_name.focus())
+        self.user_name.bind ('<Return>',lambda event : self.password.focus())
+        # self.password.bind    ('<Return>',lambda event : self.password.focus())
         
     def f_register(self):
         pass
