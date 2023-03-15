@@ -10,7 +10,6 @@ class A(Tk):
         self.geometry('1400x800+250+100')
         self.configure(bg='white')
         
-
         #image
         self.addUserImg=PhotoImage(file='image/adduserImg.png')
         self.addWareImg=PhotoImage(file='image/addWareImg.png')
@@ -22,17 +21,17 @@ class A(Tk):
         self.closeBtnImg=PhotoImage(file='image/closeImg.png')
         self.openBtnImg=PhotoImage(file='image/openNavImg.png')
 
-        self.b_openNav=Button(self,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch)
+        self.b_openNav=Button(self,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch,cursor='hand2')
         self.navFrm=Frame(self,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm=LabelFrame(self.navFrm,width=220,bg='#2E2E2E',bd=0,height=50)
-        self.b_closeNav=Button(self.closeFrm,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',command=self.switch)
-        self.b_addUser=Label(self.navFrm,image=self.addUserImg,bg='#777777',bd=0)
-        self.b_addWare=Label(self.navFrm,image=self.addWareImg,bg='#777777',bd=0)
-        self.b_WrStock=Label(self.navFrm,image=self.WrStockImg,bg='#777777',bd=0)
-        self.b_Receipt=Label(self.navFrm,image=self.ReceiptImg,bg='#777777',bd=0)
-        self.b_request=Label(self.navFrm,image=self.requestImg,bg='#777777',bd=0)
-        self.b_issuance=Label(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0)
-        self.b_exit=Label(self.navFrm,image=self.exitImg,bg='#777777',bd=0)
+        self.b_closeNav=Button(self.closeFrm,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch)
+        self.b_addUser=Label(self.navFrm,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_addWare=Label(self.navFrm,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_WrStock=Label(self.navFrm,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_Receipt=Label(self.navFrm,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_request=Label(self.navFrm,image=self.requestImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_issuance=Label(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_exit=Label(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
         self.b_openNav.place(x=1340,y=20)
         self.navFrm.place(x=1400,y=0)
