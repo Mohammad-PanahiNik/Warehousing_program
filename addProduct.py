@@ -1,4 +1,5 @@
 from tkinter import *
+import sqlite3 as sql
 class A(Tk):
     def __init__(self):
         Tk.__init__(self)
@@ -31,11 +32,11 @@ class A(Tk):
         self.l_purchase    = Label(self,text=' : نقطه خرید',font=('Lalezar',17))
         self.e_purchase    = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16,relief='solid')
         self.l_imgSelector = Label(self,text='انتخاب تصویر',font=('Lalezar',17))
-        self.imgSelectorBg = Label(self,bg='#F3F3F3',image=self.fildImg2)
+        self.imgSelectorBg = Label(self,bg='#F3F3F3',image=self.fildImg2,cursor='hand2')
         self.l_search      = Label(self,text=' : جستجو',font=('Lalezar',17))
         self.e_search      = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16,relief='solid')
         self.b_dropdownbtn = Label(self,bg='#F3F3F3',image=self.dropdownImg)
-        self.b_addKala = Button(self,bg='#F3F3F3',image=self.addKalaBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
+        self.b_addKala     = Button(self,bg='#F3F3F3',image=self.addKalaBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.funcAddKala)
         self.listKalaBg    = Label(self,bg='white',image=self.listKalaBgImg)
 
         #___________
@@ -65,7 +66,7 @@ class A(Tk):
         self.l_search.place      (x=340 , y=370)
         self.e_search.place      (x=130 , y=375)
         self.b_dropdownbtn.place (x=85 , y=370)
-        self.b_addKala.place (x=1120 , y=340)
+        self.b_addKala.place     (x=1120 , y=340)
         self.listKalaBg.place    (x=85 , y=420)
 
         #____
@@ -85,10 +86,34 @@ class A(Tk):
         self.e_groupType.bind    ('<Return>',lambda event : self.e_purchase.focus())
         self.e_purchase.bind     ('<Return>',lambda event : self.e_description.focus())
         self.e_description.bind     ('<Return>',lambda event : self.b_addKala.focus())
-        # self.b_addKala.bind     ('<Return>',lambda event : )
+        self.b_addKala.bind     ('<Return>', self.funcAddKala)
 
         self.b_addKala.bind    ('<Enter>',lambda event : self.funcBtnHover(self.addKalaBtnImg,'image/addKalaBtnH.png'))
         self.b_addKala.bind    ('<Leave>',lambda event : self.funcBtnHover(self.addKalaBtnImg,'image/addKalaBtn.png'))
+
+    def funcAddKala(self , event=None):
+        self.productId=self.e_productId.get()
+        self.productName=self.e_productName.get()
+        self.productType=self.e_productType.get()
+        self.groupType=self.e_groupType.get()
+        self.purchase=self.e_purchase.get()
+        self.description=self.e_description.get()
+
+        self.e_productId.delete(0,END)
+        self.e_productName.delete(0,END)
+        self.e_productType.delete(0,END)
+        self.e_groupType.delete(0,END)
+        self.e_purchase.delete(0,END)
+        self.e_description.delete(0,END)
+        self.e_productId.focus()
+
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.data=(self.productId,self.productName,self.productType,self.groupType,self.purchase,self.description)
+        self.cur.execute('''CREATE TABLE IF NOT EXISTS kala (id PRIMARY KEY ,name TEXT ,type TEXT,category TEXT
+        ,purchase INTEGER,description TEXT)''')
+        self.cur.execute('INSERT INTO kala(id,name,type,category,purchase,description) VALUES(?,?,?,?,?,?)',self.data)
+        self.con.commit()
 
 
     def funcBtnHover(self,img,url):
