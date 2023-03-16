@@ -1,6 +1,6 @@
 from tkinter import *
 
-class A(Tk):
+class App(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.btnState = False
@@ -59,5 +59,5 @@ class A(Tk):
                 self.navFrm.update()
             self.btnState = True
 
-O = A()
+O = App()
 O.mainloop()

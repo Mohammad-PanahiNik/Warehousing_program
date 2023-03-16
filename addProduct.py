@@ -19,23 +19,23 @@ class A(Tk):
 
         self.h_sabtKala    = Label(self,image=self.h_sabtKalaImg)
         self.l_productId   = Label(self,text=' : کد کالا',font=('Lalezar',17))
-        self.e_productId   = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16)
+        self.e_productId   = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16,relief='solid')
         self.l_productName = Label(self,text=' : نام کالا',font=('Lalezar',17))
-        self.e_productName = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16)
+        self.e_productName = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16,relief='solid')
         self.l_productType = Label(self,text=' : نوع کالا',font=('Lalezar',17))
-        self.e_productType = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16)
+        self.e_productType = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16,relief='solid')
         self.l_groupType   = Label(self,text=' : نام گروه کالا',font=('Lalezar',17))
-        self.e_groupType   = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16)
+        self.e_groupType   = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16,relief='solid')
         self.l_description = Label(self,text=' : توضیحات',font=('Lalezar',17))
-        self.e_description = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=25)
+        self.e_description = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=25,relief='solid')
         self.l_purchase    = Label(self,text=' : نقطه خرید',font=('Lalezar',17))
-        self.e_purchase    = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16)
+        self.e_purchase    = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16,relief='solid')
         self.l_imgSelector = Label(self,text='انتخاب تصویر',font=('Lalezar',17))
         self.imgSelectorBg = Label(self,bg='#F3F3F3',image=self.fildImg2)
         self.l_search      = Label(self,text=' : جستجو',font=('Lalezar',17))
-        self.e_search      = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16)
+        self.e_search      = Entry(self,font=('arial',16),bd=1,justify=RIGHT,width=16,relief='solid')
         self.b_dropdownbtn = Label(self,bg='#F3F3F3',image=self.dropdownImg)
-        self.b_addKala = Button(self,bg='#F3F3F3',image=self.addKalaBtnImg,activebackground='#F3F3F3',bd=0)
+        self.b_addKala = Button(self,bg='#F3F3F3',image=self.addKalaBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
         self.listKalaBg    = Label(self,bg='white',image=self.listKalaBgImg)
 
         #___________
@@ -47,7 +47,7 @@ class A(Tk):
         # self.purchaseBg    = Label(self,bg='#F3F3F3',image=self.fildImg1)
         # self.searchBg      = Label(self,bg='#F3F3F3',image=self.fildImg1)
 
-        self.h_sabtKala.place    (x=1165 , y=0)
+        self.h_sabtKala.place    (x=580 , y=0)
         self.l_productId.place   (x=1245 , y=100)
         self.e_productId.place   (x=1000 , y=105)
         self.l_productName.place (x=855 , y=100)
@@ -76,6 +76,20 @@ class A(Tk):
         # self.descriptionBg.place (x=890 , y=275)
         # self.purchaseBg.place    (x=380 , y=275)
         # self.searchBg.place      (x=130 , y=360)
+
+        #_____bind_____
+        self.e_productId.focus()
+        self.e_productId.bind     ('<Return>',lambda event : self.e_productName.focus())
+        self.e_productName.bind     ('<Return>',lambda event : self.e_productType.focus())
+        self.e_productType.bind ('<Return>',lambda event : self.e_groupType.focus())
+        self.e_groupType.bind    ('<Return>',lambda event : self.e_purchase.focus())
+        self.e_purchase.bind     ('<Return>',lambda event : self.e_description.focus())
+        self.e_description.bind     ('<Return>',lambda event : self.b_addKala.focus())
+        # self.b_addKala.bind     ('<Return>',lambda event : )
+
+        self.b_addKala.bind    ('<Enter>',lambda event : self.funcBtnHover(self.addKalaBtnImg,'image/addKalaBtnH.png'))
+        self.b_addKala.bind    ('<Leave>',lambda event : self.funcBtnHover(self.addKalaBtnImg,'image/addKalaBtn.png'))
+
 
     def funcBtnHover(self,img,url):
         img['file'] = url
