@@ -9,6 +9,7 @@ class A(Tk):
         Tk.__init__(self)
         self.style=ttk.Style()
         self.lst=[]
+        self.search_list=[]
 
         self.main()
         self.data_to_list()
@@ -45,7 +46,7 @@ class A(Tk):
         self.l_imgSelector = Label(self,text='انتخاب تصویر',font=('Lalezar',17))
         self.imgSelectorBg = Label(self,bg='#F3F3F3',image=self.kalaImg,cursor='hand2',width=150,height=150)
         self.e_search      = Entry(self,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_search      = Button(self,bg='#F3F3F3',image=self.searchBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
+        self.b_search      = Button(self,bg='#F3F3F3',image=self.searchBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id)
         self.b_addKala     = Button(self,bg='#F3F3F3',image=self.addKalaBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.funcAddKala)
         self.listKalaBg    = Label(self,bg='white',image=self.listKalaBgImg)
 
@@ -167,8 +168,8 @@ class A(Tk):
 
         self.e_productId.delete(0,END)
         self.e_productName.delete(0,END)
-        self.e_productType.delete(0,END)
-        self.e_groupType.delete(0,END)
+        self.c_productType.set('')
+        self.c_groupType.set('')
         self.e_purchase.delete(0,END)
         self.e_description.delete(0,END)
         self.kalaImg['file']='image/imgSelectorBg.png'
@@ -187,6 +188,25 @@ class A(Tk):
             blobdata = f.read()
         return blobdata
     
+    def search_id(self):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.idKala=self.e_search.get()
+        self.count=0
+        if self.idKala !='':
+            for i in self.listKala.get_children():
+                self.listKala.delete(i)
+            self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala))
+            self.search_list=list(self.row)
+            print(len(self.search_list))
+            self.listKala.insert(parent='',index='end',iid=self.count,text='',
+                                    values=(self.search_list[0][4],self.search_list[0][3],self.search_list[0][2],
+                                            self.search_list[0][1],self.search_list[0][0],str(self.count+1)))
+        else:
+            self.lst=[]
+            self.listKala.delete('0')
+            self.data_to_list()
+
     def funcBtnHover(self,img,url):
         img['file'] = url
 
