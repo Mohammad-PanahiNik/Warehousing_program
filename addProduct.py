@@ -10,6 +10,8 @@ class A(Tk):
         self.style=ttk.Style()
         self.lst=[]
         self.search_list=[]
+        self.y1=-50
+        self.y2=-50
 
         self.main()
         self.data_to_list()
@@ -21,6 +23,8 @@ class A(Tk):
         self.searchBtnImg   = PhotoImage(file='image/searchBtnImg.png')
         self.h_sabtKalaImg = PhotoImage(file='image/headerSabtKala.png')
         self.addKalaBtnImg = PhotoImage(file='image/addKalaBtn.png')
+        self.deleteBtnImg = PhotoImage(file='image/deleteBtnImg.png')
+        self.editBtnImg = PhotoImage(file='image/editBtnImg.png')
 
         self.geometry  ('1400x800+250+100')
         self.configure (bg='#F3F3F3')
@@ -49,6 +53,10 @@ class A(Tk):
         self.b_search      = Button(self,bg='#F3F3F3',image=self.searchBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id)
         self.b_addKala     = Button(self,bg='#F3F3F3',image=self.addKalaBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.funcAddKala)
         self.listKalaBg    = Label(self,bg='white',image=self.listKalaBgImg)
+        self.b_delete=Button(self,image=self.deleteBtnImg,bd=0,activebackground='white',cursor='hand2')
+        self.b_edit=Button(self,image=self.editBtnImg,bd=0,activebackground='white',cursor='hand2')
+        # self.b_delete=Button(self,image=self.deleteBtnImg,bd=0,activebackground='white')
+        # self.b_edit=Button(self,image=self.editBtnImg,bd=0,activebackground='white')
 
         #list
         self.listKala= ttk.Treeview(self,show='headings',height=8)
@@ -114,7 +122,11 @@ class A(Tk):
         self.b_search.place      (x=85 , y=370)
         self.b_addKala.place     (x=1120 , y=340)
         self.listKala.place      (x=85 , y=420)
-
+        # self.b_delete.place      (x=0 , y=0)
+        # self.b_edit.place        (x=0 , y=0)
+        
+        # self.b_delete.place_forget()
+        # self.b_edit.place_forget()
         #____
         # self.productIdBg.place   (x=1000 , y=80)
         # self.productNameBg.place (x=380 , y=80)
@@ -126,12 +138,13 @@ class A(Tk):
 
         #_____bind_____
         self.e_productId.focus()
-        self.e_productId.bind     ('<Return>',lambda event : self.e_productName.focus())
-        self.e_productName.bind     ('<Return>',lambda event : self.e_purchase.focus())
-        self.e_purchase.bind     ('<Return>',lambda event : self.e_description.focus())
-        self.e_description.bind     ('<Return>',lambda event : self.b_addKala.focus())
-        self.b_addKala.bind     ('<Return>', self.funcAddKala)
-        self.imgSelectorBg.bind     ('<Button-1>', self.funcAddImg)
+        self.e_productId.bind('<Return>',lambda event : self.e_productName.focus())
+        self.e_productName.bind('<Return>',lambda event : self.e_purchase.focus())
+        self.e_purchase.bind('<Return>',lambda event : self.e_description.focus())
+        self.e_description.bind('<Return>',lambda event : self.b_addKala.focus())
+        self.b_addKala.bind('<Return>', self.funcAddKala)
+        self.imgSelectorBg.bind('<Button-1>', self.funcAddImg)
+        self.listKala.bind('<ButtonRelease-1>', self.select_record)
 
         self.e_search.insert(0,'جستجو کد کالا  ')
         self.e_search.bind('<Button-1>',lambda event :self.e_search.delete(0,END))
@@ -139,6 +152,10 @@ class A(Tk):
         self.b_addKala.bind('<Leave>',lambda event : self.funcBtnHover(self.addKalaBtnImg,'image/addKalaBtn.png'))
         self.b_search.bind('<Enter>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImgH.png'))
         self.b_search.bind('<Leave>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImg.png'))
+        self.b_delete.bind('<Enter>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImgH.png'))
+        self.b_delete.bind('<Leave>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImg.png'))
+        self.b_edit.bind('<Enter>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImgH.png'))
+        self.b_edit.bind('<Leave>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImg.png'))
 
     def data_to_list(self):
         self.count=0
@@ -206,6 +223,15 @@ class A(Tk):
             self.lst=[]
             self.listKala.delete('0')
             self.data_to_list()
+
+    def select_record(self,event=None):
+        row_id =self.listKala.identify_row(event.y)
+        start = self.listKala.bbox(row_id, column=None)
+        self.y1=start[1]+400
+        self.y2=start[1]+440
+        self.b_delete.place(x=35,y=self.y1)
+        self.b_edit.place(x=35,y=self.y2)
+        
 
     def funcBtnHover(self,img,url):
         img['file'] = url
