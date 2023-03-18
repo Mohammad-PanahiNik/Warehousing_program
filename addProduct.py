@@ -25,6 +25,7 @@ class A(Tk):
         self.addKalaBtnImg = PhotoImage(file='image/addKalaBtn.png')
         self.deleteBtnImg = PhotoImage(file='image/deleteBtnImg.png')
         self.editBtnImg = PhotoImage(file='image/editBtnImg.png')
+        self.sabtTaghirBtn = PhotoImage(file='image/sabtEdit.png')
 
         self.geometry  ('1400x800+250+100')
         self.configure (bg='#F3F3F3')
@@ -38,7 +39,7 @@ class A(Tk):
         self.c_productType = ttk.Combobox(self,width = 20 , font = ('B Koodak' , 12),state='readonly',
                                             justify = 'right',values=["مواد خام", "کالای خریداری شده",
                                             "کالای توید شده اولیه", "کالای تولید شده برای فروش"])
-        self.l_groupType   = Label(self,text=' : نام گروه کالا',font=('Lalezar',17))
+        self.l_groupType   = Label(self,text=' : گروه کالا',font=('Lalezar',17))
         self.c_groupType   = ttk.Combobox(self,width = 20 , font = ('B Koodak' , 12),state='readonly',
                                           justify = 'right',values=["فلزات", "مواد غذایی"])
         self.c_productType.set("یک گزینه را انتخاب کنید")
@@ -55,6 +56,7 @@ class A(Tk):
         self.listKalaBg    = Label(self,bg='white',image=self.listKalaBgImg)
         self.b_delete=Button(self,image=self.deleteBtnImg,bd=0,activebackground='white',cursor='hand2')
         self.b_edit=Button(self,image=self.editBtnImg,bd=0,activebackground='white',cursor='hand2')
+        self.b_sabtTaghirat=Button(self,image=self.sabtTaghirBtn,bd=0,activebackground='white')
         # self.b_delete=Button(self,image=self.deleteBtnImg,bd=0,activebackground='white')
         # self.b_edit=Button(self,image=self.editBtnImg,bd=0,activebackground='white')
 
@@ -72,8 +74,8 @@ class A(Tk):
         self.listKala.column('row',width=150,anchor=E)
         #heading
         # self.listKala.heading('#0',text='',anchor=E)
-        self.listKala.heading('Purchase',text=' : گروه کالا',anchor=E)
-        self.listKala.heading('Category',text=' : نوع بسته بندی',anchor=E)
+        self.listKala.heading('Purchase',text=' : نقطه خرید',anchor=E)
+        self.listKala.heading('Category',text=' : گروه کالا',anchor=E)
         self.listKala.heading('Type',text=' : نوع کالا',anchor=E)
         self.listKala.heading('Name',text=' : نام کالا',anchor=E)
         self.listKala.heading('id',text=' : کد کالا',anchor=E)
@@ -110,7 +112,7 @@ class A(Tk):
         self.e_productName.place (x=585 , y=100)
         self.l_productType.place (x=1240 , y=178)
         self.c_productType.place (x=985 , y=178)
-        self.l_groupType.place   (x=1200 , y=250)
+        self.l_groupType.place   (x=1235 , y=250)
         self.c_groupType.place   (x=985 , y=250)
         self.l_description.place (x=820 , y=250)
         self.e_description.place (x=475 , y=250)
@@ -122,6 +124,8 @@ class A(Tk):
         self.b_search.place      (x=85 , y=370)
         self.b_addKala.place     (x=1120 , y=340)
         self.listKala.place      (x=85 , y=420)
+        self.b_sabtTaghirat.place(x=-100,y=-100)
+
         # self.b_delete.place      (x=0 , y=0)
         # self.b_edit.place        (x=0 , y=0)
         
@@ -146,13 +150,12 @@ class A(Tk):
         self.imgSelectorBg.bind('<Button-1>', self.funcAddImg)
         self.listKala.bind('<ButtonRelease-1>', self.select_record)
         self.b_delete.bind('<Button-1>', self.delete_record)
-        # self.b_edit.bind('<ButtonRelease-1>', self.edit_record_values)
+        self.b_edit.bind('<ButtonRelease-1>', self.edit_record_values)
+        self.b_sabtTaghirat.bind('<Button-1>', self.edit)
 
         #_______ hover button ________
         self.e_search.insert(0,'جستجو کد کالا  ')
         self.e_search.bind('<Button-1>',lambda event :self.e_search.delete(0,END))
-        self.b_addKala.bind('<Enter>',lambda event : self.funcBtnHover(self.addKalaBtnImg,'image/addKalaBtnH.png'))
-        self.b_addKala.bind('<Leave>',lambda event : self.funcBtnHover(self.addKalaBtnImg,'image/addKalaBtn.png'))
         self.b_search.bind('<Enter>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImgH.png'))
         self.b_search.bind('<Leave>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImg.png'))
         self.b_delete.bind('<Enter>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImgH.png'))
@@ -167,7 +170,6 @@ class A(Tk):
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='kala'")
         
         self.result = self.cur.fetchone()
-        print(self.result)
         if self.result != None:
             
             row=self.cur.execute('SELECT * FROM kala')
@@ -204,7 +206,7 @@ class A(Tk):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.data=(self.productId,self.productName,self.productType,self.groupType,self.purchase,self.description,self.photo)
-        self.cur.execute('''CREATE TABLE IF NOT EXISTS kala (id PRIMARY KEY NOT NULL ,name TEXT NOT NULL ,type TEXT NOT NULL,category TEXT NOT NULL
+        self.cur.execute('''CREATE TABLE IF NOT EXISTS kala (id TEXT PRIMARY KEY NOT NULL ,name TEXT NOT NULL ,type TEXT NOT NULL,category TEXT NOT NULL
         ,purchase INTEGER NOT NULL,description TEXT NOT NULL,photo BLOB NOT NULL)''')
         self.cur.execute('INSERT INTO kala(id,name,type,category,purchase,description,photo) VALUES(?,?,?,?,?,?,?)',self.data)
         self.con.commit()
@@ -222,7 +224,7 @@ class A(Tk):
         if self.idKala !='':
             for i in self.listKala.get_children():
                 self.listKala.delete(i)
-            self.row=self.cur.execute('SELECT * FROM kala WHERE id=self.idKala')
+            self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala))
             self.search_list=list(self.row)
             self.listKala.insert(parent='',index='end',iid=self.count,text='',
                                     values=(self.search_list[0][4],self.search_list[0][3],self.search_list[0][2],
@@ -248,13 +250,69 @@ class A(Tk):
         self.cur=self.con.cursor()
         self.listKala.delete(self.row_id)
         self.code=self.values[4]
-        print(self.values[4])
         self.cur.execute("DELETE FROM kala WHERE id='{}'" .format(self.code))
         self.con.commit()
         self.b_delete.place(x=-50,y=-50)
         self.b_edit.place(x=-50,y=-50)
+
+    def sql_search(self,id1):
+        con = sql.connect('mydb.db')
+        cur = con.cursor()
+        self.cur.execute("SELECT COUNT(*) FROM kala")
+        self.rowNum = self.cur.fetchone()[0]
+        row = cur.execute('SELECT * FROM kala WHERE id="{}"'.format(id1))
+        return list(row)
     
-    
+    def edit_record_values(self ,event=None):
+        self.e_productId.delete(0,END)
+        self.e_productName.delete(0,END)
+        self.c_groupType.set("یک گزینه را انتخاب کنید")
+        self.c_productType.set("یک گزینه را انتخاب کنید")
+        self.e_purchase.delete(0,END)
+        self.e_description.delete(0,END)
+
+        self.values = self.listKala.item(self.selected , "values")
+        self.row_num=self.values[5]
+        self.valuelst = self.sql_search(self.values[4])
+        # self.cur('SELECT * FROM Blob WHERE id={}'.format(self.valuelst[0][6]))
+        self.edit_value=self.sql_search(self.values[0][3])
+        self.e_productId.insert(0,self.valuelst[0][0])
+        self.e_productName.insert(0,self.valuelst[0][1])
+        self.c_productType.set(self.valuelst[0][2])
+        self.c_groupType.set(self.valuelst[0][3])
+        self.e_purchase.insert(0,self.valuelst[0][4])
+        self.e_description.insert(0,self.valuelst[0][5])
+        self.b_sabtTaghirat.place(x=910,y=340)
+
+
+    def edit(self,event = None):
+        self.con = sql.connect('mydb.db')
+        self.cur = self.con.cursor()
+        self.code = self.e_productId.get()
+        self.name = self.e_productName.get()
+        self.point = self.e_purchase.get()
+        self.desc = self.e_description.get()
+        self.type = self.c_productType.get()
+        self.group = self.c_groupType.get()
+        self.listKala.item(self.selected ,values = (self.point,self.group,self.type,self.name,self.code,self.row_num))
+        print(self.values)
+        self.cur.execute(''' UPDATE kala SET id = "{}" , name = "{}", type = "{}",category = "{}",
+        purchase = "{}",description = "{}" WHERE id="{}" '''.format(self.code,self.name,self.type,self.group,self.point,self.desc,self.values[4]))
+        self.con.commit()
+        self.b_sabtTaghirat.place(x=-100,y=-100)
+        self.b_delete.place(x=-50,y=-50)
+        self.b_edit.place(x=-50,y=-50)
+        # self.kalaImg['file']=self.valuelst[0][6]
+    # def sql_update(self):
+    #     self.con = sql.connect('mydb.db')
+    #     self.cur = self.con.cursor()
+    #     self.dastor =' UPDATE kala SET id = "{}" , name = "{}", type = "{}",category = "{}", purchase = "{}",description = "{}" WHERE id="{}" '.format(self.code,self.name,self.type,self.group,self.point,self.des,self.values[3])
+    #     self.cur.execute(self.dastor)
+    #     self.con.commit()
+    #     self.b_sabtTaghirat.place(x=-100,y=-100)
+    #     self.b_delete.place(x=-50,y=-50)
+    #     self.b_edit.place(x=-50,y=-50)
+
     def funcBtnHover(self,img,url):
         img['file'] = url
 
