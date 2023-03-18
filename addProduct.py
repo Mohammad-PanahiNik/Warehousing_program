@@ -63,7 +63,7 @@ class A(Tk):
 
         self.listKala['columns']=('Purchase','Category','Type','Name','id','row')
         #columns
-        self.listKala.column('#0',width=0,stretch=NO)
+        # self.listKala.column('#0',width=0,stretch=NO)
         self.listKala.column('Purchase',width=220,anchor=E)
         self.listKala.column('Category',width=220,anchor=E)
         self.listKala.column('Type',width=220,anchor=E)
@@ -71,7 +71,7 @@ class A(Tk):
         self.listKala.column('id',width=200,anchor=E)
         self.listKala.column('row',width=150,anchor=E)
         #heading
-        self.listKala.heading('#0',text='',anchor=E)
+        # self.listKala.heading('#0',text='',anchor=E)
         self.listKala.heading('Purchase',text=' : گروه کالا',anchor=E)
         self.listKala.heading('Category',text=' : نوع بسته بندی',anchor=E)
         self.listKala.heading('Type',text=' : نوع کالا',anchor=E)
@@ -136,7 +136,7 @@ class A(Tk):
         # self.purchaseBg.place    (x=380 , y=275)
         # self.searchBg.place      (x=130 , y=360)
 
-        #_____bind_____
+        #_____ bind _____
         self.e_productId.focus()
         self.e_productId.bind('<Return>',lambda event : self.e_productName.focus())
         self.e_productName.bind('<Return>',lambda event : self.e_purchase.focus())
@@ -145,7 +145,10 @@ class A(Tk):
         self.b_addKala.bind('<Return>', self.funcAddKala)
         self.imgSelectorBg.bind('<Button-1>', self.funcAddImg)
         self.listKala.bind('<ButtonRelease-1>', self.select_record)
+        self.b_delete.bind('<Button-1>', self.delete_record)
+        # self.b_edit.bind('<ButtonRelease-1>', self.edit_record_values)
 
+        #_______ hover button ________
         self.e_search.insert(0,'جستجو کد کالا  ')
         self.e_search.bind('<Button-1>',lambda event :self.e_search.delete(0,END))
         self.b_addKala.bind('<Enter>',lambda event : self.funcBtnHover(self.addKalaBtnImg,'image/addKalaBtnH.png'))
@@ -161,14 +164,20 @@ class A(Tk):
         self.count=0
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
-        row=self.cur.execute('SELECT * FROM kala')
-        for i in row :
-            self.lst.append(i)
+        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='kala'")
         
-        for i in self.lst:
-            self.listKala.insert(parent='',index='end',iid=self.count,text='',
-                                 values=(i[4],i[3],i[2],i[1],i[0],str(self.count+1)))
-            self.count += 1
+        self.result = self.cur.fetchone()
+        print(self.result)
+        if self.result != None:
+            
+            row=self.cur.execute('SELECT * FROM kala')
+            for i in row :
+                self.lst.append(i)
+            
+            for i in self.lst:
+                self.listKala.insert(parent='',index='end',iid=self.count,text='',
+                                    values=(i[4],i[3],i[2],i[1],i[0],str(self.count+1)))
+                self.count += 1
 
     def funcAddImg(self,event=None):
         self.img_name = filedialog.askopenfilename()
@@ -185,8 +194,8 @@ class A(Tk):
 
         self.e_productId.delete(0,END)
         self.e_productName.delete(0,END)
-        self.c_productType.set('')
-        self.c_groupType.set('')
+        self.c_productType.set('یشببببببب')
+        self.c_groupType.set('یسبیشب')
         self.e_purchase.delete(0,END)
         self.e_description.delete(0,END)
         self.kalaImg['file']='image/imgSelectorBg.png'
@@ -213,26 +222,39 @@ class A(Tk):
         if self.idKala !='':
             for i in self.listKala.get_children():
                 self.listKala.delete(i)
-            self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala))
+            self.row=self.cur.execute('SELECT * FROM kala WHERE id=self.idKala')
             self.search_list=list(self.row)
-            print(len(self.search_list))
             self.listKala.insert(parent='',index='end',iid=self.count,text='',
                                     values=(self.search_list[0][4],self.search_list[0][3],self.search_list[0][2],
                                             self.search_list[0][1],self.search_list[0][0],str(self.count+1)))
+            
         else:
             self.lst=[]
             self.listKala.delete('0')
             self.data_to_list()
 
     def select_record(self,event=None):
-        row_id =self.listKala.identify_row(event.y)
-        start = self.listKala.bbox(row_id, column=None)
+        self.selected = self.listKala.focus()
+        self.values = self.listKala.item(self.selected , "values")
+        self.row_id =self.listKala.identify_row(event.y)
+        start = self.listKala.bbox(self.row_id, column=None)
         self.y1=start[1]+400
         self.y2=start[1]+440
-        self.b_delete.place(x=35,y=self.y1)
-        self.b_edit.place(x=35,y=self.y2)
-        
+        self.b_delete.place(x=40,y=self.y1)
+        self.b_edit.place(x=40,y=self.y2)
 
+    def delete_record(self,event=None):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.listKala.delete(self.row_id)
+        self.code=self.values[4]
+        print(self.values[4])
+        self.cur.execute("DELETE FROM kala WHERE id='{}'" .format(self.code))
+        self.con.commit()
+        self.b_delete.place(x=-50,y=-50)
+        self.b_edit.place(x=-50,y=-50)
+    
+    
     def funcBtnHover(self,img,url):
         img['file'] = url
 
