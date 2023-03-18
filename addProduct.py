@@ -146,6 +146,8 @@ class A(Tk):
         self.e_productName.bind('<Return>',lambda event : self.e_purchase.focus())
         self.e_purchase.bind('<Return>',lambda event : self.e_description.focus())
         self.e_description.bind('<Return>',lambda event : self.b_addKala.focus())
+        self.e_search.bind('<Return>',lambda event : self.b_search.focus())
+        self.b_search.bind('<Return>', self.search_id)
         self.b_addKala.bind('<Return>', self.funcAddKala)
         self.imgSelectorBg.bind('<Button-1>', self.funcAddImg)
         self.listKala.bind('<ButtonRelease-1>', self.select_record)
@@ -196,8 +198,8 @@ class A(Tk):
 
         self.e_productId.delete(0,END)
         self.e_productName.delete(0,END)
-        self.c_productType.set('یشببببببب')
-        self.c_groupType.set('یسبیشب')
+        self.c_productType.set("یک گزینه را انتخاب کنید")
+        self.c_groupType.set("یک گزینه را انتخاب کنید")
         self.e_purchase.delete(0,END)
         self.e_description.delete(0,END)
         self.kalaImg['file']='image/imgSelectorBg.png'
@@ -210,13 +212,16 @@ class A(Tk):
         ,purchase INTEGER NOT NULL,description TEXT NOT NULL,photo BLOB NOT NULL)''')
         self.cur.execute('INSERT INTO kala(id,name,type,category,purchase,description,photo) VALUES(?,?,?,?,?,?,?)',self.data)
         self.con.commit()
+        self.numlist=len(self.listKala.get_children())
+        self.listKala.insert(parent='',index='end',text='',values=(self.purchase,self.groupType,self.productType,
+                                                                                  self.productName,self.productId,self.numlist+1))
 
     def covert_to_binary_data(self,filename):
         with open (filename , 'rb') as f:
             blobdata = f.read()
         return blobdata
     
-    def search_id(self):
+    def search_id(self,event=None):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.idKala=self.e_search.get()
@@ -248,10 +253,13 @@ class A(Tk):
     def delete_record(self,event=None):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
-        self.listKala.delete(self.row_id)
         self.code=self.values[4]
         self.cur.execute("DELETE FROM kala WHERE id='{}'" .format(self.code))
         self.con.commit()
+        for item in self.listKala.get_children():
+            self.listKala.delete(item)
+        self.lst=[]
+        self.data_to_list()
         self.b_delete.place(x=-50,y=-50)
         self.b_edit.place(x=-50,y=-50)
 
@@ -275,7 +283,9 @@ class A(Tk):
         self.row_num=self.values[5]
         self.valuelst = self.sql_search(self.values[4])
         # self.cur('SELECT * FROM Blob WHERE id={}'.format(self.valuelst[0][6]))
-        self.edit_value=self.sql_search(self.values[0][3])
+        print('salmmmm')
+        print(self.values[0])
+        self.edit_value=self.sql_search(self.values[3])
         self.e_productId.insert(0,self.valuelst[0][0])
         self.e_productName.insert(0,self.valuelst[0][1])
         self.c_productType.set(self.valuelst[0][2])
