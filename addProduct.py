@@ -285,7 +285,6 @@ class A(Tk):
         # self.cur('SELECT * FROM Blob WHERE id={}'.format(self.valuelst[0][6]))
         print('salmmmm')
         print(self.values[0])
-        self.edit_value=self.sql_search(self.values[3])
         self.e_productId.insert(0,self.valuelst[0][0])
         self.e_productName.insert(0,self.valuelst[0][1])
         self.c_productType.set(self.valuelst[0][2])

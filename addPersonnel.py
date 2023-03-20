@@ -19,6 +19,9 @@ class A(Tk):
         self.UserImg = PhotoImage(file='image/imgSelectorBg.png')
         self.searchBtnImg   = PhotoImage(file='image/searchBtnImg.png')
         self.addPesonnelImg = PhotoImage(file='image/addPesonnelBtnImg.png')
+        self.deleteBtnImg = PhotoImage(file='image/deleteBtnImg.png')
+        self.editBtnImg = PhotoImage(file='image/editBtnImg.png')
+        self.sabtTaghirBtn = PhotoImage(file='image/sabtEdit.png')
         self.geometry ('1400x800+250+100')
         self.configure (bg='#F3F3F3')
     
@@ -48,6 +51,9 @@ class A(Tk):
         self.b_addPesonnel= Button(self,bg='#F3F3F3',image=self.addPesonnelImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
         self.e_searchUser   = Entry(self,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_searchUser= Button(self,bg='#F3F3F3',image=self.searchBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id)
+        self.b_delete=Button(self,image=self.deleteBtnImg,bd=0,activebackground='white',cursor='hand2')
+        self.b_edit=Button(self,image=self.editBtnImg,bd=0,activebackground='white',cursor='hand2')
+        self.b_sabtTaghirat=Button(self,image=self.sabtTaghirBtn,bd=0,activebackground='white')
         
         #list
         self.listUser= ttk.Treeview(self,show='headings',height=8)
@@ -125,6 +131,10 @@ class A(Tk):
         self.e_UserPass.bind('<Return>',lambda event : self.funcAddUser)
         self.b_addPesonnel.bind('<Button-1>',self.funcAddUser)
         self.imgSelectorBg.bind('<Button-1>', self.funcAddImg)
+        self.listUser.bind('<ButtonRelease-1>', self.select_record)
+        self.b_delete.bind('<Button-1>', self.delete_record)
+        self.b_edit.bind('<ButtonRelease-1>', self.edit_record_values)
+        self.b_sabtTaghirat.bind('<Button-1>', self.edit)
 
 
     def funcAddImg(self,event=None):
@@ -160,7 +170,7 @@ class A(Tk):
         self.count=0
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
-        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='kala'")
+        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='user'")
         
         self.result = self.cur.fetchone()
         if self.result != None:
@@ -171,7 +181,7 @@ class A(Tk):
             
             for i in self.lst:
                 self.listUser.insert(parent='',index='end',iid=self.count,text='',
-                                    values=(i[4],i[3],i[2],i[1],i[0],str(self.count+1)))
+                                    values=(i[6],i[5],i[3],i[2],i[1],i[0],str(self.count+1)))
                 self.count += 1
 
     def funcAddUser(self , event=None):
@@ -224,6 +234,89 @@ class A(Tk):
             self.lst=[]
             self.listUser.delete('0')
             self.data_to_list()
+    
+    def select_record(self,event=None):
+        self.selected = self.listUser.focus()
+        self.values = self.listUser.item(self.selected , "values")
+        self.row_id =self.listUser.identify_row(event.y)
+        start = self.listUser.bbox(self.row_id, column=None)
+        self.y1=start[1]+400
+        self.y2=start[1]+440
+        self.b_delete.place(x=40,y=self.y1)
+        self.b_edit.place(x=40,y=self.y2)
+
+    def delete_record(self,event=None):
+        print('12')
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.code=self.values[4]
+        print(self.values[4])
+        self.cur.execute("DELETE FROM user WHERE id='{}'" .format(self.code))
+        self.con.commit()
+        for item in self.listUser.get_children():
+            self.listUser.delete(item)
+        self.lst=[]
+        self.data_to_list()
+        self.b_delete.place(x=-50,y=-50)
+        self.b_edit.place(x=-50,y=-50)
+
+    def sql_search(self,id1):
+        con = sql.connect('mydb.db')
+        cur = con.cursor()
+        self.cur.execute("SELECT COUNT(*) FROM user")
+        self.rowNum = self.cur.fetchone()[0]
+        row = cur.execute('SELECT * FROM user WHERE id="{}"'.format(id1))
+        return list(row)
+    
+    def edit_record_values(self ,event=None):
+        print('dsfaaaaaaaaaaaaaa')
+        self.e_nameUser.delete(0,END)
+        self.e_lastUser.delete(0,END)
+        self.e_nationalCode.delete(0,END)
+        self.c_gender.set("یک گزینه را انتخاب کنید")
+        self.e_phoneNum.delete(0,END)
+        self.c_accountType.set("یک گزینه را انتخاب کنید")
+        self.e_personnelId.delete(0,END)
+        self.e_UserPass.delete(0,END)
+
+        self.values = self.listUser.item(self.selected , "values")
+        self.row_num=self.values[6]
+        self.valuelst = self.sql_search(self.values[5])
+        print(self.valuelst)
+        # self.cur('SELECT * FROM Blob WHERE id={}'.format(self.valuelst[0][6]))
+        print('salmmmm')
+        # print(self.values[0])
+        self.e_personnelId.insert(0,self.valuelst[0][0])
+        self.e_nameUser.insert(0,self.valuelst[0][1])
+        self.e_lastUser.insert(0,self.valuelst[0][2])
+        self.e_nationalCode.insert(0,self.valuelst[0][3])
+        self.c_gender.insert(0,self.valuelst[0][4])
+        self.e_phoneNum.insert(0,self.valuelst[0][5])
+        self.c_accountType.insert(0,self.valuelst[0][6])
+        self.e_UserPass.insert(0,self.valuelst[0][7])
+        self.b_sabtTaghirat.place(x=910,y=340)
+
+    def edit(self,event = None):
+        self.con = sql.connect('mydb.db')
+        self.cur = self.con.cursor()
+        self.pesonnelName=self.e_nameUser.get()
+        self.pesonnelLast=self.e_lastUser.get()
+        self.nationalCode=self.e_nationalCode.get()
+        self.gender=self.c_gender.get()
+        self.phoneNum=self.e_phoneNum.get()
+        self.accountType=self.c_accountType.get()
+        self.personnelId=self.e_personnelId.get()
+        self.personnelPass=self.e_UserPass.get()
+        self.listUser.item(self.selected ,values = (self.accountType,self.phoneNum,self.nationalCode,self.pesonnelLast,self.pesonnelName,self.personnelId,self.row_num))
+        self.cur.execute(''' UPDATE user SET id = "{}" , name = "{}", last_name = "{}",national_code = "{}",
+        gender = "{}",phone_number = "{}",account_type ="{}",personnel_pass ="{}" WHERE id="{}" '''.format(self.personnelId,
+                                                    self.pesonnelName,self.pesonnelLast,self.nationalCode,self.gender,
+                                                    self.phoneNum,self.accountType,self.personnelPass,self.values[5]))
+        self.con.commit()
+        self.b_sabtTaghirat.place(x=-100,y=-100)
+        self.b_delete.place(x=-50,y=-50)
+        self.b_edit.place(x=-50,y=-50)
+    
 
 O=A()
 O.mainloop()
