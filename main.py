@@ -1,4 +1,6 @@
 from tkinter import *
+import time
+import math
 
 class App(Tk):
     def __init__(self):
