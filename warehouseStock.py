@@ -29,7 +29,7 @@ class A(Tk):
         self.c_filterStock.set("یک گزینه را انتخاب کنید")
         self.l_filterStock=Label(self,text=' : گروه کالا',font=('Lalezar',17))
         self.e_searchUser   = Entry(self,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_searchUser= Button(self,bg='#F3F3F3',image=self.searchBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
+        self.b_searchUser= Button(self,bg='#F3F3F3',image=self.searchBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id)
         self.b_delete=Button(self,image=self.deleteBtnImg,bd=0,activebackground='white',cursor='hand2')
 
         #list
@@ -141,7 +141,24 @@ class A(Tk):
                 self.listStock.insert(parent='',index='end',text='',
                                     values=(i[4],i[7],i[3],i[2],i[1],i[0],str(self.count+1)))
                 self.count += 1
-        
+    
+    def search_id(self,event=None):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.idKala=self.e_searchUser.get()
+        self.count=0
+        if self.idKala !='':
+            for i in self.listStock.get_children():
+                self.listStock.delete(i)
+            self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala))
+            self.search_list=list(self.row)
+            self.listStock.insert(parent='',index='end',iid=self.count,text='',
+                                    values=(self.search_list[0][4],self.search_list[0][7],self.search_list[0][3],
+                                            self.search_list[0][2],self.search_list[0][1],self.search_list[0][0],str(self.count+1)))
+        else:
+            self.lst=[]
+            self.listStock.delete('0')
+            self.data_to_list()
 
         
 
