@@ -207,10 +207,10 @@ class A(Tk):
 
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
-        self.data=(self.productId,self.productName,self.productType,self.groupType,self.purchase,self.description,self.photo)
+        self.data=(self.productId,self.productName,self.productType,self.groupType,self.purchase,self.description,self.photo,'0')
         self.cur.execute('''CREATE TABLE IF NOT EXISTS kala (id TEXT PRIMARY KEY NOT NULL ,name TEXT NOT NULL ,type TEXT NOT NULL,category TEXT NOT NULL
-        ,purchase INTEGER NOT NULL,description TEXT NOT NULL,photo BLOB NOT NULL)''')
-        self.cur.execute('INSERT INTO kala(id,name,type,category,purchase,description,photo) VALUES(?,?,?,?,?,?,?)',self.data)
+        ,purchase INTEGER NOT NULL,description TEXT NOT NULL,photo BLOB NOT NULL,stock)''')
+        self.cur.execute('INSERT INTO kala(id,name,type,category,purchase,description,photo,stock) VALUES(?,?,?,?,?,?,?,?)',self.data)
         self.con.commit()
         self.numlist=len(self.listKala.get_children())
         self.listKala.insert(parent='',index='end',text='',values=(self.purchase,self.groupType,self.productType,
