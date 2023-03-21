@@ -40,7 +40,7 @@ class A(Tk):
         self.e_phoneNum=Entry(self,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.l_accountType=Label(self,text=' : نوع کاربری',font=('Lalezar',17))
         self.c_accountType=ttk.Combobox(self,width = 20 , font = ('B Koodak' , 12),state='readonly',
-                                          justify = 'right',values=["کارمند","ادمین", "مدیر"])
+                                          justify = 'right',values=["فروشنده","کارمند","ادمین", "مدیر"])
         self.c_accountType.set("یک گزینه را انتخاب کنید")
         self.l_personnelId=Label(self,text=' : کد کارمند',font=('Lalezar',17))
         self.e_personnelId=Entry(self,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
@@ -214,7 +214,7 @@ class A(Tk):
         self.cur.execute('INSERT INTO user(id,name,last_name,national_code,gender,phone_number,account_type,personnel_pass,photo) VALUES(?,?,?,?,?,?,?,?,?)',self.data)
         self.con.commit()
         self.numlist=len(self.listUser.get_children())
-        self.listUser.insert(parent='',index='end',text='',values=(self.accountType,self.phoneNum,self.accountType,
+        self.listUser.insert(parent='',index='end',text='',values=(self.accountType,self.phoneNum,self.gender,
                                                                     self.pesonnelLast,self.pesonnelName,self.personnelId,self.numlist+1))
     
     def search_id(self,event=None):
