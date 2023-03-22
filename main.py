@@ -13,6 +13,7 @@ product_page = Toplevel()
 user_page = Toplevel()
 stock_page = Toplevel()
 receipt_page = Toplevel()
+request_page = Toplevel()
 
 class App:
     def __init__(self,event=None):
@@ -32,11 +33,14 @@ class App:
         self.warehouse_receipt_page()
         self.warehouse_login_page()
         self.warehouse_register_page()
+        self.request_product_page()
+        self.data_to_list_request()
 
     def main(self):
         main_page.geometry('1400x800+250+100')
         main_page.configure(bg='white')
         main_page.title('menu')
+        main_page.state('normal')
         
         #image
         self.addUserImg=PhotoImage(file='image/adduserImg.png')
@@ -57,7 +61,7 @@ class App:
         self.b_addWare=Button(self.navFrm,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.open_addKala_page)
         self.b_WrStock=Button(self.navFrm,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.open_stock_page)
         self.b_Receipt=Button(self.navFrm,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.open_receipt_page)
-        self.b_request=Button(self.navFrm,image=self.requestImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_request=Button(self.navFrm,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.open_request_page)
         self.b_issuance=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit=Button(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
@@ -95,6 +99,7 @@ class App:
         loginn_page.state('withdraw')
         user_page.state('withdraw')
         stock_page.state('withdraw')
+        request_page.state('withdraw')
         receipt_page.state('withdraw')
         self.btnState = False
 
@@ -105,6 +110,7 @@ class App:
         register_page.state('withdraw')
         loginn_page.state('withdraw')
         stock_page.state('withdraw')
+        request_page.state('withdraw')
         receipt_page.state('withdraw')
         self.btnState = False
     
@@ -115,11 +121,24 @@ class App:
         main_page.state('withdraw')
         register_page.state('withdraw')
         loginn_page.state('withdraw')
+        request_page.state('withdraw')
         receipt_page.state('withdraw')
         self.btnState = False
     
     def open_receipt_page(self):
         receipt_page.state('normal')
+        stock_page.state('withdraw')
+        user_page.state('withdraw')
+        product_page .state('withdraw')
+        main_page.state('withdraw')
+        register_page.state('withdraw')
+        request_page.state('withdraw')
+        loginn_page.state('withdraw')
+        self.btnState = False
+
+    def open_request_page(self):
+        request_page.state('normal')
+        receipt_page.state('withdraw')
         stock_page.state('withdraw')
         user_page.state('withdraw')
         product_page .state('withdraw')
@@ -355,7 +374,7 @@ class App:
         self.e_search_kala.bind('<Return>',lambda event : self.b_search_kala.focus())
         self.b_search_kala.bind('<Return>', self.search_id_kalaPage)
         self.b_addKala_kala.bind('<Return>', self.funcAddKala)
-        self.imgSelectorBg_kala.bind('<Button-1>', self.funcAddImg)
+        self.imgSelectorBg_kala.bind('<Button-1>', self.funcAddImg_kala)
         self.listKala.bind('<ButtonRelease-1>', self.select_record_list_kala)
         self.b_delete_kala.bind('<Button-1>', self.delete_record_kala)
         self.b_edit_kala.bind('<ButtonRelease-1>', self.edit_record_kala_values)
@@ -400,7 +419,7 @@ class App:
                                     values=(i[4],i[3],i[2],i[1],i[0],str(self.count+1)))
                 self.count += 1
 
-    def funcAddImg(self,event=None):
+    def funcAddImg_kala(self,event=None):
         self.img_name = filedialog.askopenfilename()
         self.kalaImg_kala['file']= self.img_name
     
@@ -898,7 +917,6 @@ class App:
         self.style.map("Treeview",
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
-        
         #___bind___
         self.listStock.bind('<ButtonRelease-1>', self.select_record_stock)
         self.b_delete_stock.bind('<Button-1>', self.delete_record_stock)
@@ -1163,5 +1181,98 @@ class App:
         self.lastUserLbl_receipt['text']=''
         self.permission=False
 
-asd = App(main_page)
+    #____________________________________________________________________________________________________________________
+    #__________________________________________________ request product _________________________________________________
+
+    def request_product_page(self):
+        request_page.geometry('1400x800+250+100')
+        request_page.configure(bg='white')
+        request_page.title('menu')
+        request_page.state('withdraw')
+
+        self.headerReguestImg = PhotoImage(file='image/headerRequestImg.png')
+        self.requestBtnImg = PhotoImage(file='image/requestBtnImg.png')
+
+        self.h_requestPage = Label(request_page,image=self.headerReguestImg)
+        self.b_requestPage = Button(request_page,image=self.requestBtnImg,bd=0,activebackground='white',command=self.order_kala)
+        #list
+        self.listRequest= ttk.Treeview(request_page,show='headings',height=15)
+
+        self.listRequest['columns']=('Purchase','number','Category','Type','Name','id','row')
+        #columns
+        self.listRequest.column('Purchase',width=150,anchor=E)
+        self.listRequest.column('number',width=150,anchor=E)
+        self.listRequest.column('Category',width=220,anchor=E)
+        self.listRequest.column('Type',width=220,anchor=E)
+        self.listRequest.column('Name',width=220,anchor=E)
+        self.listRequest.column('id',width=150,anchor=E)
+        self.listRequest.column('row',width=120,anchor=E)
+        #heading
+        self.listRequest.heading('Purchase',text=' : نقطه خرید',anchor=E)
+        self.listRequest.heading('number',text=' : تعداد',anchor=E)
+        self.listRequest.heading('Category',text=' : گروه کالا',anchor=E)
+        self.listRequest.heading('Type',text=' : نوع کالا',anchor=E)
+        self.listRequest.heading('Name',text=' : نام کالا',anchor=E)
+        self.listRequest.heading('id',text=' : کد کالا',anchor=E)
+        self.listRequest.heading('row',text=' : ردیف',anchor=E)
+        self.style.theme_use('clam')
+        self.style.configure("Treeview.Heading",font=('Lalezar', 18),
+                            padding=[0, 5, 15, 5],background='#474A56',
+                            foreground="white",bd=0,relief='raised'
+                            )
+        self.style.map("Treeview.Heading",
+            background=[('active','#686A75')])
+        self.style.configure("Treeview", highlightthickness=0, 
+                            height=150,
+                            bd=0, font=('AraFProgram', 16),
+                            background="white",foreground="black",
+                            rowheight = 35,fieldbackground="white"
+                            )
+        self.style.map("Treeview",
+            background=[('selected', '#7A8BA7')],
+            foreground=[('selected', 'white')])
+        
+        #_________________bind_________________
+        self.listRequest.bind('<ButtonRelease>',self.select_record_list_request)
+
+        self.h_requestPage.place(x=580,y=0)
+        self.listRequest.place(x=85,y=90)
+        self.b_requestPage.place(x=600,y=720)
+
+    def data_to_list_request(self):
+        self.lst=[]
+        self.fullname='محمد پناهی'
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='kala'")
+        self.result_request = self.cur.fetchone()
+        if self.result_request != None:
+            row=self.cur.execute('SELECT * FROM kala')
+            for i in row:
+                self.lst.append(i)
+            for i in self.lst:
+                if int(i[4]) > int(i[7]):
+                    self.numlistRequest=len(self.listKala.get_children())
+                    self.listRequest.insert(parent='',index='end',text='',
+                                    values=(i[4],i[7],i[3],i[2],i[1],i[0],self.numlistRequest))
+                    self.purchase_req=i[4]
+                    self.kalaNum_req=i[7]
+    def order_kala(self):
+        self.permission=True
+        receipt_page.state('normal')
+        request_page.state('withdraw')
+        self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.valuesReq[5]))
+        self.e_searchKala_receipt.delete(0,END)
+        self.e_searchKala_receipt.insert('0',(self.valuesReq[5]))
+        self.search_idKala()
+        self.e_kalaNum_receipt.insert('0',int(self.purchase_req)-int(self.kalaNum_req))
+        self.con.commit()
+
+    def select_record_list_request(self,event=None):
+        self.selected = self.listRequest.focus()
+        self.valuesReq = self.listRequest.item(self.selected , "values")
+        
+                
+
+O = App(main_page)
 main_page.mainloop()
