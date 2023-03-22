@@ -10,8 +10,6 @@ class A(Tk):
         self.style=ttk.Style()
         self.lst=[]
         self.search_list=[]
-        self.y1=-50
-        self.y2=-50
 
         self.main()
         self.data_to_list()
@@ -283,7 +281,6 @@ class A(Tk):
         self.row_num=self.values[5]
         self.valuelst = self.sql_search(self.values[4])
         # self.cur('SELECT * FROM Blob WHERE id={}'.format(self.valuelst[0][6]))
-        print('salmmmm')
         print(self.values[0])
         self.e_productId.insert(0,self.valuelst[0][0])
         self.e_productName.insert(0,self.valuelst[0][1])

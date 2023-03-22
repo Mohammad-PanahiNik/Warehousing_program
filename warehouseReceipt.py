@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
 import sqlite3 as sql
+from tkinter import messagebox
+
 
 class A(Tk):
     def __init__(self):
@@ -129,18 +131,24 @@ class A(Tk):
 
 
     def search_idUser(self,event=None):
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
-        self.nationalId=self.e_searchUser.get()
-        self.count=0
-        if self.nationalId != '':
-            self.row=self.cur.execute('SELECT * FROM user WHERE national_code="{}"'.format(self.nationalId))
-            self.userInfo=list(self.row)
-            if self.userInfo[0][6]=='فروشنده':
-                self.permission=True
-                self.nameUserLbl['text']=self.userInfo[0][1]
-                self.lastUserLbl['text']=self.userInfo[0][2]
-                self.fullname=self.userInfo[0][1]+' '+self.userInfo[0][2]
+        try:
+            self.con=sql.connect('mydb.db')
+            self.cur=self.con.cursor()
+            self.nationalId=self.e_searchUser.get()
+            self.count=0
+            if self.nationalId != '':
+                self.row=self.cur.execute('SELECT * FROM user WHERE national_code="{}"'.format(self.nationalId))
+                self.userInfo=list(self.row)
+                if self.userInfo[0][6]=='فروشنده':
+                    self.permission=True
+                    self.nameUserLbl['text']=self.userInfo[0][1]
+                    self.lastUserLbl['text']=self.userInfo[0][2]
+                    self.fullname=self.userInfo[0][1]+' '+self.userInfo[0][2]
+                else:
+                    messagebox.showinfo("information","کاربر با این کد ملی قادر به ثبت ورود کالا نیست")
+        except :
+            messagebox.showinfo("information","کاربری با این کد ملی وجود ندارد")
+
 
     def search_idKala(self,event=None):
         if self.permission==True:
@@ -156,14 +164,15 @@ class A(Tk):
                 self.groupKalaLbl['text']=self.kalaInfo[0][3]
 
     def funcAddNum(self,event=None):
-        self.count=1
-        self.kalaNumber=self.e_kalaNum.get()
+        self.entryNum=self.e_kalaNum.get()
+        self.kalaNumber=int(self.entryNum)+int(self.kalaInfo[0][7])
+
         self.cur.execute(''' UPDATE kala SET stock = "{}" WHERE id="{}" '''.format(self.kalaNumber,self.idKala))
         self.con.commit()
+        self.num_of_rows = len(self.listReceipt.get_children())
         self.listReceipt.insert(parent='',index='end',text='',
                                     values=('01/01',self.kalaNumber,self.kalaInfo[0][0],
-                                            self.kalaInfo[0][3],self.kalaInfo[0][2],self.kalaInfo[0][1],self.fullname,self.count))
-        self.count += 1
+                                            self.kalaInfo[0][3],self.kalaInfo[0][2],self.kalaInfo[0][1],self.fullname,self.num_of_rows+1))
         self.e_kalaNum.delete(0,END)
         self.e_searchKala.delete(0,END)
         self.e_searchUser.delete(0,END)
@@ -176,6 +185,7 @@ class A(Tk):
         self.nameUserLbl['text']=''
         self.lastUserLbl['text']=''
         self.permission=False
+    
 
 O=A()
 O.mainloop()

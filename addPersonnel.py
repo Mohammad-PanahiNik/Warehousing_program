@@ -269,7 +269,6 @@ class A(Tk):
         return list(row)
     
     def edit_record_values(self ,event=None):
-        print('dsfaaaaaaaaaaaaaa')
         self.e_nameUser.delete(0,END)
         self.e_lastUser.delete(0,END)
         self.e_nationalCode.delete(0,END)
@@ -284,7 +283,6 @@ class A(Tk):
         self.valuelst = self.sql_search(self.values[5])
         print(self.valuelst)
         # self.cur('SELECT * FROM Blob WHERE id={}'.format(self.valuelst[0][6]))
-        print('salmmmm')
         # print(self.values[0])
         self.e_personnelId.insert(0,self.valuelst[0][0])
         self.e_nameUser.insert(0,self.valuelst[0][1])
