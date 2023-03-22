@@ -52,10 +52,10 @@ class App:
         self.navFrm=Frame(main_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm=LabelFrame(self.navFrm,width=220,bg='#2E2E2E',bd=0,height=50)
         self.b_closeNav=Button(self.closeFrm,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch)
-        self.b_addUser=Button(self.navFrm,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_addUser=Button(self.navFrm,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.open_addUser_page)
         self.b_addWare=Button(self.navFrm,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.open_addKala_page)
-        self.b_WrStock=Button(self.navFrm,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_Receipt=Button(self.navFrm,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_WrStock=Button(self.navFrm,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.open_stock_page)
+        self.b_Receipt=Button(self.navFrm,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.open_receipt_page)
         self.b_request=Button(self.navFrm,image=self.requestImg,bg='#777777',bd=0,cursor='hand2')
         self.b_issuance=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit=Button(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
@@ -95,6 +95,36 @@ class App:
         user_page.state('withdraw')
         stock_page.state('withdraw')
         receipt_page.state('withdraw')
+        self.btnState = False
+
+    def open_addUser_page(self):
+        user_page.state('normal')
+        product_page .state('withdraw')
+        main_page.state('withdraw')
+        register_page.state('withdraw')
+        loginn_page.state('withdraw')
+        stock_page.state('withdraw')
+        receipt_page.state('withdraw')
+        self.btnState = False
+    
+    def open_stock_page(self):
+        stock_page.state('normal')
+        user_page.state('withdraw')
+        product_page .state('withdraw')
+        main_page.state('withdraw')
+        register_page.state('withdraw')
+        loginn_page.state('withdraw')
+        receipt_page.state('withdraw')
+        self.btnState = False
+    
+    def open_receipt_page(self):
+        receipt_page.state('normal')
+        stock_page.state('withdraw')
+        user_page.state('withdraw')
+        product_page .state('withdraw')
+        main_page.state('withdraw')
+        register_page.state('withdraw')
+        loginn_page.state('withdraw')
         self.btnState = False
 
 #_____________________________________________________________________________________________________________________
@@ -499,11 +529,12 @@ class App:
     def add_user_page(self):
         self.hSabtUserImg = PhotoImage(file='image/headerSabtKarmandImg.png')
         self.UserImg = PhotoImage(file='image/imgSelectorBg.png')
-        self.searchBtnImg   = PhotoImage(file='image/searchBtnImg.png')
+        self.searchBtnImg_user = PhotoImage(file='image/searchBtnImg.png')
         self.addPesonnelImg = PhotoImage(file='image/addPesonnelBtnImg.png')
-        self.deleteBtnImg = PhotoImage(file='image/deleteBtnImg.png')
-        self.editBtnImg = PhotoImage(file='image/editBtnImg.png')
-        self.sabtTaghirBtn = PhotoImage(file='image/sabtEdit.png')
+        self.deleteBtnImg_user = PhotoImage(file='image/deleteBtnImg.png')
+        self.editBtnImg_user = PhotoImage(file='image/editBtnImg.png')
+        self.sabtTaghirBtn_user = PhotoImage(file='image/sabtEdit.png')
+
         user_page.geometry ('1400x800+250+100')
         user_page.configure (bg='#F3F3F3')
         user_page.state ('withdraw')
@@ -533,10 +564,10 @@ class App:
         self.imgSelectorBg = Label(user_page,bg='#F3F3F3',image=self.UserImg,cursor='hand2',width=150,height=150)
         self.b_addPesonnel= Button(user_page,bg='#F3F3F3',image=self.addPesonnelImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
         self.e_searchUser   = Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_searchUser= Button(user_page,bg='#F3F3F3',image=self.searchBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id_kalaPage)
-        self.b_delete=Button(user_page,image=self.deleteBtnImg,bd=0,activebackground='white',cursor='hand2')
-        self.b_edit=Button(user_page,image=self.editBtnImg,bd=0,activebackground='white',cursor='hand2')
-        self.b_sabtTaghirat=Button(user_page,image=self.sabtTaghirBtn,bd=0,activebackground='white')
+        self.b_searchUser= Button(user_page,bg='#F3F3F3',image=self.searchBtnImg_user,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id_user)
+        self.b_delete_user=Button(user_page,image=self.deleteBtnImg_user,bd=0,activebackground='white',cursor='hand2')
+        self.b_edit_user=Button(user_page,image=self.editBtnImg_user,bd=0,activebackground='white',cursor='hand2')
+        self.b_sabtTaghirat_user=Button(user_page,image=self.sabtTaghirBtn_user,bd=0,activebackground='white')
         
         #list
         self.listUser= ttk.Treeview(user_page,show='headings',height=8)
@@ -635,10 +666,10 @@ class App:
         self.e_UserPass.bind('<Return>',lambda event : self.funcAddUser)
         self.b_addPesonnel.bind('<Button-1>',self.funcAddUser)
         self.imgSelectorBg.bind('<Button-1>', self.funcAddImg)
-        self.listUser.bind('<ButtonRelease-1>', self.select_record)
-        self.b_delete.bind('<Button-1>', self.delete_record)
-        self.b_edit.bind('<ButtonRelease-1>', self.edit_record_kala_values)
-        self.b_sabtTaghirat.bind('<Button-1>', self.edit)
+        self.listUser.bind('<ButtonRelease-1>', self.select_record_user)
+        self.b_delete_user.bind('<Button-1>', self.delete_record_user)
+        self.b_edit_user.bind('<ButtonRelease-1>', self.edit_record_values_user)
+        self.b_sabtTaghirat_user.bind('<Button-1>', self.edit_user)
 
     def switch_user_nav(self):
         if self.btnState is True:
@@ -675,7 +706,7 @@ class App:
             
             for i in self.lst:
                 self.listUser.insert(parent='',index='end',iid=self.count,text='',
-                                    values=(i[4],i[3],i[2],i[1],i[0],str(self.count+1)))
+                                    values=(i[6],i[5],i[3],i[2],i[1],i[0],str(self.count+1)))
                 self.count += 1
 
 
@@ -712,49 +743,49 @@ class App:
         self.listUser.insert(parent='',index='end',text='',values=(self.accountType,self.phoneNum,self.gender,
                                                                     self.pesonnelLast,self.pesonnelName,self.personnelId,self.numlist+1))
     
-    def search_id(self,event=None):
+    def search_id_user(self,event=None):
+        print('okk')
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.idUser=self.e_searchUser.get()
-        self.count=0
         if self.idUser !='':
             for i in self.listUser.get_children():
                 self.listUser.delete(i)
+            self.numlist=len(self.listUser.get_children())
             self.row=self.cur.execute('SELECT * FROM user WHERE id="{}"'.format(self.idUser))
             self.search_list=list(self.row)
             self.listUser.insert(parent='',index='end',iid=self.count,text='',
-                                    values=(self.search_list[0][4],self.search_list[0][3],self.search_list[0][2],
-                                            self.search_list[0][1],self.search_list[0][0],str(self.count+1)))
+                                    values=(self.search_list[0][6],self.search_list[0][5],self.search_list[0][3],
+                                            self.search_list[0][2],self.search_list[0][1],self.search_list[0][0],str(self.numlist+1)))
         else:
             self.lst=[]
             self.listUser.delete('0')
             self.data_to_list_user()
     
-    def select_record(self,event=None):
+    def select_record_user(self,event=None):
         self.selected = self.listUser.focus()
         self.values = self.listUser.item(self.selected , "values")
         self.row_id =self.listUser.identify_row(event.y)
         start = self.listUser.bbox(self.row_id, column=None)
         self.y1=start[1]+400
         self.y2=start[1]+440
-        self.b_delete.place(x=40,y=self.y1)
-        self.b_edit.place(x=40,y=self.y2)
+        self.b_delete_user.place(x=40,y=self.y1)
+        self.b_edit_user.place(x=40,y=self.y2)
 
-    def delete_record(self,event=None):
+    def delete_record_user(self,event=None):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
-        self.code=self.values[4]
-        print(self.values[4])
+        self.code=self.values[5]
         self.cur.execute("DELETE FROM user WHERE id='{}'" .format(self.code))
         self.con.commit()
         for item in self.listUser.get_children():
             self.listUser.delete(item)
         self.lst=[]
         self.data_to_list_user()
-        self.b_delete.place(x=-50,y=-50)
-        self.b_edit.place(x=-50,y=-50)
+        self.b_delete_user.place(x=-50,y=-50)
+        self.b_edit_user.place(x=-50,y=-50)
 
-    def sql_search(self,id1):
+    def sql_search_user(self,id1):
         con = sql.connect('mydb.db')
         cur = con.cursor()
         self.cur.execute("SELECT COUNT(*) FROM user")
@@ -762,7 +793,7 @@ class App:
         row = cur.execute('SELECT * FROM user WHERE id="{}"'.format(id1))
         return list(row)
     
-    def edit_record_values(self ,event=None):
+    def edit_record_values_user(self ,event=None):
         self.e_nameUser.delete(0,END)
         self.e_lastUser.delete(0,END)
         self.e_nationalCode.delete(0,END)
@@ -771,13 +802,9 @@ class App:
         self.c_accountType.set("یک گزینه را انتخاب کنید")
         self.e_personnelId.delete(0,END)
         self.e_UserPass.delete(0,END)
-
         self.values = self.listUser.item(self.selected , "values")
         self.row_num=self.values[6]
-        self.valuelst = self.sql_search(self.values[5])
-        print(self.valuelst)
-        # self.cur('SELECT * FROM Blob WHERE id={}'.format(self.valuelst[0][6]))
-        # print(self.values[0])
+        self.valuelst = self.sql_search_user(self.values[5])
         self.e_personnelId.insert(0,self.valuelst[0][0])
         self.e_nameUser.insert(0,self.valuelst[0][1])
         self.e_lastUser.insert(0,self.valuelst[0][2])
@@ -786,9 +813,9 @@ class App:
         self.e_phoneNum.insert(0,self.valuelst[0][5])
         self.c_accountType.insert(0,self.valuelst[0][6])
         self.e_UserPass.insert(0,self.valuelst[0][7])
-        self.b_sabtTaghirat.place(x=910,y=340)
+        self.b_sabtTaghirat_user.place(x=910,y=340)
 
-    def edit(self,event = None):
+    def edit_user(self,event = None):
         self.con = sql.connect('mydb.db')
         self.cur = self.con.cursor()
         self.pesonnelName=self.e_nameUser.get()
@@ -805,14 +832,11 @@ class App:
                                                     self.pesonnelName,self.pesonnelLast,self.nationalCode,self.gender,
                                                     self.phoneNum,self.accountType,self.personnelPass,self.values[5]))
         self.con.commit()
-        self.b_sabtTaghirat.place(x=-100,y=-100)
-        self.b_delete.place(x=-50,y=-50)
-        self.b_edit.place(x=-50,y=-50)
+        self.b_sabtTaghirat_user.place(x=-100,y=-100)
+        self.b_delete_user.place(x=-50,y=-50)
+        self.b_edit_user.place(x=-50,y=-50)
 
 
-    def funcBtnHover(self,img,url):
-        img['file'] = url
-    
     #____________________________________________________________________________________________________________________
     #________________________________________________ warehouse Stock page ______________________________________________
     def warehouse_stock_page(self):
@@ -820,7 +844,7 @@ class App:
         self.h_stockImg = PhotoImage(file='image/headerStock.png')
         self.searchBtnImg_stock   = PhotoImage(file='image/searchBtnImg.png')
         self.filterBtnImg = PhotoImage(file='image/filterBtnImg.png')
-        self.deleteBtnImg = PhotoImage(file='image/deleteBtnImg.png')
+        self.deleteBtnImg_stock = PhotoImage(file='image/deleteBtnImg.png')
 
         stock_page.geometry ('1400x800+250+100')
         stock_page.configure (bg='#F3F3F3')
@@ -832,9 +856,9 @@ class App:
                                           justify = 'right',values=["همه ی کالا ها","فلزات", "مواد غذایی"])
         self.c_filterStock.set("یک گزینه را انتخاب کنید")
         self.l_filterStock=Label(stock_page,text=' : گروه کالا',font=('Lalezar',17))
-        self.e_searchStock   = Entry(stock_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_searchStock= Button(stock_page,image=self.searchBtnImg_stock,activebackground='#F3F3F3',bd=0,cursor='hand2')
-        self.b_delete=Button(stock_page,image=self.deleteBtnImg,bd=0,activebackground='#F3F3F3',cursor='hand2')
+        self.e_searchStock = Entry(stock_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.b_searchStock= Button(stock_page,image=self.searchBtnImg_stock,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id_stock)
+        self.b_delete_stock=Button(stock_page,image=self.deleteBtnImg_stock,bd=0,activebackground='#F3F3F3',cursor='hand2')
 
         #list
         self.listStock= ttk.Treeview(stock_page,show='headings',height=15)
@@ -875,8 +899,8 @@ class App:
             foreground=[('selected', 'white')])
         
         #___bind___
-        self.listStock.bind('<ButtonRelease-1>', self.select_record)
-        self.b_delete.bind('<Button-1>', self.delete_record)
+        self.listStock.bind('<ButtonRelease-1>', self.select_record_stock)
+        self.b_delete_stock.bind('<Button-1>', self.delete_record_stock)
 
 
         self.l_headerStock.place(x=580,y=0)
@@ -906,15 +930,15 @@ class App:
                                     values=(i[4],i[7],i[3],i[2],i[1],i[0],str(self.count+1)))
                 self.count += 1
     
-    def select_record(self,event=None):
+    def select_record_stock(self,event=None):
         self.selected = self.listStock.focus()
         self.values = self.listStock.item(self.selected , "values")
         self.row_id =self.listStock.identify_row(event.y)
         start = self.listStock.bbox(self.row_id, column=None)
         self.y1=start[1]+185
-        self.b_delete.place(x=40,y=self.y1)
+        self.b_delete_stock.place(x=40,y=self.y1)
 
-    def delete_record(self,event=None):
+    def delete_record_stock(self,event=None):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.code=self.values[5]
@@ -924,7 +948,7 @@ class App:
             self.listStock.delete(item)
         self.lst=[]
         self.data_to_list_stock()
-        self.b_delete.place(x=-50,y=-50)
+        self.b_delete_stock.place(x=-50,y=-50)
     
     def filter_stock(self):
         self.filterLst=self.c_filterStock.get()
@@ -946,10 +970,10 @@ class App:
                                     values=(i[4],i[7],i[3],i[2],i[1],i[0],str(self.count+1)))
                 self.count += 1
     
-    def search_id(self,event=None):
+    def search_id_stock(self,event=None):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
-        self.idKala=self.e_searchUser.get()
+        self.idKala=self.e_searchStock.get()
         self.count=0
         if self.idKala !='':
             for i in self.listStock.get_children():
@@ -1006,7 +1030,6 @@ class App:
         self.b_addKalaNum_receipt = Button(self.kalaNumFrm_receipt,bg='#DFDFDF',image=self.addKalaNumImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.funcAddNum)
         #list
         self.listReceipt= ttk.Treeview(receipt_page,show='headings',height=5)
-
         self.listReceipt['columns']=('date','kalaNum','kalaId','groupKala','kalaType','kalaName','fullname','row')
         #columns
         # self.listKarmand.column('#0',width=0,stretch=NO)
