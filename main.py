@@ -17,6 +17,7 @@ receipt_page = Toplevel()
 class App:
     def __init__(self,event=None):
         self.btnState = False
+        self.permission=False
         self.style=ttk.Style()
         self.lst=[]
         self.search_list=[]
@@ -1005,7 +1006,7 @@ class App:
         self.h_vorodKala_receipt = Label(self.searchUserFrm,image=self.headerVorodKalaImg)
         self.l_attention_receipt = Label(self.searchUserFrm,text='.توجه : لطفا ابتدا کد ملی متقاضی مورد نظر را وارد کنید',font=('Lalezar',17),bg='#DFDFDF')
         self.e_searchUser_receipt  = Entry(self.searchUserFrm,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_searchUser_receipt = Button(self.searchUserFrm,bg='#DFDFDF',image=self.searchBtnImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.search_idUser)
+        self.b_searchUser_receipt = Button(self.searchUserFrm,bg='#DFDFDF',image=self.searchBtnImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.search_idUser_receipt)
         self.e_searchKala_receipt = Entry(receipt_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid',fg='#717171')
         self.e_searchKala_receipt.insert(0,'جستجوی کد کالا')
         self.b_searchKala_receipt = Button(receipt_page,bg='#DFDFDF',image=self.searchBtnImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.search_idKala)
@@ -1032,7 +1033,6 @@ class App:
         self.listReceipt= ttk.Treeview(receipt_page,show='headings',height=5)
         self.listReceipt['columns']=('date','kalaNum','kalaId','groupKala','kalaType','kalaName','fullname','row')
         #columns
-        # self.listKarmand.column('#0',width=0,stretch=NO)
         self.listReceipt.column('date',width=150,anchor=E)
         self.listReceipt.column('kalaNum',width=90,anchor=E)
         self.listReceipt.column('groupKala',width=200,anchor=E)
@@ -1042,7 +1042,6 @@ class App:
         self.listReceipt.column('fullname',width=200,anchor=E)
         self.listReceipt.column('row',width=100,anchor=E)
         #heading
-        # self.listKarmand.heading('#0',text='',anchor=E)
         self.listReceipt.heading('date',text=' : تاریخ',anchor=E)
         self.listReceipt.heading('kalaNum',text=' : تعداد',anchor=E)
         self.listReceipt.heading('groupKala',text=' : گروه کالا',anchor=E)
@@ -1070,12 +1069,12 @@ class App:
         
         #____bind____
         self.e_searchUser_receipt.focus()
-        self.e_searchUser_receipt.bind('<Return>',lambda event:self.b_searchUser.focus())
-        self.b_searchUser_receipt.bind('<Return>',self.search_idUser)
-        self.e_searchKala_receipt.bind('<Button-1>',lambda event:self.e_searchKala.delete(0,END))
-        self.e_searchKala_receipt.bind('<Return>',lambda event:self.b_searchKala.focus())
+        self.e_searchUser_receipt.bind('<Return>',lambda event:self.b_searchUser_receipt.focus())
+        self.b_searchUser_receipt.bind('<Return>',self.search_idUser_receipt)
+        self.e_searchKala_receipt.bind('<Button-1>',lambda event:self.e_searchKala_receipt.delete(0,END))
+        self.e_searchKala_receipt.bind('<Return>',lambda event:self.b_searchKala_receipt.focus())
         self.b_searchKala_receipt.bind('<Return>',self.search_idKala)
-        self.e_kalaNum_receipt.bind('<Return>',lambda event:self.b_addKalaNum.focus())
+        self.e_kalaNum_receipt.bind('<Return>',lambda event:self.b_addKalaNum_receipt.focus())
         self.b_addKalaNum_receipt.bind('<Return>',self.funcAddNum)
 
 
@@ -1108,19 +1107,19 @@ class App:
         self.listReceipt.place(x=85,y=545)
 
 
-    def search_idUser(self,event=None):
+    def search_idUser_receipt(self,event=None):
         try:
             self.con=sql.connect('mydb.db')
             self.cur=self.con.cursor()
-            self.nationalId=self.e_searchUser.get()
+            self.nationalId=self.e_searchUser_receipt.get()
             self.count=0
             if self.nationalId != '':
                 self.row=self.cur.execute('SELECT * FROM user WHERE national_code="{}"'.format(self.nationalId))
                 self.userInfo=list(self.row)
                 if self.userInfo[0][6]=='فروشنده':
                     self.permission=True
-                    self.nameUserLbl['text']=self.userInfo[0][1]
-                    self.lastUserLbl['text']=self.userInfo[0][2]
+                    self.nameUserLbl_receipt['text']=self.userInfo[0][1]
+                    self.lastUserLbl_receipt['text']=self.userInfo[0][2]
                     self.fullname=self.userInfo[0][1]+' '+self.userInfo[0][2]
                 else:
                     messagebox.showinfo("information","کاربر با این کد ملی قادر به ثبت ورود کالا نیست")
@@ -1130,19 +1129,19 @@ class App:
 
     def search_idKala(self,event=None):
         if self.permission==True:
-            self.idKala=self.e_searchKala.get()
+            self.idKala=self.e_searchKala_receipt.get()
             if self.idKala !='':
                 self.con=sql.connect('mydb.db')
                 self.cur=self.con.cursor()
                 self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala))
                 self.kalaInfo=list(self.row)
-                self.nameKalaLbl['text']=self.kalaInfo[0][1]
-                self.kalaTypeLbl['text']=self.kalaInfo[0][2]
-                self.kalaIdLbl['text']=self.kalaInfo[0][0]
-                self.groupKalaLbl['text']=self.kalaInfo[0][3]
+                self.nameKalaLbl_receipt['text']=self.kalaInfo[0][1]
+                self.kalaTypeLbl_receipt['text']=self.kalaInfo[0][2]
+                self.kalaIdLbl_receipt['text']=self.kalaInfo[0][0]
+                self.groupKalaLbl_receipt['text']=self.kalaInfo[0][3]
 
     def funcAddNum(self,event=None):
-        self.entryNum=self.e_kalaNum.get()
+        self.entryNum=self.e_kalaNum_receipt.get()
         self.kalaNumber=int(self.entryNum)+int(self.kalaInfo[0][7])
 
         self.cur.execute(''' UPDATE kala SET stock = "{}" WHERE id="{}" '''.format(self.kalaNumber,self.idKala))
@@ -1151,21 +1150,18 @@ class App:
         self.listReceipt.insert(parent='',index='end',text='',
                                     values=('01/01',self.kalaNumber,self.kalaInfo[0][0],
                                             self.kalaInfo[0][3],self.kalaInfo[0][2],self.kalaInfo[0][1],self.fullname,self.num_of_rows+1))
-        self.e_kalaNum.delete(0,END)
-        self.e_searchKala.delete(0,END)
-        self.e_searchUser.delete(0,END)
+        self.e_kalaNum_receipt.delete(0,END)
+        self.e_searchKala_receipt.delete(0,END)
+        self.e_searchUser_receipt.delete(0,END)
         self.kalaInfo=[]
         self.fullname=''
-        self.nameKalaLbl['text']=''
-        self.kalaTypeLbl['text']=''
-        self.kalaIdLbl['text']=''
-        self.groupKalaLbl['text']=''
-        self.nameUserLbl['text']=''
-        self.lastUserLbl['text']=''
+        self.nameKalaLbl_receipt['text']=''
+        self.kalaTypeLbl_receipt['text']=''
+        self.kalaIdLbl_receipt['text']=''
+        self.groupKalaLbl_receipt['text']=''
+        self.nameUserLbl_receipt['text']=''
+        self.lastUserLbl_receipt['text']=''
         self.permission=False
-
-        
-    
 
 asd = App(main_page)
 main_page.mainloop()
