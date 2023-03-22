@@ -14,6 +14,7 @@ user_page = Toplevel()
 stock_page = Toplevel()
 receipt_page = Toplevel()
 request_page = Toplevel()
+order_page = Toplevel()
 
 class App:
     def __init__(self,event=None):
@@ -35,12 +36,13 @@ class App:
         self.warehouse_register_page()
         self.request_product_page()
         self.data_to_list_request()
+        self.order_kala_page()
 
     def main(self):
         main_page.geometry('1400x800+250+100')
         main_page.configure(bg='white')
         main_page.title('menu')
-        main_page.state('normal')
+        main_page.state('withdraw')
         
         #image
         self.addUserImg=PhotoImage(file='image/adduserImg.png')
@@ -917,6 +919,7 @@ class App:
         self.style.map("Treeview",
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
+        
         #___bind___
         self.listStock.bind('<ButtonRelease-1>', self.select_record_stock)
         self.b_delete_stock.bind('<Button-1>', self.delete_record_stock)
@@ -1272,7 +1275,125 @@ class App:
         self.selected = self.listRequest.focus()
         self.valuesReq = self.listRequest.item(self.selected , "values")
         
-                
+#__________________________________________________________________________________________________________________________________________________________________
+#_______________________________________________________________ order page ______________________________________________________________________________
+    def order_kala_page(self):
+        order_page.geometry('1400x800+250+100')
+        order_page.configure(bg='white')
+        order_page.title('menu')
+        order_page.state('normal')
+
+        self.headerReguestImg = PhotoImage(file='image/headerRequestImg.png')
+        self.sabtOrderBtnImg = PhotoImage(file='image/sabtOrder.png')
+        self.searchBtnImg_order = PhotoImage(file='image/searchBtnImg.png')
+        self.order_imgSelectorPic = PhotoImage(file='image/imgSelectorBg.png')
+
+        self.l_headerOrderPage = Label(order_page,image=self.headerReguestImg)
+        self.attention_idKala = Label(order_page,text=' . لطفا کد کالای موردنطر خود را وارد کنید',font=('Lalezar',17),bg='white')
+        self.e_idKala_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.b_searchBtnOrder = Button(order_page,image=self.searchBtnImg_order,bd=0,activebackground='white',command=self.search_idKala_order)
+
+        self.order_frm_num = LabelFrame(order_page,width=470,height=240,bg='#F2F2F2',bd=5,relief=SOLID)
+        self.l_attention_orderNum = Label(self.order_frm_num,text='  . تعداد درخواستی خود را وارد کنید',font=('Lalezar',17),fg='#1C5EF6')
+        self.l_orderNum = Label(self.order_frm_num,text=' : تعداد',font=('Lalezar',17))
+        self.e_orderNum = Entry(self.order_frm_num,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.b_sabtOrder = Button(self.order_frm_num,image=self.sabtOrderBtnImg,bd=0,activebackground='white')
+
+        self.kalaInfo_order_frm = LabelFrame(order_page,width=840,height=240,bg='#D0D0D0',bd=5,relief=SOLID)
+        self.l_nameKala_order = Label(self.kalaInfo_order_frm,text=' : نام کالا',font=('Lalezar',17),bg='#D0D0D0')
+        self.nameKalaLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
+        self.l_kalaType_order = Label(self.kalaInfo_order_frm,text=' : نوع کالا',font=('Lalezar',17),bg='#D0D0D0')
+        self.kalaTypeLbl_order =Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
+        self.l_kalaId_order = Label(self.kalaInfo_order_frm,text=' : کد کالا',font=('Lalezar',17),bg='#D0D0D0')
+        self.kalaIdLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
+        self.l_groupKala_order = Label(self.kalaInfo_order_frm,text=' : گروه کالا',font=('Lalezar',17),bg='#D0D0D0')
+        self.groupKalaLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
+        self.l_kalaNum_order = Label(self.kalaInfo_order_frm,text=' : تعداد',font=('Lalezar',17),bg='#D0D0D0')
+        self.kalaNumLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
+        self.l_purcase_order = Label(self.kalaInfo_order_frm,text=' : نقطه خرید',font=('Lalezar',17),bg='#D0D0D0')
+        self.purcaseLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
+        self.l_imgSelector_order = Label(self.kalaInfo_order_frm,text='انتخاب تصویر',font=('Lalezar',17),bg='#D0D0D0')
+        self.imgSelectorBg_order = Label(self.kalaInfo_order_frm,bg='#D0D0D0',image=self.order_imgSelectorPic,cursor='hand2',width=150,height=150)
+        #list
+        self.listOrder= ttk.Treeview(order_page,show='headings',height=8)
+
+        self.listOrder['columns']=('date','Purchase','stock','Category','Type','Name','id','row')
+        #columns
+        self.listOrder.column('date',width=130,anchor=E)
+        self.listOrder.column('Purchase',width=130,anchor=E)
+        self.listOrder.column('stock',width=150,anchor=E)
+        self.listOrder.column('Category',width=220,anchor=E)
+        self.listOrder.column('Type',width=220,anchor=E)
+        self.listOrder.column('Name',width=185,anchor=E)
+        self.listOrder.column('id',width=130,anchor=E)
+        self.listOrder.column('row',width=130,anchor=E)
+        #heading
+        self.listOrder.heading('date',text=' : تاریخ',anchor=E)
+        self.listOrder.heading('Purchase',text=' : نقطه خرید',anchor=E)
+        self.listOrder.heading('stock',text=' : موجودی',anchor=E)
+        self.listOrder.heading('Category',text=' : گروه کالا',anchor=E)
+        self.listOrder.heading('Type',text=' : نوع کالا',anchor=E)
+        self.listOrder.heading('Name',text=' : نام کالا',anchor=E)
+        self.listOrder.heading('id',text=' : کد کالا',anchor=E)
+        self.listOrder.heading('row',text=' : ردیف',anchor=E)
+        self.style.theme_use('clam')
+        self.style.configure("Treeview.Heading",font=('Lalezar', 18),
+                            padding=[0, 5, 15, 5],background='#474A56',
+                            foreground="white",bd=0,relief='raised'
+                            )
+        self.style.map("Treeview.Heading",
+            background=[('active','#686A75')])
+        self.style.configure("Treeview", highlightthickness=0, 
+                            height=150,
+                            bd=0, font=('AraFProgram', 16),
+                            background="white",foreground="black",
+                            rowheight = 35,fieldbackground="white"
+                            )
+        self.style.map("Treeview",
+            background=[('selected', '#7A8BA7')],
+            foreground=[('selected', 'white')])
+        
+
+        self.l_headerOrderPage.place(x=580,y=0)
+        self.attention_idKala.place(x=1040,y=90)
+        self.b_searchBtnOrder.place(x=670,y=83)
+        self.e_idKala_order.place(x=830,y=90)
+        self.order_frm_num.place(x=50,y=140)
+        self.l_attention_orderNum.place(x=90,y=30)
+        self.l_orderNum.place(x=300,y=90)
+        self.e_orderNum.place(x=85,y=90)
+        self.b_sabtOrder.place(x=190,y=160)
+        self.kalaInfo_order_frm.place(x=510,y=140)
+        self.l_kalaId_order.place(x=740,y=10)
+        self.kalaIdLbl_order.place(x=560,y=10)
+        self.l_nameKala_order.place(x=450,y=10)
+        self.nameKalaLbl_order.place(x=270,y=10)
+        self.l_kalaType_order.place(x=740,y=90)
+        self.kalaTypeLbl_order.place(x=560,y=90)
+        self.l_groupKala_order.place(x=450,y=90)
+        self.groupKalaLbl_order.place(x=270,y=90)
+        self.l_kalaNum_order.place(x=740,y=170)
+        self.kalaNumLbl_order.place(x=560,y=170)
+        self.l_purcase_order.place(x=450,y=170)
+        self.purcaseLbl_order.place(x=270,y=170)
+        self.l_imgSelector_order.place(x=115,y=175)
+        self.imgSelectorBg_order.place(x=100,y=25)
+        self.listOrder.place(x=50,y=420)
+
+    def search_idKala_order(self,event=None):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.idKala_order=self.e_idKala_order.get()
+        if self.idKala_order !='':
+            self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala_order))
+            self.iInfo_order_list = list(self.row)
+            self.kalaIdLbl_order['text']=self.iInfo_order_list[0][0]
+            self.nameKalaLbl_order['text']=self.iInfo_order_list[0][1]
+            self.kalaTypeLbl_order['text']=self.iInfo_order_list[0][2]
+            self.groupKalaLbl_order['text']=self.iInfo_order_list[0][3]
+            self.kalaNumLbl_order['text']=self.iInfo_order_list[0][7]
+            self.purcaseLbl_order['text']=self.iInfo_order_list[0][4]
+    
 
 O = App(main_page)
 main_page.mainloop()
