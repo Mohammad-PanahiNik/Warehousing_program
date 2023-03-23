@@ -32,7 +32,6 @@ class App:
         self.warehouse_stock_page()
         self.data_to_list_stock()
         self.add_user_page()
-        self.data_to_list_user()
         self.warehouse_receipt_page()
         self.warehouse_login_page()
         self.warehouse_register_page()
@@ -47,7 +46,7 @@ class App:
         main_page.geometry('1400x800+250+100')
         main_page.configure(bg='white')
         main_page.title('menu')
-        main_page.state('withdraw')
+        main_page.state('normal')
         
         #image
         self.addUserImg=PhotoImage(file='image/adduserImg.png')
@@ -55,8 +54,11 @@ class App:
         self.WrStockImg=PhotoImage(file='image/WrStockImg.png')
         self.ReceiptImg=PhotoImage(file='image/ReceiptImg.png')
         self.requestImg=PhotoImage(file='image/requestImg.png')
-        self.issuanceImg=PhotoImage(file='image/issuanceImg.png')
+        self.issuanceImg=PhotoImage(file='image/fishBtnMenuImg.png')
+        self.homePageBtnImg=PhotoImage(file='image/homePageBtnImg.png')
         self.exitImg=PhotoImage(file='image/exitImg.png')
+        self.sabtSefareshBtnImg=PhotoImage(file='image/sabtSefareshBtnImg.png')
+        self.exitKalaBtnMenuImg=PhotoImage(file='image/exitKalaBtnMenuImg.png')
         self.closeBtnImg=PhotoImage(file='image/closeImg.png')
         self.openBtnImg=PhotoImage(file='image/openNavImg.png')
 
@@ -64,11 +66,14 @@ class App:
         self.navFrm=Frame(main_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm=LabelFrame(self.navFrm,width=220,bg='#2E2E2E',bd=0,height=50)
         self.b_closeNav=Button(self.closeFrm,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch)
+        self.b_home_page=Button(self.navFrm,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
         self.b_addUser=Button(self.navFrm,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.open_addUser_page)
         self.b_addWare=Button(self.navFrm,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.open_addKala_page)
         self.b_WrStock=Button(self.navFrm,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.open_stock_page)
         self.b_Receipt=Button(self.navFrm,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.open_receipt_page)
         self.b_request=Button(self.navFrm,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.open_request_page)
+        self.b_sabtSefareshPage=Button(self.navFrm,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.open_sabtSefaresh_page)
+        self.b_sabtExitKalaPage=Button(self.navFrm,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.open_sabtExit_page)
         self.b_issuance=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit=Button(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
@@ -76,13 +81,16 @@ class App:
         self.navFrm.place(x=1400,y=0)
         self.closeFrm.place(x=0,y=0)
         self.b_closeNav.place(x=15,y=15)
-        self.b_addWare.place(x=0,y=50)
-        self.b_addUser.place(x=0,y=115)
-        self.b_WrStock.place(x=0,y=180)
-        self.b_Receipt.place(x=0,y=245)
-        self.b_request.place(x=0,y=310)
-        self.b_issuance.place(x=0,y=375)
-        self.b_exit.place(x=0,y=440)
+        self.b_home_page.place(x=0,y=50)
+        self.b_addWare.place(x=0,y=115)
+        self.b_addUser.place(x=0,y=180)
+        self.b_WrStock.place(x=0,y=245)
+        self.b_Receipt.place(x=0,y=310)
+        self.b_request.place(x=0,y=375)
+        self.b_sabtExitKalaPage.place(x=0,y=440)
+        self.b_sabtSefareshPage.place(x=0,y=505)
+        self.b_issuance.place(x=0,y=570)
+        self.b_exit.place(x=0,y=635)
 
     def switch(self):
         if self.btnState is True:
@@ -102,56 +110,36 @@ class App:
     def open_addKala_page(self):
         product_page .state('normal')
         main_page.state('withdraw')
-        register_page.state('withdraw')
-        loginn_page.state('withdraw')
-        user_page.state('withdraw')
-        stock_page.state('withdraw')
-        request_page.state('withdraw')
-        receipt_page.state('withdraw')
         self.btnState = False
 
     def open_addUser_page(self):
         user_page.state('normal')
-        product_page .state('withdraw')
         main_page.state('withdraw')
-        register_page.state('withdraw')
-        loginn_page.state('withdraw')
-        stock_page.state('withdraw')
-        request_page.state('withdraw')
-        receipt_page.state('withdraw')
         self.btnState = False
     
     def open_stock_page(self):
         stock_page.state('normal')
-        user_page.state('withdraw')
-        product_page .state('withdraw')
         main_page.state('withdraw')
-        register_page.state('withdraw')
-        loginn_page.state('withdraw')
-        request_page.state('withdraw')
-        receipt_page.state('withdraw')
         self.btnState = False
     
     def open_receipt_page(self):
         receipt_page.state('normal')
-        stock_page.state('withdraw')
-        user_page.state('withdraw')
-        product_page .state('withdraw')
         main_page.state('withdraw')
-        register_page.state('withdraw')
-        request_page.state('withdraw')
-        loginn_page.state('withdraw')
         self.btnState = False
 
     def open_request_page(self):
         request_page.state('normal')
-        receipt_page.state('withdraw')
-        stock_page.state('withdraw')
-        user_page.state('withdraw')
-        product_page .state('withdraw')
         main_page.state('withdraw')
-        register_page.state('withdraw')
-        loginn_page.state('withdraw')
+        self.btnState = False
+
+    def open_sabtSefaresh_page(self):
+        order_page.state('normal')
+        main_page.state('withdraw')
+        self.btnState = False
+
+    def open_sabtExit_page(self):
+        exit_page.state('normal')
+        main_page.state('withdraw')
         self.btnState = False
 
 #_____________________________________________________________________________________________________________________
@@ -220,9 +208,9 @@ class App:
         self.b_signin_btn     = Button (self.signinFrm,image=self.signInBtn,bd=0)
         self.l_description = Label(self.signinFrm,text=' ! لطفا برای ورود به برنامه ابتدا ثبت نام کنید *   ', bg='white',font=('Lalezar',14),fg='#5D5555')
 
-        self.signinImgFrm.grid  (row=1,column=1)
+        self.signinImgFrm.grid (row=1,column=1)
         self.img_signin.grid (row=1,column=1)
-        self.signinFrm.grid  (row=1,column=2)
+        self.signinFrm.grid (row=1,column=2)
         self.signIn_logo.place(x=175,y=10)
         self.e_Name.place(x=100,y=175)
         self.e_Last.place(x=100,y=264)
@@ -233,12 +221,12 @@ class App:
 
         #bind
         self.e_Name.focus()
-        self.e_Name.bind     ('<Return>',lambda event : self.e_Last.focus())
-        self.e_Last.bind     ('<Return>',lambda event : self.e_user_name.focus())
+        self.e_Name.bind ('<Return>',lambda event : self.e_Last.focus())
+        self.e_Last.bind ('<Return>',lambda event : self.e_user_name.focus())
         self.e_user_name.bind ('<Return>',lambda event : self.e_password.focus())
-        self.e_password.bind    ('<Return>',lambda event : self.b_signin_btn.focus())
-        self.b_signin_btn.bind    ('<Enter>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtnH.png'))
-        self.b_signin_btn.bind    ('<Leave>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtn.png'))
+        self.e_password.bind ('<Return>',lambda event : self.b_signin_btn.focus())
+        self.b_signin_btn.bind ('<Enter>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtnH.png'))
+        self.b_signin_btn.bind ('<Leave>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtn.png'))
 
     def funcBtnHover(self,img,url):
         img['file'] = url
@@ -253,18 +241,16 @@ class App:
         self.fildsBgImg = PhotoImage(file='image/fildsBg.png')
         self.kalaImg_kala = PhotoImage(file='image/imgSelectorBg.png')
         self.listKalaBgImg = PhotoImage(file='image/listSkalaBg.png')
-        self.searchBtnImg_kala   = PhotoImage(file='image/searchBtnImg.png')
+        self.searchBtnImg_kala = PhotoImage(file='image/searchBtnImg.png')
         self.h_sabtKalaImg = PhotoImage(file='image/headerSabtKala.png')
         self.addKalaBtnImg = PhotoImage(file='image/addKalaBtn.png')
         self.deleteBtnImg_kala = PhotoImage(file='image/deleteBtnImg.png')
         self.editBtnImg_kala = PhotoImage(file='image/editBtnImg.png')
         self.sabtTaghirKalaBtn = PhotoImage(file='image/sabtEdit.png')
 
-        product_page.geometry  ('1400x800+250+100')
+        product_page.geometry ('1400x800+250+100')
         product_page.state ('withdraw')
         product_page.configure (bg='#F3F3F3')
-
-        #-------menu------
 
         self.h_sabtKala_kala = Label(product_page,image=self.h_sabtKalaImg)
         self.l_productId_kala = Label(product_page,text=' : کد کالا',font=('Lalezar',17))
@@ -333,24 +319,31 @@ class App:
         self.navFrm_product=Frame(product_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_product=LabelFrame(self.navFrm_product,width=220,bg='#2E2E2E',bd=0,height=50)
         self.b_closeNav_product=Button(self.closeFrm_product,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_product_nav)
-        self.b_addUser_product=Label(self.navFrm_product,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_addWare_product=Label(self.navFrm_product,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_WrStock_product=Label(self.navFrm_product,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_Receipt_product=Label(self.navFrm_product,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_request_product=Label(self.navFrm_product,image=self.requestImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_issuance_product=Label(self.navFrm_product,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_exit_product=Label(self.navFrm_product,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_mainpage_product=Button(self.navFrm_product,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_main)
+        self.b_addKala_product=Button(self.navFrm_product,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
+        self.b_addUser_product=Button(self.navFrm_product,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_user)
+        self.b_WrStock_product=Button(self.navFrm_product,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_WrStock)
+        self.b_Receipt_product=Button(self.navFrm_product,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_Receipt)
+        self.b_request_product=Button(self.navFrm_product,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_request)
+        self.b_order_product=Button(self.navFrm_product,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_order)
+        self.b_exitKala_product=Button(self.navFrm_product,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_exit)
+        self.b_issuance_product=Button(self.navFrm_product,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_exit_product=Button(self.navFrm_product,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
         self.b_openNav_product.place (x=1340,y=20)
         self.navFrm_product.place (x=1400,y=0)
         self.closeFrm_product.place (x=0,y=0)
         self.b_closeNav_product.place (x=15,y=15)
-        self.b_addUser_product.place (x=0,y=50)
-        self.b_WrStock_product.place (x=0,y=115)
-        self.b_Receipt_product.place (x=0,y=180)
-        self.b_request_product.place (x=0,y=245)
-        self.b_issuance_product.place (x=0,y=310)
-        self.b_exit_product.place (x=0,y=375)
+        self.b_mainpage_product.place (x=0,y=50)
+        self.b_addKala_product.place (x=0,y=115)
+        self.b_addUser_product.place (x=0,y=180)
+        self.b_WrStock_product.place (x=0,y=245)
+        self.b_Receipt_product.place (x=0,y=310)
+        self.b_request_product.place (x=0,y=375)
+        self.b_order_product.place (x=0,y=440)
+        self.b_exitKala_product.place (x=0,y=505)
+        self.b_issuance_product.place (x=0,y=570)
+        self.b_exit_product.place (x=0,y=635)
         self.h_sabtKala_kala.place (x=580 , y=0)
         self.l_productId_kala.place (x=1245 , y=100)
         self.e_productId_kala.place (x=985 , y=105)
@@ -396,6 +389,41 @@ class App:
         self.b_delete_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImg.png'))
         self.b_edit_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImgH.png'))
         self.b_edit_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImg.png'))
+    
+    def pruduct_to_main(self):
+        main_page .state('normal')
+        product_page.state('withdraw')
+        self.btnState = False
+
+    def pruduct_to_user(self):
+        user_page.state('normal')
+        product_page.state('withdraw')
+        self.btnState = False
+    
+    def pruduct_to_WrStock(self):
+        stock_page.state('normal')
+        product_page.state('withdraw')
+        self.btnState = False
+    
+    def pruduct_to_Receipt(self):
+        receipt_page.state('normal')
+        product_page.state('withdraw')
+        self.btnState = False
+
+    def pruduct_to_request(self):
+        request_page.state('normal')
+        product_page.state('withdraw')
+        self.btnState = False
+
+    def pruduct_to_order(self):
+        order_page.state('normal')
+        product_page.state('withdraw')
+        self.btnState = False
+
+    def pruduct_to_exit(self):
+        exit_page.state('normal')
+        product_page.state('withdraw')
+        self.btnState = False
 
     def switch_product_nav(self):
         if self.btnState is True:
@@ -639,24 +667,31 @@ class App:
         self.navFrm_user=Frame(user_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_user=LabelFrame(self.navFrm_user,width=220,bg='#2E2E2E',bd=0,height=50)
         self.b_closeNav_user=Button(self.closeFrm_user,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_user_nav)
-        self.b_addUser_user=Label(self.navFrm_user,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_addWare_user=Label(self.navFrm_user,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_WrStock_user=Label(self.navFrm_user,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_Receipt_user=Label(self.navFrm_user,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_request_user=Label(self.navFrm_user,image=self.requestImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_issuance_user=Label(self.navFrm_user,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
-        self.b_exit_user=Label(self.navFrm_user,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_mainPage_user=Button(self.navFrm_user,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_main)
+        self.b_addKala_user=Button(self.navFrm_user,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_kala)
+        self.b_addUser_user=Button(self.navFrm_user,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
+        self.b_WrStock_user=Button(self.navFrm_user,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_stock)
+        self.b_Receipt_user=Button(self.navFrm_user,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_receipt)
+        self.b_request_user=Button(self.navFrm_user,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_request)
+        self.b_order_user=Button(self.navFrm_user,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_order)
+        self.b_exitKala_user=Button(self.navFrm_user,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_exit)
+        self.b_issuance_user=Button(self.navFrm_user,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_exit_user=Button(self.navFrm_user,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
         self.b_openNav_user.place(x=1340,y=20)
         self.navFrm_user.place(x=1400,y=0)
         self.closeFrm_user.place(x=0,y=0)
         self.b_closeNav_user.place(x=15,y=15)
-        self.b_addUser_user.place(x=0,y=50)
-        self.b_WrStock_user.place(x=0,y=115)
-        self.b_Receipt_user.place(x=0,y=180)
-        self.b_request_user.place(x=0,y=245)
-        self.b_issuance_user.place(x=0,y=310)
-        self.b_exit_user.place(x=0,y=375)
+        self.b_mainPage_user.place(x=0,y=50)
+        self.b_addKala_user.place(x=0,y=115)
+        self.b_addUser_user.place(x=0,y=180)
+        self.b_WrStock_user.place(x=0,y=245)
+        self.b_Receipt_user.place(x=0,y=310)
+        self.b_request_user.place(x=0,y=375)
+        self.b_order_user.place(x=0,y=440)
+        self.b_exitKala_user.place(x=0,y=505)
+        self.b_issuance_user.place(x=0,y=570)
+        self.b_exit_user.place(x=0,y=635)
 
         self.l_headerUser.place(x=595,y=0)
         self.l_nameUser.place(x=1315,y=100)
@@ -705,6 +740,42 @@ class App:
         else:
             self.navFrm_user.place(x=1180, y=0)
             self.btnState = True
+    
+    def user_to_main(self):
+        main_page .state('normal')
+        user_page.state('withdraw')
+        self.btnState = False
+
+    def user_to_kala(self):
+        product_page.state('normal')
+        user_page.state('withdraw')
+        self.btnState = False
+    
+    def user_to_stock(self):
+        stock_page.state('normal')
+        user_page.state('withdraw')
+        self.btnState = False
+    
+    def user_to_receipt(self):
+        receipt_page.state('normal')
+        user_page.state('withdraw')
+        self.btnState = False
+
+    def user_to_request(self):
+        request_page.state('normal')
+        user_page.state('withdraw')
+        self.btnState = False
+
+    def user_to_order(self):
+        order_page.state('normal')
+        user_page.state('withdraw')
+        self.btnState = False
+
+    def user_to_exit(self):
+        exit_page.state('normal')
+        user_page.state('withdraw')
+        self.btnState = False
+
 
     def funcAddImg(self,event=None):
         self.img_name = filedialog.askopenfilename()
@@ -1286,7 +1357,7 @@ class App:
         order_page.geometry('1400x800+250+100')
         order_page.configure(bg='white')
         order_page.title('menu')
-        order_page.state('normal')
+        order_page.state('withdraw')
 
         self.headerReguestImg = PhotoImage(file='image/headerRequestImg.png')
         self.sabtOrderBtnImg = PhotoImage(file='image/sabtOrder.png')
@@ -1521,7 +1592,7 @@ class App:
         exit_page.geometry('1400x800+250+100')
         exit_page.configure(bg='white')
         exit_page.title('menu')
-        exit_page.state('normal')
+        exit_page.state('withdraw')
 
         self.h_sabtExitKalaImg = PhotoImage(file='image/sabtExitKala.png')
         self.exitKalaImg = PhotoImage(file='image/sabtExitBtn.png')
