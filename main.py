@@ -37,6 +37,7 @@ class App:
         self.request_product_page()
         self.data_to_list_request()
         self.order_kala_page()
+        self.data_to_list_order()
 
     def main(self):
         main_page.geometry('1400x800+250+100')
@@ -1287,19 +1288,35 @@ class App:
         self.sabtOrderBtnImg = PhotoImage(file='image/sabtOrder.png')
         self.searchBtnImg_order = PhotoImage(file='image/searchBtnImg.png')
         self.order_imgSelectorPic = PhotoImage(file='image/imgSelectorBg.png')
+        self.order_baresiImg = PhotoImage(file='image/baresiBtnImg.png')
 
         self.l_headerOrderPage = Label(order_page,image=self.headerReguestImg)
-        self.attention_idKala = Label(order_page,text=' . لطفا کد کالای موردنطر خود را وارد کنید',font=('Lalezar',17),bg='white')
+        self.attention_idUser = Label(order_page,text=' . لطفا کد کاربر موردنطر خود را وارد کنید',font=('Lalezar',17),bg='white')
+        self.e_idUser_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.b_searchUserBtnOrder = Button(order_page,image=self.order_baresiImg,bd=0,activebackground='white',command=self.search_idUser_order)
+
         self.e_idKala_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_searchBtnOrder = Button(order_page,image=self.searchBtnImg_order,bd=0,activebackground='white',command=self.search_idKala_order)
 
-        self.order_frm_num = LabelFrame(order_page,width=470,height=240,bg='#F2F2F2',bd=5,relief=SOLID)
-        self.l_attention_orderNum = Label(self.order_frm_num,text='  . تعداد درخواستی خود را وارد کنید',font=('Lalezar',17),fg='#1C5EF6')
+        self.userInfo_order_frm = LabelFrame(order_page,width=510,height=165,bg='#F2F2F2',bd=5,relief=SOLID)
+        self.l_nameUser_order = Label(self.userInfo_order_frm,text=' : نام',font=('Lalezar',17),bg='#F2F2F2')
+        self.nameUserLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=15,fg='#4F4E4E')
+        self.l_lastUser_order = Label(self.userInfo_order_frm,text=' : نام خانوادگی',font=('Lalezar',17),bg='#F2F2F2')
+        self.lastUserLbl_order =Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=15,fg='#4F4E4E')
+        self.l_nationalCode_order = Label(self.userInfo_order_frm,text=' : کد ملی',font=('Lalezar',17),bg='#F2F2F2')
+        self.nationalCodeLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=15,fg='#4F4E4E')
+        self.l_userId_order = Label(self.userInfo_order_frm,text=' : کد کاربری',font=('Lalezar',17),bg='#F2F2F2')
+        self.userIdLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=8,fg='#4F4E4E')
+
+        self.order_frm_num = LabelFrame(order_page,width=510,height=85,bg='#F2F2F2',bd=5,relief=SOLID)
         self.l_orderNum = Label(self.order_frm_num,text=' : تعداد',font=('Lalezar',17))
         self.e_orderNum = Entry(self.order_frm_num,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_sabtOrder = Button(self.order_frm_num,image=self.sabtOrderBtnImg,bd=0,activebackground='white')
+        self.b_sabtOrder = Button(self.order_frm_num,image=self.sabtOrderBtnImg,bd=0,activebackground='white',command=self.addOrder)
 
-        self.kalaInfo_order_frm = LabelFrame(order_page,width=840,height=240,bg='#D0D0D0',bd=5,relief=SOLID)
+        self.kalaInfo_order_frm = LabelFrame(order_page,width=800,height=240,bg='#D0D0D0',bd=5,relief=SOLID)
+
+        
+
         self.l_nameKala_order = Label(self.kalaInfo_order_frm,text=' : نام کالا',font=('Lalezar',17),bg='#D0D0D0')
         self.nameKalaLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
         self.l_kalaType_order = Label(self.kalaInfo_order_frm,text=' : نوع کالا',font=('Lalezar',17),bg='#D0D0D0')
@@ -1308,7 +1325,7 @@ class App:
         self.kalaIdLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
         self.l_groupKala_order = Label(self.kalaInfo_order_frm,text=' : گروه کالا',font=('Lalezar',17),bg='#D0D0D0')
         self.groupKalaLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
-        self.l_kalaNum_order = Label(self.kalaInfo_order_frm,text=' : تعداد',font=('Lalezar',17),bg='#D0D0D0')
+        self.l_kalaNum_order = Label(self.kalaInfo_order_frm,text=' : موجودی',font=('Lalezar',17),bg='#D0D0D0')
         self.kalaNumLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
         self.l_purcase_order = Label(self.kalaInfo_order_frm,text=' : نقطه خرید',font=('Lalezar',17),bg='#D0D0D0')
         self.purcaseLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
@@ -1317,23 +1334,21 @@ class App:
         #list
         self.listOrder= ttk.Treeview(order_page,show='headings',height=8)
 
-        self.listOrder['columns']=('date','Purchase','stock','Category','Type','Name','id','row')
+        self.listOrder['columns']=('date','stock','orderNum','userName','NameKala','id','row')
         #columns
-        self.listOrder.column('date',width=130,anchor=E)
-        self.listOrder.column('Purchase',width=130,anchor=E)
-        self.listOrder.column('stock',width=150,anchor=E)
-        self.listOrder.column('Category',width=220,anchor=E)
-        self.listOrder.column('Type',width=220,anchor=E)
-        self.listOrder.column('Name',width=185,anchor=E)
-        self.listOrder.column('id',width=130,anchor=E)
-        self.listOrder.column('row',width=130,anchor=E)
+        self.listOrder.column('date',width=200,anchor=E)
+        self.listOrder.column('stock',width=160,anchor=E)
+        self.listOrder.column('orderNum',width=220,anchor=E)
+        self.listOrder.column('userName',width=250,anchor=E)
+        self.listOrder.column('NameKala',width=185,anchor=E)
+        self.listOrder.column('id',width=150,anchor=E)
+        self.listOrder.column('row',width=140,anchor=E)
         #heading
         self.listOrder.heading('date',text=' : تاریخ',anchor=E)
-        self.listOrder.heading('Purchase',text=' : نقطه خرید',anchor=E)
         self.listOrder.heading('stock',text=' : موجودی',anchor=E)
-        self.listOrder.heading('Category',text=' : گروه کالا',anchor=E)
-        self.listOrder.heading('Type',text=' : نوع کالا',anchor=E)
-        self.listOrder.heading('Name',text=' : نام کالا',anchor=E)
+        self.listOrder.heading('orderNum',text=' : تعداد سفارش',anchor=E)
+        self.listOrder.heading('userName',text=' : نام سفارش دهنده',anchor=E)
+        self.listOrder.heading('NameKala',text=' : نام کالا',anchor=E)
         self.listOrder.heading('id',text=' : کد کالا',anchor=E)
         self.listOrder.heading('row',text=' : ردیف',anchor=E)
         self.style.theme_use('clam')
@@ -1355,45 +1370,132 @@ class App:
         
 
         self.l_headerOrderPage.place(x=580,y=0)
-        self.attention_idKala.place(x=1040,y=90)
-        self.b_searchBtnOrder.place(x=670,y=83)
-        self.e_idKala_order.place(x=830,y=90)
-        self.order_frm_num.place(x=50,y=140)
-        self.l_attention_orderNum.place(x=90,y=30)
-        self.l_orderNum.place(x=300,y=90)
-        self.e_orderNum.place(x=85,y=90)
-        self.b_sabtOrder.place(x=190,y=160)
-        self.kalaInfo_order_frm.place(x=510,y=140)
-        self.l_kalaId_order.place(x=740,y=10)
-        self.kalaIdLbl_order.place(x=560,y=10)
-        self.l_nameKala_order.place(x=450,y=10)
-        self.nameKalaLbl_order.place(x=270,y=10)
-        self.l_kalaType_order.place(x=740,y=90)
-        self.kalaTypeLbl_order.place(x=560,y=90)
-        self.l_groupKala_order.place(x=450,y=90)
-        self.groupKalaLbl_order.place(x=270,y=90)
-        self.l_kalaNum_order.place(x=740,y=170)
-        self.kalaNumLbl_order.place(x=560,y=170)
-        self.l_purcase_order.place(x=450,y=170)
-        self.purcaseLbl_order.place(x=270,y=170)
-        self.l_imgSelector_order.place(x=115,y=175)
-        self.imgSelectorBg_order.place(x=100,y=25)
+        self.attention_idUser.place(x=1040,y=90)
+        self.e_idUser_order.place(x=835,y=90)
+        self.b_searchUserBtnOrder.place(x=670,y=85)
+        self.b_searchBtnOrder.place(x=50,y=85)
+        self.e_idKala_order.place(x=215,y=90)
+        self.order_frm_num.place(x=845,y=305)
+        self.l_orderNum.place(x=420,y=15)
+        self.e_orderNum.place(x=210,y=15)
+        self.b_sabtOrder.place(x=20,y=10)
+
+        self.userInfo_order_frm.place(x=845,y=150)
+        self.l_nameUser_order.place(x=450,y=20)
+        self.nameUserLbl_order.place(x=260,y=20)
+        self.l_lastUser_order.place(x=200,y=20)
+        self.lastUserLbl_order.place(x=10,y=20)
+        self.l_userId_order.place(x=405,y=80)
+        self.userIdLbl_order.place(x=260,y=80)
+        self.l_nationalCode_order.place(x=190,y=80)
+        self.nationalCodeLbl_order.place(x=5,y=80)
+
+
+        self.kalaInfo_order_frm.place(x=50,y=150)
+        self.l_kalaId_order.place(x=690,y=10)
+        self.kalaIdLbl_order.place(x=510,y=10)
+        self.l_nameKala_order.place(x=400,y=10)
+        self.nameKalaLbl_order.place(x=220,y=10)
+        self.l_kalaType_order.place(x=690,y=90)
+        self.kalaTypeLbl_order.place(x=510,y=90)
+        self.l_groupKala_order.place(x=400,y=90)
+        self.groupKalaLbl_order.place(x=220,y=90)
+        self.l_kalaNum_order.place(x=690,y=170)
+        self.kalaNumLbl_order.place(x=510,y=170)
+        self.l_purcase_order.place(x=400,y=170)
+        self.purcaseLbl_order.place(x=220,y=170)
+        self.l_imgSelector_order.place(x=65,y=175)
+        self.imgSelectorBg_order.place(x=50,y=25)
         self.listOrder.place(x=50,y=420)
 
     def search_idKala_order(self,event=None):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.idKala_order=self.e_idKala_order.get()
-        if self.idKala_order !='':
-            self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala_order))
-            self.iInfo_order_list = list(self.row)
-            self.kalaIdLbl_order['text']=self.iInfo_order_list[0][0]
-            self.nameKalaLbl_order['text']=self.iInfo_order_list[0][1]
-            self.kalaTypeLbl_order['text']=self.iInfo_order_list[0][2]
-            self.groupKalaLbl_order['text']=self.iInfo_order_list[0][3]
-            self.kalaNumLbl_order['text']=self.iInfo_order_list[0][7]
-            self.purcaseLbl_order['text']=self.iInfo_order_list[0][4]
+        if self.permission==True:
+            if self.idKala_order !='':
+                self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala_order))
+                self.iInfo_order_list = list(self.row)
+                self.kalaIdLbl_order['text']=self.iInfo_order_list[0][0]
+                self.nameKalaLbl_order['text']=self.iInfo_order_list[0][1]
+                self.kalaTypeLbl_order['text']=self.iInfo_order_list[0][2]
+                self.groupKalaLbl_order['text']=self.iInfo_order_list[0][3]
+                self.kalaNumLbl_order['text']=self.iInfo_order_list[0][7]
+                self.purcaseLbl_order['text']=self.iInfo_order_list[0][4]
     
+    def search_idUser_order(self,event=None):
+        try:
+            self.con=sql.connect('mydb.db')
+            self.cur=self.con.cursor()
+            self.nationalId=self.e_idUser_order.get()
+            self.count=0
+            if self.nationalId != '':
+                self.row=self.cur.execute('SELECT * FROM user WHERE national_code="{}"'.format(self.nationalId))
+                self.userInfo_order=list(self.row)
+                if self.userInfo_order[0][6]=='فروشنده':
+                    self.permission=True
+                    self.nameUserLbl_order['text']=self.userInfo_order[0][1]
+                    self.lastUserLbl_order['text']=self.userInfo_order[0][2]
+                    self.userIdLbl_order['text']=self.userInfo_order[0][0]
+                    self.nationalCodeLbl_order['text']=self.userInfo_order[0][3]
+                    self.fullname_order=self.userInfo_order[0][1]+' '+self.userInfo_order[0][2]
+                    self.con.close()
 
+                else:
+                    messagebox.showinfo("information","کاربر با این کد ملی قادر به ثبت ورود کالا نیست")
+        except :
+            messagebox.showinfo("information","کاربری با این کد ملی وجود ندارد")
+
+    def addOrder(self):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.numKalaOrder = self.e_orderNum.get()
+        if self.numKalaOrder != '':
+            self.fullNameUser = self.userInfo_order[0][1]+' '+self.userInfo_order[0][2]
+            self.data=(self.iInfo_order_list[0][0],self.iInfo_order_list[0][1],self.fullNameUser,self.numKalaOrder,self.iInfo_order_list[0][7],
+                       self.iInfo_order_list[0][4],'سفارش داده شد','01/01')
+            self.cur.execute('''CREATE TABLE IF NOT EXISTS orders (idKala TEXT  NOT NULL ,nameKala TEXT NOT NULL ,nameUser TEXT NOT NULL
+            ,numOrder TEXT NOT NULL,stock TEXT NOT NULL,purchase TEXT NOT NULL,condition TEXT,date INTEGER NOT NULL)''')
+            self.cur.execute('INSERT INTO orders(idKala,nameKala,nameUser,numOrder,stock,purchase,condition,date) VALUES(?,?,?,?,?,?,?,?)',self.data)
+            self.con.commit()
+            self.numlist=len(self.listOrder.get_children())
+            self.listOrder.insert(parent='',index='end',text='',values=('01/01',self.iInfo_order_list[0][7],self.numKalaOrder,
+                                                self.fullNameUser,self.iInfo_order_list[0][1],self.iInfo_order_list[0][0],self.numlist+1))
+            self.e_orderNum.delete(0,END)
+            self.e_idUser_order.delete(0,END)
+            self.e_idKala_order.delete(0,END)
+            self.nameUserLbl_order['text']=''
+            self.lastUserLbl_order['text']=''
+            self.userIdLbl_order['text']=''
+            self.nationalCodeLbl_order['text']=''
+            self.fullname_order=''
+            self.kalaIdLbl_order['text']=''
+            self.nameKalaLbl_order['text']=''
+            self.kalaTypeLbl_order['text']=''
+            self.groupKalaLbl_order['text']=''
+            self.kalaNumLbl_order['text']=''
+            self.purcaseLbl_order['text']=''
+            self.permission=False
+            self.e_idUser_order.focus()
+        
+    def data_to_list_order(self):
+        self.lst=[]
+        self.count=0
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='orders'")
+        self.result = self.cur.fetchone()
+        if self.result != None:
+            row=self.cur.execute('SELECT * FROM orders')
+            self.list_order=list(row)
+            for i in self.list_order :
+                if self.list_order[0][6] == 'سفارش داده شد':
+                    self.lst.append(i)
+            for i in self.lst:
+                self.numlist_order=len(self.listOrder.get_children())
+                self.listOrder.insert(parent='',index='end',text='',
+                    values=('01/01',i[4],i[3],i[2],i[1],i[0],self.numlist_order+1))
+
+            
 O = App(main_page)
 main_page.mainloop()
