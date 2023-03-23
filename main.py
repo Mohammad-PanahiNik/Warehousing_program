@@ -3,6 +3,7 @@ from tkinter import filedialog
 from tkinter import ttk
 import sqlite3 as sql
 from tkinter import messagebox
+import uuid
 import time
 import math
 
@@ -15,6 +16,7 @@ stock_page = Toplevel()
 receipt_page = Toplevel()
 request_page = Toplevel()
 order_page = Toplevel()
+exit_page = Toplevel()
 
 class App:
     def __init__(self,event=None):
@@ -38,6 +40,8 @@ class App:
         self.data_to_list_request()
         self.order_kala_page()
         self.data_to_list_order()
+        self.exit_kala_page()
+        self.data_to_list_exit()
 
     def main(self):
         main_page.geometry('1400x800+250+100')
@@ -1289,15 +1293,14 @@ class App:
         self.searchBtnImg_order = PhotoImage(file='image/searchBtnImg.png')
         self.order_imgSelectorPic = PhotoImage(file='image/imgSelectorBg.png')
         self.order_baresiImg = PhotoImage(file='image/baresiBtnImg.png')
+        self.tickImgBtn = PhotoImage(file='image/tickImgBtn.png')
 
         self.l_headerOrderPage = Label(order_page,image=self.headerReguestImg)
         self.attention_idUser = Label(order_page,text=' . لطفا کد کاربر موردنطر خود را وارد کنید',font=('Lalezar',17),bg='white')
         self.e_idUser_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_searchUserBtnOrder = Button(order_page,image=self.order_baresiImg,bd=0,activebackground='white',command=self.search_idUser_order)
-
         self.e_idKala_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_searchBtnOrder = Button(order_page,image=self.searchBtnImg_order,bd=0,activebackground='white',command=self.search_idKala_order)
-
         self.userInfo_order_frm = LabelFrame(order_page,width=510,height=165,bg='#F2F2F2',bd=5,relief=SOLID)
         self.l_nameUser_order = Label(self.userInfo_order_frm,text=' : نام',font=('Lalezar',17),bg='#F2F2F2')
         self.nameUserLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=15,fg='#4F4E4E')
@@ -1307,16 +1310,11 @@ class App:
         self.nationalCodeLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=15,fg='#4F4E4E')
         self.l_userId_order = Label(self.userInfo_order_frm,text=' : کد کاربری',font=('Lalezar',17),bg='#F2F2F2')
         self.userIdLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=8,fg='#4F4E4E')
-
         self.order_frm_num = LabelFrame(order_page,width=510,height=85,bg='#F2F2F2',bd=5,relief=SOLID)
         self.l_orderNum = Label(self.order_frm_num,text=' : تعداد',font=('Lalezar',17))
         self.e_orderNum = Entry(self.order_frm_num,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_sabtOrder = Button(self.order_frm_num,image=self.sabtOrderBtnImg,bd=0,activebackground='white',command=self.addOrder)
-
         self.kalaInfo_order_frm = LabelFrame(order_page,width=800,height=240,bg='#D0D0D0',bd=5,relief=SOLID)
-
-        
-
         self.l_nameKala_order = Label(self.kalaInfo_order_frm,text=' : نام کالا',font=('Lalezar',17),bg='#D0D0D0')
         self.nameKalaLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
         self.l_kalaType_order = Label(self.kalaInfo_order_frm,text=' : نوع کالا',font=('Lalezar',17),bg='#D0D0D0')
@@ -1331,28 +1329,31 @@ class App:
         self.purcaseLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
         self.l_imgSelector_order = Label(self.kalaInfo_order_frm,text='انتخاب تصویر',font=('Lalezar',17),bg='#D0D0D0')
         self.imgSelectorBg_order = Label(self.kalaInfo_order_frm,bg='#D0D0D0',image=self.order_imgSelectorPic,cursor='hand2',width=150,height=150)
+        self.tickBtnOrder = Button(order_page,bg='#D0D0D0',image=self.tickImgBtn,bd=0,background='white',cursor='hand2')
         #list
         self.listOrder= ttk.Treeview(order_page,show='headings',height=8)
 
-        self.listOrder['columns']=('date','stock','orderNum','userName','NameKala','id','row')
+        self.listOrder['columns']=('date','stock','orderNum','orderId','userName','NameKala','id','row')
         #columns
-        self.listOrder.column('date',width=200,anchor=E)
-        self.listOrder.column('stock',width=160,anchor=E)
-        self.listOrder.column('orderNum',width=220,anchor=E)
-        self.listOrder.column('userName',width=250,anchor=E)
+        self.listOrder.column('date',width=140,anchor=CENTER)
+        self.listOrder.column('stock',width=140,anchor=CENTER)
+        self.listOrder.column('orderId',width=210,anchor=E)
+        self.listOrder.column('orderNum',width=130,anchor=CENTER)
+        self.listOrder.column('userName',width=230,anchor=E)
         self.listOrder.column('NameKala',width=185,anchor=E)
-        self.listOrder.column('id',width=150,anchor=E)
-        self.listOrder.column('row',width=140,anchor=E)
+        self.listOrder.column('id',width=130,anchor=CENTER)
+        self.listOrder.column('row',width=130,anchor=CENTER)
         #heading
         self.listOrder.heading('date',text=' : تاریخ',anchor=E)
         self.listOrder.heading('stock',text=' : موجودی',anchor=E)
+        self.listOrder.heading('orderId',text=' : کد سفارش',anchor=E)
         self.listOrder.heading('orderNum',text=' : تعداد سفارش',anchor=E)
         self.listOrder.heading('userName',text=' : نام سفارش دهنده',anchor=E)
         self.listOrder.heading('NameKala',text=' : نام کالا',anchor=E)
         self.listOrder.heading('id',text=' : کد کالا',anchor=E)
         self.listOrder.heading('row',text=' : ردیف',anchor=E)
         self.style.theme_use('clam')
-        self.style.configure("Treeview.Heading",font=('Lalezar', 18),
+        self.style.configure("Treeview.Heading",font=('Lalezar', 16),
                             padding=[0, 5, 15, 5],background='#474A56',
                             foreground="white",bd=0,relief='raised'
                             )
@@ -1367,8 +1368,7 @@ class App:
         self.style.map("Treeview",
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
-        
-
+    
         self.l_headerOrderPage.place(x=580,y=0)
         self.attention_idUser.place(x=1040,y=90)
         self.e_idUser_order.place(x=835,y=90)
@@ -1379,7 +1379,6 @@ class App:
         self.l_orderNum.place(x=420,y=15)
         self.e_orderNum.place(x=210,y=15)
         self.b_sabtOrder.place(x=20,y=10)
-
         self.userInfo_order_frm.place(x=845,y=150)
         self.l_nameUser_order.place(x=450,y=20)
         self.nameUserLbl_order.place(x=260,y=20)
@@ -1389,8 +1388,6 @@ class App:
         self.userIdLbl_order.place(x=260,y=80)
         self.l_nationalCode_order.place(x=190,y=80)
         self.nationalCodeLbl_order.place(x=5,y=80)
-
-
         self.kalaInfo_order_frm.place(x=50,y=150)
         self.l_kalaId_order.place(x=690,y=10)
         self.kalaIdLbl_order.place(x=510,y=10)
@@ -1406,7 +1403,12 @@ class App:
         self.purcaseLbl_order.place(x=220,y=170)
         self.l_imgSelector_order.place(x=65,y=175)
         self.imgSelectorBg_order.place(x=50,y=25)
-        self.listOrder.place(x=50,y=420)
+        self.listOrder.place(x=60,y=420)
+
+
+        #________bind___________
+        self.listOrder.bind('<ButtonRelease-1>',self.select_record_order)
+        self.tickBtnOrder.bind('<Button-1>',self.ready_to_delivery)
 
     def search_idKala_order(self,event=None):
         self.con=sql.connect('mydb.db')
@@ -1450,17 +1452,19 @@ class App:
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.numKalaOrder = self.e_orderNum.get()
+        self.randomId=str(uuid.uuid4())
+        self.randomId=self.randomId[:8]
         if self.numKalaOrder != '':
             self.fullNameUser = self.userInfo_order[0][1]+' '+self.userInfo_order[0][2]
             self.data=(self.iInfo_order_list[0][0],self.iInfo_order_list[0][1],self.fullNameUser,self.numKalaOrder,self.iInfo_order_list[0][7],
-                       self.iInfo_order_list[0][4],'سفارش داده شد','01/01')
+                       self.iInfo_order_list[0][4],'سفارش داده شد','01/01',self.randomId)
             self.cur.execute('''CREATE TABLE IF NOT EXISTS orders (idKala TEXT  NOT NULL ,nameKala TEXT NOT NULL ,nameUser TEXT NOT NULL
-            ,numOrder TEXT NOT NULL,stock TEXT NOT NULL,purchase TEXT NOT NULL,condition TEXT,date INTEGER NOT NULL)''')
-            self.cur.execute('INSERT INTO orders(idKala,nameKala,nameUser,numOrder,stock,purchase,condition,date) VALUES(?,?,?,?,?,?,?,?)',self.data)
+            ,numOrder TEXT NOT NULL,stock TEXT NOT NULL,purchase TEXT NOT NULL,condition TEXT,date INTEGER NOT NULL,orderId)''')
+            self.cur.execute('INSERT INTO orders(idKala,nameKala,nameUser,numOrder,stock,purchase,condition,date,orderId) VALUES(?,?,?,?,?,?,?,?,?)',self.data)
             self.con.commit()
             self.numlist=len(self.listOrder.get_children())
             self.listOrder.insert(parent='',index='end',text='',values=('01/01',self.iInfo_order_list[0][7],self.numKalaOrder,
-                                                self.fullNameUser,self.iInfo_order_list[0][1],self.iInfo_order_list[0][0],self.numlist+1))
+                                    self.randomId,self.fullNameUser,self.iInfo_order_list[0][1],self.iInfo_order_list[0][0],self.numlist+1))
             self.e_orderNum.delete(0,END)
             self.e_idUser_order.delete(0,END)
             self.e_idKala_order.delete(0,END)
@@ -1489,13 +1493,115 @@ class App:
             row=self.cur.execute('SELECT * FROM orders')
             self.list_order=list(row)
             for i in self.list_order :
-                if self.list_order[0][6] == 'سفارش داده شد':
+                if i[6] == 'سفارش داده شد':
                     self.lst.append(i)
             for i in self.lst:
                 self.numlist_order=len(self.listOrder.get_children())
                 self.listOrder.insert(parent='',index='end',text='',
-                    values=('01/01',i[4],i[3],i[2],i[1],i[0],self.numlist_order+1))
+                    values=('01/01',i[4],i[3],i[8],i[2],i[1],i[0],self.numlist_order+1))
+    def select_record_order(self ,event=None):
+        self.selected = self.listOrder.focus()
+        self.values_order_list = self.listOrder.item(self.selected , "values")
+        self.row_id_order =self.listOrder.identify_row(event.y)
+        start = self.listOrder.bbox(self.row_id_order, column=None)
+        self.y1=start[1]+420
+        self.tickBtnOrder.place(x=20,y=self.y1)
 
-            
+    def ready_to_delivery(self,event=None):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        orderIdCheck=self.values_order_list[3]
+        self.cur.execute(''' UPDATE orders SET condition = ?  WHERE orderId= ? ''',("آماده تحویل",orderIdCheck))
+        self.listOrder.delete(orderIdCheck)
+        self.con.commit()
+
+#_____________________________________________________________________________________________________________________________________________
+#______________________________________________________________ exit kala page _______________________________________________________________
+    def exit_kala_page(self):
+        exit_page.geometry('1400x800+250+100')
+        exit_page.configure(bg='white')
+        exit_page.title('menu')
+        exit_page.state('normal')
+
+        self.h_sabtExitKalaImg = PhotoImage(file='image/sabtExitKala.png')
+        self.exitKalaImg = PhotoImage(file='image/sabtExitBtn.png')
+
+        self.h_exitPage = Label(exit_page,image=self.h_sabtExitKalaImg)
+        #list
+        self.listExit= ttk.Treeview(exit_page,show='headings',height=15)
+        self.listExit['columns']=('date','stock','orderNum','orderId','userName','NameKala','id','row')
+        self.b_exit_kala = Button(exit_page,bg='#F3F3F3',image=self.exitKalaImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.sabt_exit_kala)
+        #columns
+        self.listExit.column('date',width=140,anchor=CENTER)
+        self.listExit.column('stock',width=140,anchor=CENTER)
+        self.listExit.column('orderId',width=210,anchor=E)
+        self.listExit.column('orderNum',width=130,anchor=CENTER)
+        self.listExit.column('userName',width=230,anchor=E)
+        self.listExit.column('NameKala',width=185,anchor=E)
+        self.listExit.column('id',width=130,anchor=CENTER)
+        self.listExit.column('row',width=130,anchor=CENTER)
+        #heading
+        self.listExit.heading('date',text=' : تاریخ',anchor=E)
+        self.listExit.heading('stock',text=' : موجودی',anchor=E)
+        self.listExit.heading('orderId',text=' : کد سفارش',anchor=E)
+        self.listExit.heading('orderNum',text=' : تعداد سفارش',anchor=E)
+        self.listExit.heading('userName',text=' : نام سفارش دهنده',anchor=E)
+        self.listExit.heading('NameKala',text=' : نام کالا',anchor=E)
+        self.listExit.heading('id',text=' : کد کالا',anchor=E)
+        self.listExit.heading('row',text=' : ردیف',anchor=E)
+        self.style.theme_use('clam')
+        self.style.configure("Treeview.Heading",font=('Lalezar', 16),
+                            padding=[0, 5, 15, 5],background='#474A56',
+                            foreground="white",bd=0,relief='raised'
+                            )
+        self.style.map("Treeview.Heading",
+            background=[('active','#686A75')])
+        self.style.configure("Treeview", highlightthickness=0, 
+                            height=150,
+                            bd=0, font=('AraFProgram', 16),
+                            background="white",foreground="black",
+                            rowheight = 35,fieldbackground="white"
+                            )
+        self.style.map("Treeview",
+            background=[('selected', '#7A8BA7')],
+            foreground=[('selected', 'white')])
+    
+
+        self.h_exitPage.place(x=590,y=0)
+        self.listExit.place(x=60,y=100)
+        self.b_exit_kala.place(x=630,y=720)
+
+        self.listExit.bind('<ButtonRelease-1>',self.select_record_exit)
+    
+    def data_to_list_exit(self):
+        self.lst=[]
+        self.count=0
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='orders'")
+        self.result = self.cur.fetchone()
+        if self.result != None:
+            row=self.cur.execute('SELECT * FROM orders')
+            self.list_exit=list(row)
+            for i in self.list_exit :
+                if i[6] == 'آماده تحویل':
+                    self.lst.append(i)
+            for i in self.lst:
+                self.numlist_exit=len(self.listExit.get_children())
+                self.listExit.insert(parent='',index='end',text='',
+                    values=('01/01',i[4],i[3],i[8],i[2],i[1],i[0],self.numlist_exit+1))
+
+    def select_record_exit(self ,event=None):
+        self.selected_exit = self.listExit.focus()
+        self.values_exit_list = self.listExit.item(self.selected_exit , "values")
+
+    def sabt_exit_kala(self,event=None):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        exitIdCheck=self.values_exit_list[3]
+        self.cur.execute(''' UPDATE orders SET condition = ?  WHERE orderId= ? ''',("تحویل داده شد",exitIdCheck))
+        self.con.commit()
+
+    
 O = App(main_page)
 main_page.mainloop()
