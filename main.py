@@ -999,6 +999,35 @@ class App:
         #___bind___
         self.listStock.bind('<ButtonRelease-1>', self.select_record_stock)
         self.b_delete_stock.bind('<Button-1>', self.delete_record_stock)
+    
+        self.b_openNav_stock=Button(stock_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_stock_nav,cursor='hand2')
+        self.navFrm_stock=Frame(stock_page,height=800,width=220,bg='#777777',bd=0)
+        self.closeFrm_stock=LabelFrame(self.navFrm_stock,width=220,bg='#2E2E2E',bd=0,height=50)
+        self.b_closeNav_stock=Button(self.closeFrm_stock,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_stock_nav)
+        self.b_mainPage_stock=Button(self.navFrm_stock,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_main)
+        self.b_addKala_stock=Button(self.navFrm_stock,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_kala)
+        self.b_addUser_stock=Button(self.navFrm_stock,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_user)
+        self.b_WrStock_stock=Button(self.navFrm_stock,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
+        self.b_Receipt_stock=Button(self.navFrm_stock,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_receipt)
+        self.b_request_stock=Button(self.navFrm_stock,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_request)
+        self.b_order_stock=Button(self.navFrm_stock,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_order)
+        self.b_exitKala_stock=Button(self.navFrm_stock,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_exit)
+        self.b_issuance_stock=Button(self.navFrm_stock,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_exit_stock=Button(self.navFrm_stock,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_openNav_stock.place(x=1340,y=20)
+        self.navFrm_stock.place(x=1400,y=0)
+        self.closeFrm_stock.place(x=0,y=0)
+        self.b_closeNav_stock.place(x=15,y=15)
+        self.b_mainPage_stock.place(x=0,y=50)
+        self.b_addKala_stock.place(x=0,y=115)
+        self.b_addUser_stock.place(x=0,y=180)
+        self.b_WrStock_stock.place(x=0,y=245)
+        self.b_Receipt_stock.place(x=0,y=310)
+        self.b_request_stock.place(x=0,y=375)
+        self.b_order_stock.place(x=0,y=440)
+        self.b_exitKala_stock.place(x=0,y=505)
+        self.b_issuance_stock.place(x=0,y=570)
+        self.b_exit_stock.place(x=0,y=635)
 
 
         self.l_headerStock.place(x=580,y=0)
@@ -1008,6 +1037,50 @@ class App:
         self.e_searchStock.place(x=245,y=135)
         self.b_searchStock.place(x=85,y=130)
         self.listStock.place(x=85,y=185)
+        
+    def switch_stock_nav(self):
+        if self.btnState is True:
+            self.navFrm_stock.place(x=1400, y=0)
+            self.btnState = False
+        else:
+            self.navFrm_stock.place(x=1180, y=0)
+            self.btnState = True
+    
+    def stock_to_main(self):
+        main_page .state('normal')
+        stock_page.state('withdraw')
+        self.btnState = False
+
+    def stock_to_kala(self):
+        product_page.state('normal')
+        stock_page.state('withdraw')
+        self.btnState = False
+    
+    def stock_to_user(self):
+        user_page.state('normal')
+        stock_page.state('withdraw')
+        self.btnState = False
+    
+    def stock_to_receipt(self):
+        receipt_page.state('normal')
+        stock_page.state('withdraw')
+        self.btnState = False
+
+    def stock_to_request(self):
+        request_page.state('normal')
+        stock_page.state('withdraw')
+        self.btnState = False
+
+    def stock_to_order(self):
+        order_page.state('normal')
+        stock_page.state('withdraw')
+        self.btnState = False
+
+    def stock_to_exit(self):
+        exit_page.state('normal')
+        stock_page.state('withdraw')
+        self.btnState = False
+
 
     def data_to_list_stock(self):
         self.count=0
@@ -1173,6 +1246,37 @@ class App:
         self.b_searchKala_receipt.bind('<Return>',self.search_idKala)
         self.e_kalaNum_receipt.bind('<Return>',lambda event:self.b_addKalaNum_receipt.focus())
         self.b_addKalaNum_receipt.bind('<Return>',self.funcAddNum)
+        
+        self.b_openNav_receipt=Button(receipt_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_receipt_nav,cursor='hand2')
+        self.navFrm_receipt=Frame(receipt_page,height=800,width=220,bg='#777777',bd=0)
+        self.closeFrm_receipt=LabelFrame(self.navFrm_receipt,width=220,bg='#2E2E2E',bd=0,height=50)
+        self.b_closeNav_receipt=Button(self.closeFrm_receipt,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_receipt_nav)
+        self.b_mainPage_receipt=Button(self.navFrm_receipt,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_main)
+        self.b_addKala_receipt=Button(self.navFrm_receipt,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_kala)
+        self.b_addUser_receipt=Button(self.navFrm_receipt,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_user)
+        self.b_WrStock_receipt=Button(self.navFrm_receipt,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_stock)
+        self.b_Receipt_receipt=Button(self.navFrm_receipt,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
+        self.b_request_receipt=Button(self.navFrm_receipt,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_request)
+        self.b_order_receipt=Button(self.navFrm_receipt,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_order)
+        self.b_exitKala_receipt=Button(self.navFrm_receipt,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_exit)
+        self.b_issuance_receipt=Button(self.navFrm_receipt,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_exit_receipt=Button(self.navFrm_receipt,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
+
+
+        self.b_openNav_receipt.place(x=1340,y=20)
+        self.navFrm_receipt.place(x=1400,y=0)
+        self.closeFrm_receipt.place(x=0,y=0)
+        self.b_closeNav_receipt.place(x=15,y=15)
+        self.b_mainPage_receipt.place(x=0,y=50)
+        self.b_addKala_receipt.place(x=0,y=115)
+        self.b_addUser_receipt.place(x=0,y=180)
+        self.b_WrStock_receipt.place(x=0,y=245)
+        self.b_Receipt_receipt.place(x=0,y=310)
+        self.b_request_receipt.place(x=0,y=375)
+        self.b_order_receipt.place(x=0,y=440)
+        self.b_exitKala_receipt.place(x=0,y=505)
+        self.b_issuance_receipt.place(x=0,y=570)
+        self.b_exit_receipt.place(x=0,y=635)
 
 
         self.h_vorodKala_receipt.place(x=610,y=0)
@@ -1202,6 +1306,49 @@ class App:
         self.e_kalaNum_receipt.place(x=180,y=10)
         self.b_addKalaNum_receipt.place(x=15,y=5)
         self.listReceipt.place(x=85,y=545)
+    
+    def switch_receipt_nav(self):
+        if self.btnState is True:
+            self.navFrm_receipt.place(x=1400, y=0)
+            self.btnState = False
+        else:
+            self.navFrm_receipt.place(x=1180, y=0)
+            self.btnState = True
+   
+    def receipt_to_main(self):
+        main_page .state('normal')
+        receipt_page.state('withdraw')
+        self.btnState = False
+
+    def receipt_to_user(self):
+        user_page.state('normal')
+        receipt_page.state('withdraw')
+        self.btnState = False
+    
+    def receipt_to_stock(self):
+        stock_page.state('normal')
+        receipt_page.state('withdraw')
+        self.btnState = False
+    
+    def receipt_to_kala(self):
+        product_page.state('normal')
+        receipt_page.state('withdraw')
+        self.btnState = False
+
+    def receipt_to_request(self):
+        request_page.state('normal')
+        receipt_page.state('withdraw')
+        self.btnState = False
+
+    def receipt_to_order(self):
+        order_page.state('normal')
+        receipt_page.state('withdraw')
+        self.btnState = False
+
+    def receipt_to_exit(self):
+        exit_page.state('normal')
+        receipt_page.state('withdraw')
+        self.btnState = False
 
 
     def search_idUser_receipt(self,event=None):
@@ -1276,7 +1423,6 @@ class App:
         self.b_requestPage = Button(request_page,image=self.requestBtnImg,bd=0,activebackground='white',command=self.order_kala)
         #list
         self.listRequest= ttk.Treeview(request_page,show='headings',height=15)
-
         self.listRequest['columns']=('Purchase','number','Category','Type','Name','id','row')
         #columns
         self.listRequest.column('Purchase',width=150,anchor=E)
@@ -1311,12 +1457,85 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
         
+        self.b_openNav_request=Button(request_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_request_nav,cursor='hand2')
+        self.navFrm_request=Frame(request_page,height=800,width=220,bg='#777777',bd=0)
+        self.closeFrm_request=LabelFrame(self.navFrm_request,width=220,bg='#2E2E2E',bd=0,height=50)
+        self.b_closeNav_request=Button(self.closeFrm_request,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_request_nav)
+        self.b_mainPage_request=Button(self.navFrm_request,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_main)
+        self.b_addKala_request=Button(self.navFrm_request,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_kala)
+        self.b_addUser_request=Button(self.navFrm_request,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_user)
+        self.b_WrStock_request=Button(self.navFrm_request,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_stock)
+        self.b_Receipt_request=Button(self.navFrm_request,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_receipt)
+        self.b_request_request=Button(self.navFrm_request,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
+        self.b_order_request=Button(self.navFrm_request,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_order)
+        self.b_exitKala_request=Button(self.navFrm_request,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_exit)
+        self.b_issuance_request=Button(self.navFrm_request,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_exit_request=Button(self.navFrm_request,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
+
+
+        self.b_openNav_request.place(x=1340,y=20)
+        self.navFrm_request.place(x=1400,y=0)
+        self.closeFrm_request.place(x=0,y=0)
+        self.b_closeNav_request.place(x=15,y=15)
+        self.b_mainPage_request.place(x=0,y=50)
+        self.b_addKala_request.place(x=0,y=115)
+        self.b_addUser_request.place(x=0,y=180)
+        self.b_WrStock_request.place(x=0,y=245)
+        self.b_Receipt_request.place(x=0,y=310)
+        self.b_request_request.place(x=0,y=375)
+        self.b_order_request.place(x=0,y=440)
+        self.b_exitKala_request.place(x=0,y=505)
+        self.b_issuance_request.place(x=0,y=570)
+        self.b_exit_request.place(x=0,y=635)
         #_________________bind_________________
         self.listRequest.bind('<ButtonRelease>',self.select_record_list_request)
 
         self.h_requestPage.place(x=580,y=0)
         self.listRequest.place(x=85,y=90)
         self.b_requestPage.place(x=600,y=720)
+    
+    def switch_request_nav(self):
+        if self.btnState is True:
+            self.navFrm_request.place(x=1400, y=0)
+            self.btnState = False
+        else:
+            self.navFrm_request.place(x=1180, y=0)
+            self.btnState = True
+    
+    def request_to_main(self):
+        main_page .state('normal')
+        request_page.state('withdraw')
+        self.btnState = False
+
+    def request_to_kala(self):
+        product_page.state('normal')
+        request_page.state('withdraw')
+        self.btnState = False
+    
+    def request_to_stock(self):
+        stock_page.state('normal')
+        request_page.state('withdraw')
+        self.btnState = False
+    
+    def request_to_receipt(self):
+        receipt_page.state('normal')
+        request_page.state('withdraw')
+        self.btnState = False
+
+    def request_to_user(self):
+        user_page.state('normal')
+        request_page.state('withdraw')
+        self.btnState = False
+
+    def request_to_order(self):
+        order_page.state('normal')
+        request_page.state('withdraw')
+        self.btnState = False
+
+    def request_to_exit(self):
+        exit_page.state('normal')
+        request_page.state('withdraw')
+        self.btnState = False
 
     def data_to_list_request(self):
         self.lst=[]
@@ -1439,7 +1658,38 @@ class App:
         self.style.map("Treeview",
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
-    
+        
+        self.b_openNav_order=Button(order_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_order_nav,cursor='hand2')
+        self.navFrm_order=Frame(order_page,height=800,width=220,bg='#777777',bd=0)
+        self.closeFrm_order=LabelFrame(self.navFrm_order,width=220,bg='#2E2E2E',bd=0,height=50)
+        self.b_closeNav_order=Button(self.closeFrm_order,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_order_nav)
+        self.b_mainPage_order=Button(self.navFrm_order,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_main)
+        self.b_addKala_order=Button(self.navFrm_order,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_kala)
+        self.b_addUser_order=Button(self.navFrm_order,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_user)
+        self.b_WrStock_order=Button(self.navFrm_order,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_stock)
+        self.b_Receipt_order=Button(self.navFrm_order,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_receipt)
+        self.b_request_order=Button(self.navFrm_order,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_request)
+        self.b_order_order=Button(self.navFrm_order,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
+        self.b_exitKala_order=Button(self.navFrm_order,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_exit)
+        self.b_issuance_order=Button(self.navFrm_order,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_exit_order=Button(self.navFrm_order,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
+
+
+
+        self.b_openNav_order.place(x=1340,y=20)
+        self.navFrm_order.place(x=1400,y=0)
+        self.closeFrm_order.place(x=0,y=0)
+        self.b_closeNav_order.place(x=15,y=15)
+        self.b_mainPage_order.place(x=0,y=50)
+        self.b_addKala_order.place(x=0,y=115)
+        self.b_addUser_order.place(x=0,y=180)
+        self.b_WrStock_order.place(x=0,y=245)
+        self.b_Receipt_order.place(x=0,y=310)
+        self.b_request_order.place(x=0,y=375)
+        self.b_order_order.place(x=0,y=440)
+        self.b_exitKala_order.place(x=0,y=505)
+        self.b_issuance_order.place(x=0,y=570)
+        self.b_exit_order.place(x=0,y=635)
         self.l_headerOrderPage.place(x=580,y=0)
         self.attention_idUser.place(x=1040,y=90)
         self.e_idUser_order.place(x=835,y=90)
@@ -1480,7 +1730,50 @@ class App:
         #________bind___________
         self.listOrder.bind('<ButtonRelease-1>',self.select_record_order)
         self.tickBtnOrder.bind('<Button-1>',self.ready_to_delivery)
+    
+    def switch_order_nav(self):
+        if self.btnState is True:
+            self.navFrm_order.place(x=1400, y=0)
+            self.btnState = False
+        else:
+            self.navFrm_order.place(x=1180, y=0)
+            self.btnState = True
+    
+    def order_to_main(self):
+        main_page .state('normal')
+        order_page.state('withdraw')
+        self.btnState = False
 
+    def order_to_kala(self):
+        product_page.state('normal')
+        order_page.state('withdraw')
+        self.btnState = False
+    
+    def order_to_stock(self):
+        stock_page.state('normal')
+        order_page.state('withdraw')
+        self.btnState = False
+    
+    def order_to_receipt(self):
+        receipt_page.state('normal')
+        order_page.state('withdraw')
+        self.btnState = False
+
+    def order_to_request(self):
+        request_page.state('normal')
+        order_page.state('withdraw')
+        self.btnState = False
+
+    def order_to_user(self):
+        user_page.state('normal')
+        order_page.state('withdraw')
+        self.btnState = False
+
+    def order_to_exit(self):
+        exit_page.state('normal')
+        order_page.state('withdraw')
+
+        self.btnState = False
     def search_idKala_order(self,event=None):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
@@ -1637,6 +1930,35 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
     
+        self.b_openNav_exit=Button(exit_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_exit_nav,cursor='hand2')
+        self.navFrm_exit=Frame(exit_page,height=800,width=220,bg='#777777',bd=0)
+        self.closeFrm_exit=LabelFrame(self.navFrm_exit,width=220,bg='#2E2E2E',bd=0,height=50)
+        self.b_closeNav_exit=Button(self.closeFrm_exit,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_exit_nav)
+        self.b_mainPage_exit=Button(self.navFrm_exit,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_main)
+        self.b_addKala_exit=Button(self.navFrm_exit,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_kala)
+        self.b_addUser_exit=Button(self.navFrm_exit,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_user)
+        self.b_WrStock_exit=Button(self.navFrm_exit,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_stock)
+        self.b_Receipt_exit=Button(self.navFrm_exit,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_receipt)
+        self.b_request_exit=Button(self.navFrm_exit,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_request)
+        self.b_order_exit=Button(self.navFrm_exit,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_order)
+        self.b_exitKala_exit=Button(self.navFrm_exit,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
+        self.b_issuance_exit=Button(self.navFrm_exit,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_exit_exit=Button(self.navFrm_exit,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
+
+        self.b_openNav_exit.place(x=1340,y=20)
+        self.navFrm_exit.place(x=1400,y=0)
+        self.closeFrm_exit.place(x=0,y=0)
+        self.b_closeNav_exit.place(x=15,y=15)
+        self.b_mainPage_exit.place(x=0,y=50)
+        self.b_addKala_exit.place(x=0,y=115)
+        self.b_addUser_exit.place(x=0,y=180)
+        self.b_WrStock_exit.place(x=0,y=245)
+        self.b_Receipt_exit.place(x=0,y=310)
+        self.b_request_exit.place(x=0,y=375)
+        self.b_order_exit.place(x=0,y=440)
+        self.b_exitKala_exit.place(x=0,y=505)
+        self.b_issuance_exit.place(x=0,y=570)
+        self.b_exit_exit.place(x=0,y=635)
 
         self.h_exitPage.place(x=590,y=0)
         self.listExit.place(x=60,y=100)
@@ -1644,6 +1966,49 @@ class App:
 
         self.listExit.bind('<ButtonRelease-1>',self.select_record_exit)
     
+    def switch_exit_nav(self):
+        if self.btnState is True:
+            self.navFrm_exit.place(x=1400, y=0)
+            self.btnState = False
+        else:
+            self.navFrm_exit.place(x=1180, y=0)
+            self.btnState = True
+    
+    def exit_to_main(self):
+        main_page .state('normal')
+        exit_page.state('withdraw')
+        self.btnState = False
+
+    def exit_to_kala(self):
+        product_page.state('normal')
+        exit_page.state('withdraw')
+        self.btnState = False
+    
+    def exit_to_stock(self):
+        stock_page.state('normal')
+        exit_page.state('withdraw')
+        self.btnState = False
+    
+    def exit_to_receipt(self):
+        receipt_page.state('normal')
+        exit_page.state('withdraw')
+        self.btnState = False
+
+    def exit_to_request(self):
+        request_page.state('normal')
+        exit_page.state('withdraw')
+        self.btnState = False
+
+    def exit_to_order(self):
+        order_page.state('normal')
+        exit_page.state('withdraw')
+        self.btnState = False
+
+    def exit_to_user(self):
+        user_page.state('normal')
+        exit_page.state('withdraw')
+        self.btnState = False
+
     def data_to_list_exit(self):
         self.lst=[]
         self.count=0
