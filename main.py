@@ -108,39 +108,46 @@ class App:
             self.btnState = True
 
     def open_addKala_page(self):
+        self.navFrm_product.place(x=1180, y=0)
         product_page .state('normal')
         main_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def open_addUser_page(self):
+        self.navFrm_user.place(x=1180, y=0)
         user_page.state('normal')
         main_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def open_stock_page(self):
+        self.navFrm_stock.place(x=1180, y=0)
         stock_page.state('normal')
         main_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def open_receipt_page(self):
+        self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
         main_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def open_request_page(self):
+        self.navFrm_request.place(x=1180, y=0)
         request_page.state('normal')
         main_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def open_sabtSefaresh_page(self):
+        self.navFrm_order.place(x=1180, y=0)
         order_page.state('normal')
         main_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def open_sabtExit_page(self):
+        self.navFrm_exit.place(x=1180, y=0)
         exit_page.state('normal')
         main_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
 #_____________________________________________________________________________________________________________________
 #_________________________________________________login page__________________________________________________________
@@ -391,39 +398,45 @@ class App:
         self.b_edit_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImg.png'))
     
     def pruduct_to_main(self):
-        main_page .state('normal')
+        self.navFrm.place(x=1180, y=0)
+        main_page.state('normal')
         product_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def pruduct_to_user(self):
+        self.navFrm_product.place(x=1180, y=0)
         user_page.state('normal')
         product_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def pruduct_to_WrStock(self):
+        self.navFrm_stock.place(x=1180, y=0)
         stock_page.state('normal')
         product_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def pruduct_to_Receipt(self):
+        self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
         product_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def pruduct_to_request(self):
         request_page.state('normal')
         product_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def pruduct_to_order(self):
+        self.navFrm_order.place(x=1180, y=0)
         order_page.state('normal')
         product_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def pruduct_to_exit(self):
+        self.navFrm_exit.place(x=1180, y=0)
         exit_page.state('normal')
         product_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def switch_product_nav(self):
         if self.btnState is True:
@@ -626,10 +639,8 @@ class App:
         
         #list
         self.listUser= ttk.Treeview(user_page,show='headings',height=8)
-
         self.listUser['columns']=('type','phoneNum','nationalCode','last','name','personnelId','row')
         #columns
-        # self.listKarmand.column('#0',width=0,stretch=NO)
         self.listUser.column('type',width=200,anchor=E)
         self.listUser.column('phoneNum',width=200,anchor=E)
         self.listUser.column('nationalCode',width=200,anchor=E)
@@ -638,7 +649,6 @@ class App:
         self.listUser.column('personnelId',width=150,anchor=E)
         self.listUser.column('row',width=100,anchor=E)
         #heading
-        # self.listKarmand.heading('#0',text='',anchor=E)
         self.listUser.heading('type',text=' : نوع کاربر',anchor=E)
         self.listUser.heading('phoneNum',text=' : شماره تماس',anchor=E)
         self.listUser.heading('nationalCode',text=' : کد ملی',anchor=E)
@@ -742,40 +752,46 @@ class App:
             self.btnState = True
     
     def user_to_main(self):
+        self.navFrm.place(x=1180, y=0)
         main_page .state('normal')
         user_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def user_to_kala(self):
+        self.navFrm_product.place(x=1180, y=0)
         product_page.state('normal')
         user_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def user_to_stock(self):
+        self.navFrm_stock.place(x=1180, y=0)
         stock_page.state('normal')
         user_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def user_to_receipt(self):
+        self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
         user_page.state('withdraw')
         self.btnState = False
 
     def user_to_request(self):
+        self.navFrm_request.place(x=1180, y=0)
         request_page.state('normal')
         user_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def user_to_order(self):
+        self.navFrm_order.place(x=1180, y=0)
         order_page.state('normal')
         user_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def user_to_exit(self):
+        self.navFrm_exit.place(x=1180, y=0)
         exit_page.state('normal')
         user_page.state('withdraw')
-        self.btnState = False
-
+        self.btnState = True
 
     def funcAddImg(self,event=None):
         self.img_name = filedialog.askopenfilename()
@@ -963,7 +979,6 @@ class App:
 
         self.listStock['columns']=('purchase','number','category','type','name','id','row')
         #columns
-        # self.listKarmand.column('#0',width=0,stretch=NO)
         self.listStock.column('purchase',width=140,anchor=E)
         self.listStock.column('number',width=140,anchor=E)
         self.listStock.column('category',width=180,anchor=E)
@@ -1047,36 +1062,43 @@ class App:
             self.btnState = True
     
     def stock_to_main(self):
+        self.navFrm.place(x=1180, y=0)
         main_page .state('normal')
         stock_page.state('withdraw')
         self.btnState = False
 
     def stock_to_kala(self):
+        self.navFrm_product.place(x=1180, y=0)
         product_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
     
     def stock_to_user(self):
+        self.navFrm_user.place(x=1180, y=0)
         user_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
     
     def stock_to_receipt(self):
+        self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
 
     def stock_to_request(self):
+        self.navFrm_request.place(x=1180, y=0)
         request_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
 
     def stock_to_order(self):
+        self.navFrm_order.place(x=1180, y=0)
         order_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
 
     def stock_to_exit(self):
+        self.navFrm_exit.place(x=1180, y=0)
         exit_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
@@ -1316,39 +1338,46 @@ class App:
             self.btnState = True
    
     def receipt_to_main(self):
+        self.navFrm.place(x=1180, y=0)
         main_page .state('normal')
         receipt_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def receipt_to_user(self):
+        self.navFrm_user.place(x=1180, y=0)
         user_page.state('normal')
         receipt_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def receipt_to_stock(self):
+        self.navFrm_stock.place(x=1180, y=0)
         stock_page.state('normal')
         receipt_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def receipt_to_kala(self):
+        self.navFrm_product.place(x=1180, y=0)
         product_page.state('normal')
         receipt_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def receipt_to_request(self):
+        self.navFrm_request.place(x=1180, y=0)
         request_page.state('normal')
         receipt_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def receipt_to_order(self):
+        self.navFrm_order.place(x=1180, y=0)
         order_page.state('normal')
         receipt_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def receipt_to_exit(self):
+        self.navFrm_exit.place(x=1180, y=0)
         exit_page.state('normal')
         receipt_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
 
     def search_idUser_receipt(self,event=None):
@@ -1503,39 +1532,46 @@ class App:
             self.btnState = True
     
     def request_to_main(self):
+        self.navFrm.place(x=1180, y=0)
         main_page .state('normal')
         request_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def request_to_kala(self):
+        self.navFrm_product.place(x=1180, y=0)
         product_page.state('normal')
         request_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def request_to_stock(self):
+        self.navFrm_stock.place(x=1180, y=0)
         stock_page.state('normal')
         request_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def request_to_receipt(self):
+        self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
         request_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def request_to_user(self):
+        self.navFrm_user.place(x=1180, y=0)
         user_page.state('normal')
         request_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def request_to_order(self):
+        self.navFrm_order.place(x=1180, y=0)
         order_page.state('normal')
         request_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def request_to_exit(self):
+        self.navFrm_exit.place(x=1180, y=0)
         exit_page.state('normal')
         request_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def data_to_list_request(self):
         self.lst=[]
@@ -1740,40 +1776,47 @@ class App:
             self.btnState = True
     
     def order_to_main(self):
-        main_page .state('normal')
+        self.navFrm.place(x=1180, y=0)
+        main_page .state('normal')        
         order_page.state('withdraw')
         self.btnState = False
 
     def order_to_kala(self):
+        self.navFrm_product.place(x=1180, y=0)
         product_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
     
     def order_to_stock(self):
+        self.navFrm_stock.place(x=1180, y=0)
         stock_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
     
     def order_to_receipt(self):
+        self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
 
     def order_to_request(self):
+        self.navFrm_request.place(x=1180, y=0)
         request_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
 
     def order_to_user(self):
+        self.navFrm_user.place(x=1180, y=0)
         user_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
 
     def order_to_exit(self):
+        self.navFrm_exit.place(x=1180, y=0)
         exit_page.state('normal')
         order_page.state('withdraw')
-
         self.btnState = False
+
     def search_idKala_order(self,event=None):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
@@ -1975,39 +2018,46 @@ class App:
             self.btnState = True
     
     def exit_to_main(self):
-        main_page .state('normal')
+        self.navFrm.place(x=1180, y=0)
+        main_page.state('normal')        
         exit_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def exit_to_kala(self):
+        self.navFrm_product.place(x=1180, y=0)
         product_page.state('normal')
         exit_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def exit_to_stock(self):
+        self.navFrm_stock.place(x=1180, y=0)
         stock_page.state('normal')
         exit_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def exit_to_receipt(self):
+        self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
         exit_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def exit_to_request(self):
+        self.navFrm_request.place(x=1180, y=0)
         request_page.state('normal')
         exit_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def exit_to_order(self):
+        self.navFrm_order.place(x=1180, y=0)
         order_page.state('normal')
         exit_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def exit_to_user(self):
+        self.navFrm_user.place(x=1180, y=0)
         user_page.state('normal')
         exit_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def data_to_list_exit(self):
         self.lst=[]
