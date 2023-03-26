@@ -4,6 +4,7 @@ from tkinter import ttk
 import sqlite3 as sql
 from tkinter import messagebox
 import uuid
+from tkcalendar import DateEntry
 import time
 import math
 
@@ -28,19 +29,14 @@ class App:
 
         self.main()
         self.add_product_page()
-        self.data_to_list_kala()
         self.warehouse_stock_page()
-        self.data_to_list_stock()
         self.add_user_page()
         self.warehouse_receipt_page()
         self.warehouse_login_page()
         self.warehouse_register_page()
         self.request_product_page()
-        self.data_to_list_request()
         self.order_kala_page()
-        self.data_to_list_order()
         self.exit_kala_page()
-        self.data_to_list_exit()
 
     def main(self):
         main_page.geometry('1400x800+250+100')
@@ -92,35 +88,32 @@ class App:
         self.b_issuance.place(x=0,y=570)
         self.b_exit.place(x=0,y=635)
 
+    
     def switch(self):
         if self.btnState is True:
-            for x in range(1180,1400):
-                self.navFrm.place(x=+x, y=0)
-                self.navFrm.update()
+            self.navFrm.place(x=1400, y=0)
             self.btnState = False
         else:
-            Px=1400
-            for x in range(55):
-                x=4
-                Px=Px-x
-                self.navFrm.place(x=Px, y=0)
-                self.navFrm.update()
+            self.navFrm.place(x=1180, y=0)
             self.btnState = True
 
     def open_addKala_page(self):
         self.navFrm_product.place(x=1180, y=0)
+        self.data_to_list_kala()
         product_page .state('normal')
         main_page.state('withdraw')
         self.btnState = True
 
     def open_addUser_page(self):
         self.navFrm_user.place(x=1180, y=0)
+        self.data_to_list_user()
         user_page.state('normal')
         main_page.state('withdraw')
         self.btnState = True
     
     def open_stock_page(self):
         self.navFrm_stock.place(x=1180, y=0)
+        self.data_to_list_stock()
         stock_page.state('normal')
         main_page.state('withdraw')
         self.btnState = True
@@ -133,18 +126,21 @@ class App:
 
     def open_request_page(self):
         self.navFrm_request.place(x=1180, y=0)
+        self.data_to_list_request()
         request_page.state('normal')
         main_page.state('withdraw')
         self.btnState = True
 
     def open_sabtSefaresh_page(self):
         self.navFrm_order.place(x=1180, y=0)
+        self.data_to_list_order()
         order_page.state('normal')
         main_page.state('withdraw')
         self.btnState = True
 
     def open_sabtExit_page(self):
         self.navFrm_exit.place(x=1180, y=0)
+        self.data_to_list_exit()
         exit_page.state('normal')
         main_page.state('withdraw')
         self.btnState = True
@@ -388,14 +384,14 @@ class App:
         self.b_sabtTaghirat_kala.bind('<Button-1>', self.edit_kala)
 
         #_______ hover button ________
-        self.e_search_kala.insert(0,'جستجو کد کالا  ')
-        self.e_search_kala.bind('<Button-1>',lambda event :self.e_search_kala.delete(0,END))
-        self.b_search_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImgH.png'))
-        self.b_search_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImg.png'))
-        self.b_delete_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImgH.png'))
-        self.b_delete_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImg.png'))
-        self.b_edit_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImgH.png'))
-        self.b_edit_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImg.png'))
+        # self.e_search_kala.insert(0,'جستجو کد کالا  ')
+        # self.e_search_kala.bind('<Button-1>',lambda event :self.e_search_kala.delete(0,END))
+        # self.b_search_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImgH.png'))
+        # self.b_search_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImg.png'))
+        # self.b_delete_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImgH.png'))
+        # self.b_delete_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImg.png'))
+        # self.b_edit_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImgH.png'))
+        # self.b_edit_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImg.png'))
     
     def pruduct_to_main(self):
         self.navFrm.place(x=1180, y=0)
@@ -404,13 +400,15 @@ class App:
         self.btnState = True
 
     def pruduct_to_user(self):
-        self.navFrm_product.place(x=1180, y=0)
+        self.navFrm_user.place(x=1180, y=0)
+        self.data_to_list_user()
         user_page.state('normal')
         product_page.state('withdraw')
         self.btnState = True
     
     def pruduct_to_WrStock(self):
         self.navFrm_stock.place(x=1180, y=0)
+        self.data_to_list_stock()
         stock_page.state('normal')
         product_page.state('withdraw')
         self.btnState = True
@@ -422,18 +420,22 @@ class App:
         self.btnState = True
 
     def pruduct_to_request(self):
+        self.navFrm_request.place(x=1180, y=0)
+        self.data_to_list_request()
         request_page.state('normal')
         product_page.state('withdraw')
         self.btnState = True
 
     def pruduct_to_order(self):
         self.navFrm_order.place(x=1180, y=0)
+        self.data_to_list_order()
         order_page.state('normal')
         product_page.state('withdraw')
         self.btnState = True
 
     def pruduct_to_exit(self):
         self.navFrm_exit.place(x=1180, y=0)
+        self.data_to_list_exit()
         exit_page.state('normal')
         product_page.state('withdraw')
         self.btnState = True
@@ -450,7 +452,7 @@ class App:
         self.count=0        
         self.lst=[]
         for item in self.listKala.get_children():
-            self.listUser.delete(item)
+            self.listKala.delete(item)
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='kala'")
@@ -759,12 +761,14 @@ class App:
 
     def user_to_kala(self):
         self.navFrm_product.place(x=1180, y=0)
+        self.data_to_list_kala()
         product_page.state('normal')
         user_page.state('withdraw')
         self.btnState = True
     
     def user_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
+        self.data_to_list_stock()
         stock_page.state('normal')
         user_page.state('withdraw')
         self.btnState = True
@@ -777,18 +781,21 @@ class App:
 
     def user_to_request(self):
         self.navFrm_request.place(x=1180, y=0)
+        self.data_to_list_request()
         request_page.state('normal')
         user_page.state('withdraw')
         self.btnState = True
 
     def user_to_order(self):
         self.navFrm_order.place(x=1180, y=0)
+        self.data_to_list_order()
         order_page.state('normal')
         user_page.state('withdraw')
         self.btnState = True
 
     def user_to_exit(self):
         self.navFrm_exit.place(x=1180, y=0)
+        self.data_to_list_exit()
         exit_page.state('normal')
         user_page.state('withdraw')
         self.btnState = True
@@ -808,21 +815,20 @@ class App:
     def data_to_list_user(self):
         self.count=0
         self.lst=[]
+        for item in self.listUser.get_children():
+            self.listUser.delete(item)
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='user'")
-        
         self.result = self.cur.fetchone()
         if self.result != None:
             row=self.cur.execute('SELECT * FROM user')
             for i in row :
                 self.lst.append(i)
-            
             for i in self.lst:
                 self.listUser.insert(parent='',index='end',iid=self.count,text='',
                                     values=(i[6],i[5],i[3],i[2],i[1],i[0],str(self.count+1)))
                 self.count += 1
-
 
     def funcAddUser(self , event=None):
         self.pesonnelName=self.e_nameUser.get()
@@ -858,19 +864,18 @@ class App:
                                                                     self.pesonnelLast,self.pesonnelName,self.personnelId,self.numlist+1))
     
     def search_id_user(self,event=None):
-        print('okk')
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.idUser=self.e_searchUser.get()
+        self.count=0
         if self.idUser !='':
             for i in self.listUser.get_children():
                 self.listUser.delete(i)
-            self.numlist=len(self.listUser.get_children())
             self.row=self.cur.execute('SELECT * FROM user WHERE id="{}"'.format(self.idUser))
             self.search_list=list(self.row)
             self.listUser.insert(parent='',index='end',iid=self.count,text='',
-                                    values=(self.search_list[0][6],self.search_list[0][5],self.search_list[0][3],
-                                            self.search_list[0][2],self.search_list[0][1],self.search_list[0][0],str(self.numlist+1)))
+                                    values=(self.search_list[0][4],self.search_list[0][3],self.search_list[0][2],
+                                            self.search_list[0][1],self.search_list[0][0],str(self.count+1)))
         else:
             self.lst=[]
             self.listUser.delete('0')
@@ -883,8 +888,8 @@ class App:
         start = self.listUser.bbox(self.row_id, column=None)
         self.y1=start[1]+400
         self.y2=start[1]+440
-        self.b_delete_user.place(x=40,y=self.y1)
-        self.b_edit_user.place(x=40,y=self.y2)
+        self.b_delete_user.place(x=30,y=self.y1)
+        self.b_edit_user.place(x=30,y=self.y2)
 
     def delete_record_user(self,event=None):
         self.con=sql.connect('mydb.db')
@@ -1069,12 +1074,14 @@ class App:
 
     def stock_to_kala(self):
         self.navFrm_product.place(x=1180, y=0)
+        self.data_to_list_kala()
         product_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
     
     def stock_to_user(self):
         self.navFrm_user.place(x=1180, y=0)
+        self.data_to_list_user()
         user_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
@@ -1087,18 +1094,21 @@ class App:
 
     def stock_to_request(self):
         self.navFrm_request.place(x=1180, y=0)
+        self.data_to_list_request()
         request_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
 
     def stock_to_order(self):
         self.navFrm_order.place(x=1180, y=0)
+        self.data_to_list_order()
         order_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
 
     def stock_to_exit(self):
         self.navFrm_exit.place(x=1180, y=0)
+        self.data_to_list_exit()
         exit_page.state('normal')
         stock_page.state('withdraw')
         self.btnState = False
@@ -1107,6 +1117,8 @@ class App:
     def data_to_list_stock(self):
         self.count=0
         self.lst=[]
+        for item in self.listStock.get_children():
+            self.listStock.delete(item)
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='kala'")
@@ -1223,21 +1235,19 @@ class App:
         self.b_addKalaNum_receipt = Button(self.kalaNumFrm_receipt,bg='#DFDFDF',image=self.addKalaNumImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.funcAddNum)
         #list
         self.listReceipt= ttk.Treeview(receipt_page,show='headings',height=5)
-        self.listReceipt['columns']=('date','kalaNum','kalaId','groupKala','kalaType','kalaName','fullname','row')
+        self.listReceipt['columns']=('date','kalaNum','receiptId','kalaId','kalaName','fullname','row')
         #columns
         self.listReceipt.column('date',width=150,anchor=E)
-        self.listReceipt.column('kalaNum',width=90,anchor=E)
-        self.listReceipt.column('groupKala',width=200,anchor=E)
-        self.listReceipt.column('kalaType',width=200,anchor=E)
-        self.listReceipt.column('kalaId',width=90,anchor=E)
+        self.listReceipt.column('kalaNum',width=150,anchor=E)
+        self.listReceipt.column('receiptId',width=220,anchor=E)
+        self.listReceipt.column('kalaId',width=150,anchor=E)
         self.listReceipt.column('kalaName',width=200,anchor=E)
-        self.listReceipt.column('fullname',width=200,anchor=E)
-        self.listReceipt.column('row',width=100,anchor=E)
+        self.listReceipt.column('fullname',width=240,anchor=E)
+        self.listReceipt.column('row',width=120,anchor=E)
         #heading
         self.listReceipt.heading('date',text=' : تاریخ',anchor=E)
         self.listReceipt.heading('kalaNum',text=' : تعداد',anchor=E)
-        self.listReceipt.heading('groupKala',text=' : گروه کالا',anchor=E)
-        self.listReceipt.heading('kalaType',text=' : نوع کالا',anchor=E)
+        self.listReceipt.heading('receiptId',text=' : کد خرید',anchor=E)
         self.listReceipt.heading('kalaId',text=' : کد کالا',anchor=E)
         self.listReceipt.heading('kalaName',text=' : نام کالا',anchor=E)
         self.listReceipt.heading('fullname',text=' : نام و نام خانوادگی',anchor=E)
@@ -1269,7 +1279,7 @@ class App:
         self.e_kalaNum_receipt.bind('<Return>',lambda event:self.b_addKalaNum_receipt.focus())
         self.b_addKalaNum_receipt.bind('<Return>',self.funcAddNum)
         
-        self.b_openNav_receipt=Button(receipt_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_receipt_nav,cursor='hand2')
+        self.b_openNav_receipt=Button(receipt_page,image=self.openBtnImg,bg='#DFDFDF',activebackground='#DFDFDF',bd=0,command=self.switch_receipt_nav,cursor='hand2')
         self.navFrm_receipt=Frame(receipt_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_receipt=LabelFrame(self.navFrm_receipt,width=220,bg='#2E2E2E',bd=0,height=50)
         self.b_closeNav_receipt=Button(self.closeFrm_receipt,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_receipt_nav)
@@ -1345,36 +1355,42 @@ class App:
 
     def receipt_to_user(self):
         self.navFrm_user.place(x=1180, y=0)
+        self.data_to_list_user()
         user_page.state('normal')
         receipt_page.state('withdraw')
         self.btnState = True
     
     def receipt_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
+        self.data_to_list_stock()
         stock_page.state('normal')
         receipt_page.state('withdraw')
         self.btnState = True
     
     def receipt_to_kala(self):
         self.navFrm_product.place(x=1180, y=0)
+        self.data_to_list_kala()
         product_page.state('normal')
         receipt_page.state('withdraw')
         self.btnState = True
 
     def receipt_to_request(self):
         self.navFrm_request.place(x=1180, y=0)
+        self.data_to_list_request()
         request_page.state('normal')
         receipt_page.state('withdraw')
         self.btnState = True
 
     def receipt_to_order(self):
         self.navFrm_order.place(x=1180, y=0)
+        self.data_to_list_order()
         order_page.state('normal')
         receipt_page.state('withdraw')
         self.btnState = True
 
     def receipt_to_exit(self):
         self.navFrm_exit.place(x=1180, y=0)
+        self.data_to_list_exit()
         exit_page.state('normal')
         receipt_page.state('withdraw')
         self.btnState = True
@@ -1416,13 +1432,17 @@ class App:
     def funcAddNum(self,event=None):
         self.entryNum=self.e_kalaNum_receipt.get()
         self.kalaNumber=int(self.entryNum)+int(self.kalaInfo[0][7])
-
+        self.randomId_receipt=str(uuid.uuid4())
+        self.randomId_receipt=self.randomId_receipt[:8]
+        self.data_receipt=(self.kalaInfo[0][0],self.kalaInfo[0][1],self.kalaInfo[0][2],self.kalaInfo[0][3],self.entryNum,self.randomId_receipt,self.kalaNumber,self.fullname,'01/01')
+        self.cur.execute('''CREATE TABLE IF NOT EXISTS receipt (idKala TEXT NOT NULL ,nameKala TEXT NOT NULL ,
+        type TEXT NOT NULL,category TEXT NOT NULL,receiptNum,receiptId,stock,nameUser TEXT NOT NULL,date)''')
+        self.cur.execute('INSERT INTO receipt(idKala,nameKala,type,category,receiptNum,receiptId,stock,nameUser,date) VALUES(?,?,?,?,?,?,?,?,?)',self.data_receipt)
         self.cur.execute(''' UPDATE kala SET stock = "{}" WHERE id="{}" '''.format(self.kalaNumber,self.idKala))
         self.con.commit()
         self.num_of_rows = len(self.listReceipt.get_children())
         self.listReceipt.insert(parent='',index='end',text='',
-                                    values=('01/01',self.kalaNumber,self.kalaInfo[0][0],
-                                            self.kalaInfo[0][3],self.kalaInfo[0][2],self.kalaInfo[0][1],self.fullname,self.num_of_rows+1))
+                        values=('01/01',self.kalaNumber,self.randomId_receipt,self.kalaInfo[0][0],self.kalaInfo[0][1],self.fullname,self.num_of_rows+1))
         self.e_kalaNum_receipt.delete(0,END)
         self.e_searchKala_receipt.delete(0,END)
         self.e_searchUser_receipt.delete(0,END)
@@ -1539,12 +1559,14 @@ class App:
 
     def request_to_kala(self):
         self.navFrm_product.place(x=1180, y=0)
+        self.data_to_list_kala()
         product_page.state('normal')
         request_page.state('withdraw')
         self.btnState = True
     
     def request_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
+        self.data_to_list_stock()
         stock_page.state('normal')
         request_page.state('withdraw')
         self.btnState = True
@@ -1557,24 +1579,29 @@ class App:
 
     def request_to_user(self):
         self.navFrm_user.place(x=1180, y=0)
+        self.data_to_list_user()
         user_page.state('normal')
         request_page.state('withdraw')
         self.btnState = True
 
     def request_to_order(self):
         self.navFrm_order.place(x=1180, y=0)
+        self.data_to_list_order()
         order_page.state('normal')
         request_page.state('withdraw')
         self.btnState = True
 
     def request_to_exit(self):
         self.navFrm_exit.place(x=1180, y=0)
+        self.data_to_list_exit()
         exit_page.state('normal')
         request_page.state('withdraw')
         self.btnState = True
 
     def data_to_list_request(self):
         self.lst=[]
+        for item in self.listRequest.get_children():
+            self.listRequest.delete(item)
         self.fullname='محمد پناهی'
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
@@ -1783,12 +1810,14 @@ class App:
 
     def order_to_kala(self):
         self.navFrm_product.place(x=1180, y=0)
+        self.data_to_list_kala()
         product_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
     
     def order_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
+        self.data_to_list_stock()
         stock_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
@@ -1801,18 +1830,21 @@ class App:
 
     def order_to_request(self):
         self.navFrm_request.place(x=1180, y=0)
+        self.data_to_list_request()
         request_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
 
     def order_to_user(self):
         self.navFrm_user.place(x=1180, y=0)
+        self.data_to_list_user()
         user_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
 
     def order_to_exit(self):
         self.navFrm_exit.place(x=1180, y=0)
+        self.data_to_list_exit()
         exit_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
@@ -2025,12 +2057,14 @@ class App:
 
     def exit_to_kala(self):
         self.navFrm_product.place(x=1180, y=0)
+        self.data_to_list_kala()
         product_page.state('normal')
         exit_page.state('withdraw')
         self.btnState = True
     
     def exit_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
+        self.data_to_list_stock()
         stock_page.state('normal')
         exit_page.state('withdraw')
         self.btnState = True
@@ -2043,24 +2077,29 @@ class App:
 
     def exit_to_request(self):
         self.navFrm_request.place(x=1180, y=0)
+        self.data_to_list_request()
         request_page.state('normal')
         exit_page.state('withdraw')
         self.btnState = True
 
     def exit_to_order(self):
         self.navFrm_order.place(x=1180, y=0)
+        self.data_to_list_order()
         order_page.state('normal')
         exit_page.state('withdraw')
         self.btnState = True
 
     def exit_to_user(self):
         self.navFrm_user.place(x=1180, y=0)
+        self.data_to_list_user()
         user_page.state('normal')
         exit_page.state('withdraw')
         self.btnState = True
 
     def data_to_list_exit(self):
         self.lst=[]
+        for item in self.listExit.get_children():
+            self.listExit.delete(item)
         self.count=0
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
