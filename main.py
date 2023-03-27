@@ -1674,7 +1674,7 @@ class App:
         self.b_searchUserBtnOrder = Button(order_page,image=self.order_baresiImg,bd=0,activebackground='white',command=self.search_idUser_order)
         self.e_idKala_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_searchBtnOrder = Button(order_page,image=self.searchBtnImg_order,bd=0,activebackground='white',command=self.search_idKala_order)
-        self.userInfo_order_frm = LabelFrame(order_page,width=510,height=165,bg='#F2F2F2',bd=5,relief=SOLID)
+        self.userInfo_order_frm = LabelFrame(order_page,width=510,height=135,bg='#F2F2F2',bd=5,relief=SOLID)
         self.l_nameUser_order = Label(self.userInfo_order_frm,text=' : نام',font=('Lalezar',17),bg='#F2F2F2')
         self.nameUserLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=15,fg='#4F4E4E')
         self.l_lastUser_order = Label(self.userInfo_order_frm,text=' : نام خانوادگی',font=('Lalezar',17),bg='#F2F2F2')
@@ -1683,9 +1683,11 @@ class App:
         self.nationalCodeLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=15,fg='#4F4E4E')
         self.l_userId_order = Label(self.userInfo_order_frm,text=' : کد کاربری',font=('Lalezar',17),bg='#F2F2F2')
         self.userIdLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=8,fg='#4F4E4E')
-        self.order_frm_num = LabelFrame(order_page,width=510,height=85,bg='#F2F2F2',bd=5,relief=SOLID)
+        self.order_frm_num = LabelFrame(order_page,width=510,height=115,bg='#F2F2F2',bd=5,relief=SOLID)
         self.l_orderNum = Label(self.order_frm_num,text=' : تعداد',font=('Lalezar',17))
         self.e_orderNum = Entry(self.order_frm_num,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.l_date_order = Label(self.order_frm_num,text=' : تاریخ',font=('Lalezar',17),bg='#EAEAEA')
+        self.date_order = DateEntry(self.order_frm_num,font=('Lalezar',14))
         self.b_sabtOrder = Button(self.order_frm_num,image=self.sabtOrderBtnImg,bd=0,activebackground='white',command=self.addOrder)
         self.kalaInfo_order_frm = LabelFrame(order_page,width=800,height=240,bg='#D0D0D0',bd=5,relief=SOLID)
         self.l_nameKala_order = Label(self.kalaInfo_order_frm,text=' : نام کالا',font=('Lalezar',17),bg='#D0D0D0')
@@ -1779,19 +1781,21 @@ class App:
         self.b_searchUserBtnOrder.place(x=670,y=85)
         self.b_searchBtnOrder.place(x=50,y=85)
         self.e_idKala_order.place(x=215,y=90)
-        self.order_frm_num.place(x=845,y=305)
+        self.order_frm_num.place(x=845,y=275)
         self.l_orderNum.place(x=420,y=15)
         self.e_orderNum.place(x=210,y=15)
-        self.b_sabtOrder.place(x=20,y=10)
+        self.l_date_order.place(x=420,y=60)
+        self.date_order.place(x=210,y=60)
+        self.b_sabtOrder.place(x=20,y=30)
         self.userInfo_order_frm.place(x=845,y=150)
-        self.l_nameUser_order.place(x=450,y=20)
-        self.nameUserLbl_order.place(x=260,y=20)
-        self.l_lastUser_order.place(x=200,y=20)
-        self.lastUserLbl_order.place(x=10,y=20)
-        self.l_userId_order.place(x=405,y=80)
-        self.userIdLbl_order.place(x=260,y=80)
-        self.l_nationalCode_order.place(x=190,y=80)
-        self.nationalCodeLbl_order.place(x=5,y=80)
+        self.l_nameUser_order.place(x=450,y=10)
+        self.nameUserLbl_order.place(x=260,y=10)
+        self.l_lastUser_order.place(x=200,y=10)
+        self.lastUserLbl_order.place(x=10,y=10)
+        self.l_userId_order.place(x=405,y=70)
+        self.userIdLbl_order.place(x=260,y=70)
+        self.l_nationalCode_order.place(x=190,y=70)
+        self.nationalCodeLbl_order.place(x=5,y=70)
         self.kalaInfo_order_frm.place(x=50,y=150)
         self.l_kalaId_order.place(x=690,y=10)
         self.kalaIdLbl_order.place(x=510,y=10)
@@ -1808,7 +1812,6 @@ class App:
         self.l_imgSelector_order.place(x=65,y=175)
         self.imgSelectorBg_order.place(x=50,y=25)
         self.listOrder.place(x=60,y=420)
-
 
         #________bind___________
         self.listOrder.bind('<ButtonRelease-1>',self.select_record_order)
@@ -1913,16 +1916,17 @@ class App:
         self.numKalaOrder = self.e_orderNum.get()
         self.randomId=str(uuid.uuid4())
         self.randomId=self.randomId[:8]
+        self.orderDate=self.date_order.get()
         if self.numKalaOrder != '':
             self.fullNameUser = self.userInfo_order[0][1]+' '+self.userInfo_order[0][2]
             self.data=(self.iInfo_order_list[0][0],self.iInfo_order_list[0][1],self.fullNameUser,self.numKalaOrder,self.iInfo_order_list[0][7],
-                       self.iInfo_order_list[0][4],'سفارش داده شد','01/01',self.randomId)
+                       self.iInfo_order_list[0][4],'سفارش داده شد',self.orderDate,self.randomId)
             self.cur.execute('''CREATE TABLE IF NOT EXISTS orders (idKala TEXT  NOT NULL ,nameKala TEXT NOT NULL ,nameUser TEXT NOT NULL
-            ,numOrder TEXT NOT NULL,stock TEXT NOT NULL,purchase TEXT NOT NULL,condition TEXT,date INTEGER NOT NULL,orderId)''')
+            ,numOrder NOT NULL,stock,purchase TEXT NOT NULL,condition TEXT,date INTEGER NOT NULL,orderId)''')
             self.cur.execute('INSERT INTO orders(idKala,nameKala,nameUser,numOrder,stock,purchase,condition,date,orderId) VALUES(?,?,?,?,?,?,?,?,?)',self.data)
             self.con.commit()
             self.numlist=len(self.listOrder.get_children())
-            self.listOrder.insert(parent='',index='end',text='',values=('01/01',self.iInfo_order_list[0][7],self.numKalaOrder,
+            self.listOrder.insert(parent='',index='end',text='',values=(self.orderDate,self.iInfo_order_list[0][7],self.numKalaOrder,
                                     self.randomId,self.fullNameUser,self.iInfo_order_list[0][1],self.iInfo_order_list[0][0],self.numlist+1))
             self.e_orderNum.delete(0,END)
             self.e_idUser_order.delete(0,END)
@@ -1943,6 +1947,8 @@ class App:
         
     def data_to_list_order(self):
         self.lst=[]
+        for item in self.listOrder.get_children():
+            self.listOrder.delete(item)
         self.count=0
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
@@ -1957,7 +1963,9 @@ class App:
             for i in self.lst:
                 self.numlist_order=len(self.listOrder.get_children())
                 self.listOrder.insert(parent='',index='end',text='',
-                    values=('01/01',i[4],i[3],i[8],i[2],i[1],i[0],self.numlist_order+1))
+                    values=('01/01',i[4],i[3],i[8],i[2],i[1],i[0],self.count+1))
+                self.count +=1
+                
     def select_record_order(self ,event=None):
         self.selected = self.listOrder.focus()
         self.values_order_list = self.listOrder.item(self.selected , "values")
@@ -1971,8 +1979,9 @@ class App:
         self.cur=self.con.cursor()
         orderIdCheck=self.values_order_list[3]
         self.cur.execute(''' UPDATE orders SET condition = ?  WHERE orderId= ? ''',("آماده تحویل",orderIdCheck))
-        self.listOrder.delete(orderIdCheck)
         self.con.commit()
+        self.data_to_list_order()
+        self.tickBtnOrder.place(x=-50,y=-50)
 
 #_____________________________________________________________________________________________________________________________________________
 #______________________________________________________________ exit kala page _______________________________________________________________
@@ -2134,7 +2143,7 @@ class App:
             for i in self.lst:
                 self.numlist_exit=len(self.listExit.get_children())
                 self.listExit.insert(parent='',index='end',text='',
-                    values=('01/01',i[4],i[3],i[8],i[2],i[1],i[0],self.numlist_exit+1))
+                    values=(i[7],i[4],i[3],i[8],i[2],i[1],i[0],self.numlist_exit+1))
 
     def select_record_exit(self ,event=None):
         self.selected_exit = self.listExit.focus()
@@ -2144,9 +2153,12 @@ class App:
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         exitIdCheck=self.values_exit_list[3]
-        self.cur.execute(''' UPDATE orders SET condition = ?  WHERE orderId= ? ''',("تحویل داده شد",exitIdCheck))
+        self.new_stock_exit=int(self.values_exit_list[1])-int(self.values_exit_list[2])
+        self.cur.execute(''' UPDATE orders SET condition = ?   WHERE orderId= ? ''',("تحویل داده شد",exitIdCheck))
+        self.cur.execute(''' UPDATE orders SET stock = ?  WHERE idKala= ? ''',(self.new_stock_exit,self.values_exit_list[6]))
+        self.cur.execute(''' UPDATE kala SET stock = ?  WHERE id= ? ''',(self.new_stock_exit,self.values_exit_list[6]))
         self.con.commit()
-
+        self.data_to_list_exit()
     
 O = App(main_page)
 main_page.mainloop()
