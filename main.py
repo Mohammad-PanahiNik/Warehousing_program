@@ -4,7 +4,7 @@ from tkinter import ttk
 import sqlite3 as sql
 from tkinter import messagebox
 import uuid
-from tkcalendar import DateEntry
+from tkcalendar import Calendar, DateEntry
 import time
 import math
 
@@ -1229,9 +1229,11 @@ class App:
         self.groupKalaLbl_receipt = Label(receipt_page,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
         self.l_imgSelector_receipt = Label(receipt_page,text='انتخاب تصویر',font=('Lalezar',17))
         self.imgSelectorBg_receipt = Label(receipt_page,bg='#F3F3F3',image=self.kalaImg,cursor='hand2',width=150,height=150)
-        self.kalaNumFrm_receipt = LabelFrame(receipt_page,bg='#EAEAEA',width=540,height=70,bd=5,relief=SOLID) 
+        self.kalaNumFrm_receipt = LabelFrame(receipt_page,bg='#EAEAEA',width=820,height=70,bd=5,relief=SOLID)
         self.kalaNum_receipt = Label(self.kalaNumFrm_receipt,text=' : تعداد کالا',font=('Lalezar',17),bg='#EAEAEA')
         self.e_kalaNum_receipt = Entry(self.kalaNumFrm_receipt,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid',fg='#717171')
+        self.l_date_receipt = Label(self.kalaNumFrm_receipt,text=' : تاریخ',font=('Lalezar',17),bg='#EAEAEA')
+        self.date_receipt = DateEntry(self.kalaNumFrm_receipt,font=('Lalezar',14))
         self.b_addKalaNum_receipt = Button(self.kalaNumFrm_receipt,bg='#DFDFDF',image=self.addKalaNumImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.funcAddNum)
         #list
         self.listReceipt= ttk.Treeview(receipt_page,show='headings',height=5)
@@ -1333,10 +1335,12 @@ class App:
         self.groupKalaLbl_receipt.place(x=330,y=360)
         self.l_imgSelector_receipt.place(x=135,y=390)
         self.imgSelectorBg_receipt.place(x=110,y=240)
-        self.kalaNumFrm_receipt.place(x=775,y=460)
-        self.kalaNum_receipt.place(x=400,y=10)
-        self.e_kalaNum_receipt.place(x=180,y=10)
+        self.kalaNumFrm_receipt.place(x=495,y=460)
+        self.kalaNum_receipt.place(x=700,y=10)
+        self.e_kalaNum_receipt.place(x=490,y=10)
         self.b_addKalaNum_receipt.place(x=15,y=5)
+        self.l_date_receipt.place(x=350,y=10)
+        self.date_receipt.place(x=190,y=10)
         self.listReceipt.place(x=85,y=545)
     
     def switch_receipt_nav(self):
@@ -1431,10 +1435,11 @@ class App:
 
     def funcAddNum(self,event=None):
         self.entryNum=self.e_kalaNum_receipt.get()
+        self.selected_date_receipt = self.date_receipt.get_date()
         self.kalaNumber=int(self.entryNum)+int(self.kalaInfo[0][7])
         self.randomId_receipt=str(uuid.uuid4())
         self.randomId_receipt=self.randomId_receipt[:8]
-        self.data_receipt=(self.kalaInfo[0][0],self.kalaInfo[0][1],self.kalaInfo[0][2],self.kalaInfo[0][3],self.entryNum,self.randomId_receipt,self.kalaNumber,self.fullname,'01/01')
+        self.data_receipt=(self.kalaInfo[0][0],self.kalaInfo[0][1],self.kalaInfo[0][2],self.kalaInfo[0][3],self.entryNum,self.randomId_receipt,self.kalaNumber,self.fullname,self.selected_date_receipt)
         self.cur.execute('''CREATE TABLE IF NOT EXISTS receipt (idKala TEXT NOT NULL ,nameKala TEXT NOT NULL ,
         type TEXT NOT NULL,category TEXT NOT NULL,receiptNum,receiptId,stock,nameUser TEXT NOT NULL,date)''')
         self.cur.execute('INSERT INTO receipt(idKala,nameKala,type,category,receiptNum,receiptId,stock,nameUser,date) VALUES(?,?,?,?,?,?,?,?,?)',self.data_receipt)
@@ -1442,7 +1447,7 @@ class App:
         self.con.commit()
         self.num_of_rows = len(self.listReceipt.get_children())
         self.listReceipt.insert(parent='',index='end',text='',
-                        values=('01/01',self.kalaNumber,self.randomId_receipt,self.kalaInfo[0][0],self.kalaInfo[0][1],self.fullname,self.num_of_rows+1))
+                        values=(self.selected_date_receipt,self.kalaNumber,self.randomId_receipt,self.kalaInfo[0][0],self.kalaInfo[0][1],self.fullname,self.num_of_rows+1))
         self.e_kalaNum_receipt.delete(0,END)
         self.e_searchKala_receipt.delete(0,END)
         self.e_searchUser_receipt.delete(0,END)
