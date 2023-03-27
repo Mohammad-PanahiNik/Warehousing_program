@@ -83,8 +83,8 @@ class App:
         self.b_WrStock.place(x=0,y=245)
         self.b_Receipt.place(x=0,y=310)
         self.b_request.place(x=0,y=375)
-        self.b_sabtExitKalaPage.place(x=0,y=440)
-        self.b_sabtSefareshPage.place(x=0,y=505)
+        self.b_sabtSefareshPage.place(x=0,y=440)
+        self.b_sabtExitKalaPage.place(x=0,y=505)
         self.b_issuance.place(x=0,y=570)
         self.b_exit.place(x=0,y=635)
 
@@ -1214,19 +1214,23 @@ class App:
         self.e_searchKala_receipt = Entry(receipt_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid',fg='#717171')
         self.e_searchKala_receipt.insert(0,'جستجوی کد کالا')
         self.b_searchKala_receipt = Button(receipt_page,bg='#DFDFDF',image=self.searchBtnImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.search_idKala)
-        self.infoKalaFrm_receipt = LabelFrame(receipt_page,bg='#EAEAEA',width=1230,height=240,bd=5,relief=SOLID)
+        self.infoKalaFrm_receipt = LabelFrame(receipt_page,bg='#EAEAEA',width=1280,height=240,bd=5,relief=SOLID)
         self.l_nameUser_receipt = Label(receipt_page,text=' : نام',font=('Lalezar',17),bg='#EAEAEA')
-        self.nameUserLbl_receipt = Label(receipt_page,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
+        self.nameUserLbl_receipt = Label(receipt_page,text='{: ^15}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=12,fg='#4F4E4E')
         self.l_nameKala_receipt = Label(receipt_page,text=' : نام کالا',font=('Lalezar',17),bg='#EAEAEA')
-        self.nameKalaLbl_receipt = Label(receipt_page,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
+        self.nameKalaLbl_receipt = Label(receipt_page,text='{: ^15}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=12,fg='#4F4E4E')
         self.l_kalaType_receipt = Label(receipt_page,text=' : نوع کالا',font=('Lalezar',17),bg='#EAEAEA')
-        self.kalaTypeLbl_receipt =Label(receipt_page,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
+        self.kalaTypeLbl_receipt =Label(receipt_page,text='{: ^15}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
         self.l_lastUser_receipt = Label(receipt_page,text=' : نام خانوادگی',font=('Lalezar',17),bg='#EAEAEA')
-        self.lastUserLbl_receipt = Label(receipt_page,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
+        self.lastUserLbl_receipt = Label(receipt_page,text='{: ^15}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
         self.l_kalaId_receipt = Label(receipt_page,text=' : کد کالا',font=('Lalezar',17),bg='#EAEAEA')
-        self.kalaIdLbl_receipt = Label(receipt_page,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
+        self.kalaIdLbl_receipt = Label(receipt_page,text='{: ^15}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
         self.l_groupKala_receipt = Label(receipt_page,text=' : گروه کالا',font=('Lalezar',17),bg='#EAEAEA')
-        self.groupKalaLbl_receipt = Label(receipt_page,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
+        self.groupKalaLbl_receipt = Label(receipt_page,text='{: ^15}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=15,fg='#4F4E4E')
+        self.l_stock_receipt = Label(receipt_page,text=' : موجودی',font=('Lalezar',17),bg='#EAEAEA')
+        self.stockLbl_receipt = Label(receipt_page,text='{: <6}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=6,fg='#4F4E4E')
+        self.l_purchase_receipt = Label(receipt_page,text=' : نقطه خرید',font=('Lalezar',17),bg='#EAEAEA')
+        self.purchaseLbl_receipt = Label(receipt_page,text='{: <6}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=6,fg='#4F4E4E')
         self.l_imgSelector_receipt = Label(receipt_page,text='انتخاب تصویر',font=('Lalezar',17))
         self.imgSelectorBg_receipt = Label(receipt_page,bg='#F3F3F3',image=self.kalaImg,cursor='hand2',width=150,height=150)
         self.kalaNumFrm_receipt = LabelFrame(receipt_page,bg='#EAEAEA',width=820,height=70,bd=5,relief=SOLID)
@@ -1320,22 +1324,27 @@ class App:
         self.b_searchUser_receipt.place(x=315,y=85)
         self.e_searchKala_receipt.place(x=1115,y=175)
         self.b_searchKala_receipt.place(x=955,y=170)
-        self.infoKalaFrm_receipt.place(x=85,y=225)
-        self.l_nameUser_receipt.place(x=1240,y=280)
-        self.nameUserLbl_receipt.place(x=1025,y=280)
-        self.l_nameKala_receipt.place(x=1210,y=360)
-        self.nameKalaLbl_receipt.place(x=1025,y=360)
-        self.l_lastUser_receipt.place(x=860,y=280)
-        self.lastUserLbl_receipt.place(x=675,y=280)
-        self.l_kalaId_receipt.place(x=900,y=360)
-        self.kalaIdLbl_receipt.place(x=675,y=360)
-        self.l_kalaType_receipt.place(x=515,y=280)
-        self.kalaTypeLbl_receipt.place(x=330,y=280)
-        self.l_groupKala_receipt.place(x=520,y=360)
-        self.groupKalaLbl_receipt.place(x=330,y=360)
-        self.l_imgSelector_receipt.place(x=135,y=390)
-        self.imgSelectorBg_receipt.place(x=110,y=240)
-        self.kalaNumFrm_receipt.place(x=495,y=460)
+        self.infoKalaFrm_receipt.place(x=60,y=225)
+        
+        self.l_nameUser_receipt.place(x=1275,y=280)
+        self.nameUserLbl_receipt.place(x=1095,y=280)
+        self.l_nameKala_receipt.place(x=1255,y=360)
+        self.nameKalaLbl_receipt.place(x=1095,y=360)
+        self.l_lastUser_receipt.place(x=975,y=280)
+        self.lastUserLbl_receipt.place(x=795,y=280)
+        self.l_kalaId_receipt.place(x=1015,y=360)
+        self.kalaIdLbl_receipt.place(x=795,y=360)
+        self.l_kalaType_receipt.place(x=700,y=280)
+        self.kalaTypeLbl_receipt.place(x=515,y=280)
+        self.l_groupKala_receipt.place(x=705,y=360)
+        self.groupKalaLbl_receipt.place(x=515,y=360)
+        self.l_stock_receipt.place(x=395,y=280)
+        self.stockLbl_receipt.place(x=280,y=280)
+        self.l_purchase_receipt.place(x=385,y=360)
+        self.purchaseLbl_receipt.place(x=280,y=360)
+        self.l_imgSelector_receipt.place(x=110,y=400)
+        self.imgSelectorBg_receipt.place(x=85,y=250)
+        self.kalaNumFrm_receipt.place(x=520,y=460)
         self.kalaNum_receipt.place(x=700,y=10)
         self.e_kalaNum_receipt.place(x=490,y=10)
         self.b_addKalaNum_receipt.place(x=15,y=5)
@@ -1432,6 +1441,8 @@ class App:
                 self.kalaTypeLbl_receipt['text']=self.kalaInfo[0][2]
                 self.kalaIdLbl_receipt['text']=self.kalaInfo[0][0]
                 self.groupKalaLbl_receipt['text']=self.kalaInfo[0][3]
+                self.stockLbl_receipt['text']=self.kalaInfo[0][7]
+                self.purchaseLbl_receipt['text']=self.kalaInfo[0][4]
 
     def funcAddNum(self,event=None):
         self.entryNum=self.e_kalaNum_receipt.get()
@@ -1459,6 +1470,8 @@ class App:
         self.groupKalaLbl_receipt['text']=''
         self.nameUserLbl_receipt['text']=''
         self.lastUserLbl_receipt['text']=''
+        self.purchaseLbl_receipt['text']=''
+        self.stockLbl_receipt['text']=''
         self.permission=False
 
     #____________________________________________________________________________________________________________________
@@ -1607,7 +1620,7 @@ class App:
         self.lst=[]
         for item in self.listRequest.get_children():
             self.listRequest.delete(item)
-        self.fullname='محمد پناهی'
+        # self.fullname='محمد پناهی'
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='kala'")
@@ -1621,17 +1634,19 @@ class App:
                     self.numlistRequest=len(self.listKala.get_children())
                     self.listRequest.insert(parent='',index='end',text='',
                                     values=(i[4],i[7],i[3],i[2],i[1],i[0],self.numlistRequest))
-                    self.purchase_req=i[4]
-                    self.kalaNum_req=i[7]
     def order_kala(self):
-        self.permission=True
+        if self.btnState == True:
+            self.navFrm_receipt.place(x=1180,y=0)
+        else:
+            self.navFrm_receipt.place(x=1400,y=0)
         receipt_page.state('normal')
         request_page.state('withdraw')
         self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.valuesReq[5]))
+        self.row=list(self.row)
+        self.limit_order=(self.row[0][4])-int(self.row[0][7])
         self.e_searchKala_receipt.delete(0,END)
         self.e_searchKala_receipt.insert('0',(self.valuesReq[5]))
-        self.search_idKala()
-        self.e_kalaNum_receipt.insert('0',int(self.purchase_req)-int(self.kalaNum_req))
+        self.e_kalaNum_receipt.insert('0',self.limit_order)
         self.con.commit()
 
     def select_record_list_request(self,event=None):
@@ -1646,14 +1661,14 @@ class App:
         order_page.title('menu')
         order_page.state('withdraw')
 
-        self.headerReguestImg = PhotoImage(file='image/headerRequestImg.png')
+        self.headerOrderImg = PhotoImage(file='image/headerRequestImg.png')
         self.sabtOrderBtnImg = PhotoImage(file='image/sabtOrder.png')
         self.searchBtnImg_order = PhotoImage(file='image/searchBtnImg.png')
         self.order_imgSelectorPic = PhotoImage(file='image/imgSelectorBg.png')
         self.order_baresiImg = PhotoImage(file='image/baresiBtnImg.png')
         self.tickImgBtn = PhotoImage(file='image/tickImgBtn.png')
 
-        self.l_headerOrderPage = Label(order_page,image=self.headerReguestImg)
+        self.l_headerOrderPage = Label(order_page,image=self.headerOrderImg)
         self.attention_idUser = Label(order_page,text=' . لطفا کد کاربر موردنطر خود را وارد کنید',font=('Lalezar',17),bg='white')
         self.e_idUser_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_searchUserBtnOrder = Button(order_page,image=self.order_baresiImg,bd=0,activebackground='white',command=self.search_idUser_order)
