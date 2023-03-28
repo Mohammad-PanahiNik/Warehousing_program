@@ -4,6 +4,7 @@ from tkinter import ttk
 import sqlite3 as sql
 from tkinter import messagebox
 import uuid
+from datetime import datetime
 from tkcalendar import Calendar, DateEntry
 
 main_page = Tk()
@@ -38,6 +39,7 @@ class App:
         self.exit_kala_page()
         self.order_history_page()
         self.data_to_list_history()
+        self.update_time()
 
     def main(self):
         main_page.geometry('1400x800+250+100')
@@ -59,7 +61,11 @@ class App:
         self.closeBtnImg=PhotoImage(file='image/closeImg.png')
         self.openBtnImg=PhotoImage(file='image/openNavImg.png')
         self.historyBtnImg=PhotoImage(file='image/historyOrderBtnImg.png')
-
+        self.bgDateImg=PhotoImage(file='image/bgDateImg.png')
+        
+        self.dateFrm=Label(main_page,image=self.bgDateImg, height=90,width=220,bd=0,bg='white')
+        self.time_label = Label(self.dateFrm)
+        self.date_label = Label(self.dateFrm)
         self.b_openNav=Button(main_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch,cursor='hand2')
         self.navFrm=Frame(main_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm=LabelFrame(self.navFrm,width=220,bg='#2E2E2E',bd=0,height=50)
@@ -76,6 +82,9 @@ class App:
         self.b_billing=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit=Button(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
+        self.dateFrm.place(x=0,y=0)
+        self.date_label.place(x=45,y=10)
+        self.time_label.place(x=55,y=50)
         self.b_openNav.place(x=1340,y=20)
         self.navFrm.place(x=1400,y=0)
         self.closeFrm.place(x=0,y=0)
@@ -92,7 +101,15 @@ class App:
         self.b_billing.place(x=0,y=635)
         self.b_exit.place(x=0,y=700)
 
-    
+            
+    def update_time(self):
+        now = datetime.now()
+        self.current_time = now.strftime("%H:%M:%S")
+        self.current_date = now.strftime("%Y/%m/%d")
+        self.time_label.config(text=f"{self.current_time}",font=('Consolas',18),bg='#6050AB',fg='white')
+        self.date_label.config(text=f"{self.current_date}",font=('Consolas',18),bg='#6050AB',fg='white')
+        self.dateFrm.after(1000, self.update_time)
+
     def switch(self):
         if self.btnState is True:
             self.navFrm.place(x=1400, y=0)
@@ -196,7 +213,7 @@ class App:
         self.e_userNameLog.bind('<Return>',lambda event : self.e_passwordLog.focus())
         self.e_passwordLog.bind('<Return>',lambda event : self.b_enterBtn.focus())
         self.showBtn.bind('<Button-1>',self.funcShow)
-        
+
 
     def funcShow(self,event=None):
         if self.e_passwordLog['show']=='*':
