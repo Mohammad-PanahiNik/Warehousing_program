@@ -5,8 +5,6 @@ import sqlite3 as sql
 from tkinter import messagebox
 import uuid
 from tkcalendar import Calendar, DateEntry
-import time
-import math
 
 main_page = Tk()
 register_page = Toplevel()
@@ -60,6 +58,7 @@ class App:
         self.exitKalaBtnMenuImg=PhotoImage(file='image/exitKalaBtnMenuImg.png')
         self.closeBtnImg=PhotoImage(file='image/closeImg.png')
         self.openBtnImg=PhotoImage(file='image/openNavImg.png')
+        self.historyBtnImg=PhotoImage(file='image/historyOrderBtnImg.png')
 
         self.b_openNav=Button(main_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch,cursor='hand2')
         self.navFrm=Frame(main_page,height=800,width=220,bg='#777777',bd=0)
@@ -73,7 +72,8 @@ class App:
         self.b_request=Button(self.navFrm,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.open_request_page)
         self.b_sabtSefareshPage=Button(self.navFrm,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.open_sabtSefaresh_page)
         self.b_sabtExitKalaPage=Button(self.navFrm,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.open_sabtExit_page)
-        self.b_issuance=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_historyOrder=Button(self.navFrm,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.open_history_page)
+        self.b_billing=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit=Button(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
         self.b_openNav.place(x=1340,y=20)
@@ -88,8 +88,9 @@ class App:
         self.b_request.place(x=0,y=375)
         self.b_sabtSefareshPage.place(x=0,y=440)
         self.b_sabtExitKalaPage.place(x=0,y=505)
-        self.b_issuance.place(x=0,y=570)
-        self.b_exit.place(x=0,y=635)
+        self.b_historyOrder.place(x=0,y=570)
+        self.b_billing.place(x=0,y=635)
+        self.b_exit.place(x=0,y=700)
 
     
     def switch(self):
@@ -106,6 +107,20 @@ class App:
         product_page .state('normal')
         main_page.state('withdraw')
         self.btnState = True
+
+    def open_history_page(self):
+        self.navFrm_history.place(x=1180, y=0)
+        self.data_to_list_history()
+        history_page.state('normal')
+        main_page.state('withdraw')
+        self.btnState = True
+
+    # def open_billing_page(self):
+    #     self.navFrm_billing.place(x=1180, y=0)
+    #     self.data_to_list_kala()
+    #     billing_page .state('normal')
+    #     main_page.state('withdraw')
+    #     self.btnState = True
 
     def open_addUser_page(self):
         self.navFrm_user.place(x=1180, y=0)
@@ -333,6 +348,7 @@ class App:
         self.b_request_product=Button(self.navFrm_product,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_request)
         self.b_order_product=Button(self.navFrm_product,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_order)
         self.b_exitKala_product=Button(self.navFrm_product,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_exit)
+        self.b_history_product=Button(self.navFrm_product,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.pruduct_to_history)
         self.b_issuance_product=Button(self.navFrm_product,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_product=Button(self.navFrm_product,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
@@ -348,8 +364,9 @@ class App:
         self.b_request_product.place (x=0,y=375)
         self.b_order_product.place (x=0,y=440)
         self.b_exitKala_product.place (x=0,y=505)
-        self.b_issuance_product.place (x=0,y=570)
-        self.b_exit_product.place (x=0,y=635)
+        self.b_history_product.place (x=0,y=570)
+        self.b_issuance_product.place (x=0,y=635)
+        self.b_exit_product.place (x=0,y=700)
         self.h_sabtKala_kala.place (x=580 , y=0)
         self.l_productId_kala.place (x=1245 , y=100)
         self.e_productId_kala.place (x=985 , y=105)
@@ -401,6 +418,20 @@ class App:
         main_page.state('normal')
         product_page.state('withdraw')
         self.btnState = True
+        
+    def pruduct_to_history(self):
+        self.navFrm_history.place(x=1180, y=0)
+        self.data_to_list_history()
+        history_page.state('normal')
+        main_page.state('withdraw')
+        self.btnState = True
+
+    # def product_to_billing(self):
+    #     self.navFrm_billing.place(x=1180, y=0)
+    #     self.data_to_list_billing()
+    #     billing_page .state('normal')
+    #     main_page.state('withdraw')
+    #     self.btnState = True
 
     def pruduct_to_user(self):
         self.navFrm_user.place(x=1180, y=0)
@@ -690,6 +721,7 @@ class App:
         self.b_request_user=Button(self.navFrm_user,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_request)
         self.b_order_user=Button(self.navFrm_user,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_order)
         self.b_exitKala_user=Button(self.navFrm_user,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_exit)
+        self.b_history_user=Button(self.navFrm_user,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.user_to_history)
         self.b_issuance_user=Button(self.navFrm_user,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_user=Button(self.navFrm_user,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
@@ -705,8 +737,9 @@ class App:
         self.b_request_user.place(x=0,y=375)
         self.b_order_user.place(x=0,y=440)
         self.b_exitKala_user.place(x=0,y=505)
-        self.b_issuance_user.place(x=0,y=570)
-        self.b_exit_user.place(x=0,y=635)
+        self.b_history_user.place(x=0,y=570)
+        self.b_issuance_user.place(x=0,y=635)
+        self.b_exit_user.place(x=0,y=700)
 
         self.l_headerUser.place(x=595,y=0)
         self.l_nameUser.place(x=1315,y=100)
@@ -767,7 +800,22 @@ class App:
         self.data_to_list_kala()
         product_page.state('normal')
         user_page.state('withdraw')
+        self.btnState = True    
+    
+    def user_to_history(self):
+        self.navFrm_history.place(x=1180, y=0)
+        self.data_to_list_history()
+        history_page.state('normal')
+        main_page.state('withdraw')
         self.btnState = True
+
+    # def open_billing_page(self):
+    #     self.navFrm_billing.place(x=1180, y=0)
+    #     self.data_to_list_billing()
+    #     billing_page .state('normal')
+    #     main_page.state('withdraw')
+    #     self.btnState = True
+
     
     def user_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
@@ -1035,6 +1083,7 @@ class App:
         self.b_request_stock=Button(self.navFrm_stock,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_request)
         self.b_order_stock=Button(self.navFrm_stock,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_order)
         self.b_exitKala_stock=Button(self.navFrm_stock,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_exit)
+        self.b_history_stock=Button(self.navFrm_stock,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_history)
         self.b_issuance_stock=Button(self.navFrm_stock,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_stock=Button(self.navFrm_stock,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
         self.b_openNav_stock.place(x=1340,y=20)
@@ -1049,8 +1098,9 @@ class App:
         self.b_request_stock.place(x=0,y=375)
         self.b_order_stock.place(x=0,y=440)
         self.b_exitKala_stock.place(x=0,y=505)
-        self.b_issuance_stock.place(x=0,y=570)
-        self.b_exit_stock.place(x=0,y=635)
+        self.b_history_stock.place(x=0,y=570)
+        self.b_issuance_stock.place(x=0,y=635)
+        self.b_exit_stock.place(x=0,y=700)
         self.l_headerStock.place(x=580,y=0)
         self.b_filterStock.place(x=860,y=130)
         self.c_filterStock.place(x=1020,y=135)
@@ -1087,6 +1137,20 @@ class App:
         stock_page.state('withdraw')
         self.btnState = False
     
+    def stock_to_history(self):
+        self.navFrm_history.place(x=1180, y=0)
+        self.data_to_list_history()
+        history_page.state('normal')
+        stock_page.state('withdraw')
+        self.btnState = False
+
+    # def product_to_billing(self):
+    #     self.navFrm_billing.place(x=1180, y=0)
+    #     self.data_to_list_billing()
+    #     billing_page .state('normal')
+    #     main_page.state('withdraw')
+    #     self.btnState = True
+
     def stock_to_receipt(self):
         self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
@@ -1298,6 +1362,7 @@ class App:
         self.b_request_receipt=Button(self.navFrm_receipt,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_request)
         self.b_order_receipt=Button(self.navFrm_receipt,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_order)
         self.b_exitKala_receipt=Button(self.navFrm_receipt,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_exit)
+        self.b_history_receipt=Button(self.navFrm_receipt,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_history)
         self.b_issuance_receipt=Button(self.navFrm_receipt,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_receipt=Button(self.navFrm_receipt,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
@@ -1314,8 +1379,9 @@ class App:
         self.b_request_receipt.place(x=0,y=375)
         self.b_order_receipt.place(x=0,y=440)
         self.b_exitKala_receipt.place(x=0,y=505)
-        self.b_issuance_receipt.place(x=0,y=570)
-        self.b_exit_receipt.place(x=0,y=635)
+        self.b_history_receipt.place(x=0,y=570)
+        self.b_issuance_receipt.place(x=0,y=635)
+        self.b_exit_receipt.place(x=0,y=700)
 
 
         self.h_vorodKala_receipt.place(x=610,y=0)
@@ -1373,6 +1439,20 @@ class App:
         user_page.state('normal')
         receipt_page.state('withdraw')
         self.btnState = True
+        
+    def receipt_to_history(self):
+        self.navFrm_history.place(x=1180, y=0)
+        self.data_to_list_history()
+        history_page.state('normal')
+        receipt_page.state('withdraw')
+        self.btnState = False
+
+    # def receipt_to_billing(self):
+    #     self.navFrm_billing.place(x=1180, y=0)
+    #     self.data_to_list_billing()
+    #     billing_page .state('normal')
+    #     main_page.state('withdraw')
+    #     self.btnState = True
     
     def receipt_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
@@ -1539,6 +1619,7 @@ class App:
         self.b_request_request=Button(self.navFrm_request,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
         self.b_order_request=Button(self.navFrm_request,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_order)
         self.b_exitKala_request=Button(self.navFrm_request,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_exit)
+        self.b_history_request=Button(self.navFrm_request,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_history)
         self.b_issuance_request=Button(self.navFrm_request,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_request=Button(self.navFrm_request,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
@@ -1555,8 +1636,9 @@ class App:
         self.b_request_request.place(x=0,y=375)
         self.b_order_request.place(x=0,y=440)
         self.b_exitKala_request.place(x=0,y=505)
-        self.b_issuance_request.place(x=0,y=570)
-        self.b_exit_request.place(x=0,y=635)
+        self.b_history_request.place(x=0,y=570)
+        self.b_issuance_request.place(x=0,y=635)
+        self.b_exit_request.place(x=0,y=700)
         #_________________bind_________________
         self.listRequest.bind('<ButtonRelease>',self.select_record_list_request)
 
@@ -1585,6 +1667,20 @@ class App:
         request_page.state('withdraw')
         self.btnState = True
     
+    def request_to_history(self):
+        self.navFrm_history.place(x=1180, y=0)
+        self.data_to_list_history()
+        history_page.state('normal')
+        request_page.state('withdraw')
+        self.btnState = False
+
+    # def request_to_billing(self):
+    #     self.navFrm_billing.place(x=1180, y=0)
+    #     self.data_to_list_billing()
+    #     request_page .state('normal')
+    #     main_page.state('withdraw')
+    #     self.btnState = True
+
     def request_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
         self.data_to_list_stock()
@@ -1758,10 +1854,9 @@ class App:
         self.b_request_order=Button(self.navFrm_order,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_request)
         self.b_order_order=Button(self.navFrm_order,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
         self.b_exitKala_order=Button(self.navFrm_order,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_exit)
+        self.b_history_order=Button(self.navFrm_order,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_history)
         self.b_issuance_order=Button(self.navFrm_order,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_order=Button(self.navFrm_order,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
-
-
 
         self.b_openNav_order.place(x=1340,y=20)
         self.navFrm_order.place(x=1400,y=0)
@@ -1775,8 +1870,9 @@ class App:
         self.b_request_order.place(x=0,y=375)
         self.b_order_order.place(x=0,y=440)
         self.b_exitKala_order.place(x=0,y=505)
-        self.b_issuance_order.place(x=0,y=570)
-        self.b_exit_order.place(x=0,y=635)
+        self.b_history_order.place(x=0,y=570)
+        self.b_issuance_order.place(x=0,y=635)
+        self.b_exit_order.place(x=0,y=700)
         self.l_headerOrderPage.place(x=580,y=0)
         self.attention_idUser.place(x=1040,y=90)
         self.e_idUser_order.place(x=835,y=90)
@@ -1847,6 +1943,20 @@ class App:
         order_page.state('withdraw')
         self.btnState = False
     
+    def order_to_history(self):
+        self.navFrm_history.place(x=1180, y=0)
+        self.data_to_list_history()
+        history_page.state('normal')
+        order_page.state('withdraw')
+        self.btnState = False
+
+    # def order_to_billing(self):
+    #     self.navFrm_billing.place(x=1180, y=0)
+    #     self.data_to_list_billing()
+    #     order_page .state('normal')
+    #     main_page.state('withdraw')
+    #     self.btnState = True
+
     def order_to_receipt(self):
         self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
@@ -2048,6 +2158,7 @@ class App:
         self.b_request_exit=Button(self.navFrm_exit,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_request)
         self.b_order_exit=Button(self.navFrm_exit,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_order)
         self.b_exitKala_exit=Button(self.navFrm_exit,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
+        self.b_history_exit=Button(self.navFrm_exit,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_history)
         self.b_issuance_exit=Button(self.navFrm_exit,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_exit=Button(self.navFrm_exit,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
@@ -2063,8 +2174,9 @@ class App:
         self.b_request_exit.place(x=0,y=375)
         self.b_order_exit.place(x=0,y=440)
         self.b_exitKala_exit.place(x=0,y=505)
-        self.b_issuance_exit.place(x=0,y=570)
-        self.b_exit_exit.place(x=0,y=635)
+        self.b_history_exit.place(x=0,y=570)
+        self.b_issuance_exit.place(x=0,y=635)
+        self.b_exit_exit.place(x=0,y=700)
 
         self.h_exitPage.place(x=590,y=0)
         self.listExit.place(x=60,y=100)
@@ -2092,7 +2204,21 @@ class App:
         product_page.state('normal')
         exit_page.state('withdraw')
         self.btnState = True
-    
+        
+    def exit_to_history(self):
+        self.navFrm_history.place(x=1180, y=0)
+        self.data_to_list_history()
+        history_page.state('normal')
+        exit_page.state('withdraw')
+        self.btnState = False
+
+    # def exit_to_billing(self):
+    #     self.navFrm_billing.place(x=1180, y=0)
+    #     self.data_to_list_billing()
+    #     exit_page .state('normal')
+    #     main_page.state('withdraw')
+    #     self.btnState = True
+
     def exit_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
         self.data_to_list_stock()
@@ -2214,7 +2340,107 @@ class App:
     
         self.h_orderHistory.place(x=590,y=0)
         self.listHistory.place(x=50,y=150)
+        self.b_openNav_history=Button(history_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_history_nav,cursor='hand2')
+        self.navFrm_history=Frame(history_page,height=800,width=220,bg='#777777',bd=0)
+        self.closeFrm_history=LabelFrame(self.navFrm_history,width=220,bg='#2E2E2E',bd=0,height=50)
+        self.b_closeNav_history=Button(self.closeFrm_history,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_history_nav)
+        self.b_mainPage_history=Button(self.navFrm_history,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.history_to_main)
+        self.b_addKala_history=Button(self.navFrm_history,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.history_to_kala)
+        self.b_addUser_history=Button(self.navFrm_history,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.history_to_user)
+        self.b_WrStock_history=Button(self.navFrm_history,image=self.WrStockImg,bg='#777777',bd=0,cursor='hand2',command=self.history_to_stock)
+        self.b_Receipt_history=Button(self.navFrm_history,image=self.ReceiptImg,bg='#777777',bd=0,cursor='hand2',command=self.history_to_receipt)
+        self.b_request_history=Button(self.navFrm_history,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',command=self.history_to_request)
+        self.b_order_history=Button(self.navFrm_history,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.history_to_order)
+        self.b_exitKala_history=Button(self.navFrm_history,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.history_to_exit)
+        self.b_history_history=Button(self.navFrm_history,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
+        self.b_issuance_history=Button(self.navFrm_history,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_exit_history=Button(self.navFrm_history,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
+
+        self.b_openNav_history.place(x=1340,y=20)
+        self.navFrm_history.place(x=1400,y=0)
+        self.closeFrm_history.place(x=0,y=0)
+        self.b_closeNav_history.place(x=15,y=15)
+        self.b_mainPage_history.place(x=0,y=50)
+        self.b_addKala_history.place(x=0,y=115)
+        self.b_addUser_history.place(x=0,y=180)
+        self.b_WrStock_history.place(x=0,y=245)
+        self.b_Receipt_history.place(x=0,y=310)
+        self.b_request_history.place(x=0,y=375)
+        self.b_order_history.place(x=0,y=440)
+        self.b_exitKala_history.place(x=0,y=505)
+        self.b_history_history.place(x=0,y=570)
+        self.b_issuance_history.place(x=0,y=635)
+        self.b_exit_history.place(x=0,y=700)
     
+    def switch_history_nav(self):
+        if self.btnState is True:
+            self.navFrm_history.place(x=1400, y=0)
+            self.btnState = False
+        else:
+            self.navFrm_history.place(x=1180, y=0)
+            self.btnState = True
+    
+    def history_to_main(self):
+        self.navFrm.place(x=1180, y=0)
+        main_page.state('normal')        
+        history_page.state('withdraw')
+        self.btnState = True
+
+    def history_to_kala(self):
+        self.navFrm_product.place(x=1180, y=0)
+        self.data_to_list_kala()
+        product_page.state('normal')
+        history_page.state('withdraw')
+        self.btnState = True
+        
+    def history_to_exit(self):
+        self.navFrm_exit.place(x=1180, y=0)
+        self.data_to_list_history()
+        exit_page.state('normal')
+        history_page.state('withdraw')
+        self.btnState = False
+
+    # def history_to_billing(self):
+    #     self.navFrm_billing.place(x=1180, y=0)
+    #     self.data_to_list_billing()
+    #     history_page .state('normal')
+    #     main_page.state('withdraw')
+    #     self.btnState = True
+
+    def history_to_stock(self):
+        self.navFrm_stock.place(x=1180, y=0)
+        self.data_to_list_stock()
+        stock_page.state('normal')
+        history_page.state('withdraw')
+        self.btnState = True
+    
+    def history_to_receipt(self):
+        self.navFrm_receipt.place(x=1180, y=0)
+        receipt_page.state('normal')
+        history_page.state('withdraw')
+        self.btnState = True
+
+    def history_to_request(self):
+        self.navFrm_request.place(x=1180, y=0)
+        self.data_to_list_request()
+        request_page.state('normal')
+        history_page.state('withdraw')
+        self.btnState = True
+
+    def history_to_order(self):
+        self.navFrm_order.place(x=1180, y=0)
+        self.data_to_list_order()
+        order_page.state('normal')
+        history_page.state('withdraw')
+        self.btnState = True
+
+    def history_to_user(self):
+        self.navFrm_user.place(x=1180, y=0)
+        self.data_to_list_user()
+        user_page.state('normal')
+        history_page.state('withdraw')
+        self.btnState = True
+
     def data_to_list_history (self):
         self.lst=[]
         for item in self.listHistory.get_children():
