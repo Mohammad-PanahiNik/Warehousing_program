@@ -18,6 +18,7 @@ receipt_page = Toplevel()
 request_page = Toplevel()
 order_page = Toplevel()
 exit_page = Toplevel()
+history_page = Toplevel()
 
 class App:
     def __init__(self,event=None):
@@ -37,6 +38,8 @@ class App:
         self.request_product_page()
         self.order_kala_page()
         self.exit_kala_page()
+        self.order_history_page()
+        self.data_to_list_history()
 
     def main(self):
         main_page.geometry('1400x800+250+100')
@@ -1048,8 +1051,6 @@ class App:
         self.b_exitKala_stock.place(x=0,y=505)
         self.b_issuance_stock.place(x=0,y=570)
         self.b_exit_stock.place(x=0,y=635)
-
-
         self.l_headerStock.place(x=580,y=0)
         self.b_filterStock.place(x=860,y=130)
         self.c_filterStock.place(x=1020,y=135)
@@ -1422,7 +1423,7 @@ class App:
                     self.permission=True
                     self.nameUserLbl_receipt['text']=self.userInfo[0][1]
                     self.lastUserLbl_receipt['text']=self.userInfo[0][2]
-                    self.fullname=self.userInfo[0][1]+' '+self.userInfo[0][2]
+                    self.fullname_r=self.userInfo[0][1]+' '+self.userInfo[0][2]
                 else:
                     messagebox.showinfo("information","کاربر با این کد ملی قادر به ثبت ورود کالا نیست")
         except :
@@ -1450,15 +1451,17 @@ class App:
         self.kalaNumber=int(self.entryNum)+int(self.kalaInfo[0][7])
         self.randomId_receipt=str(uuid.uuid4())
         self.randomId_receipt=self.randomId_receipt[:8]
-        self.data_receipt=(self.kalaInfo[0][0],self.kalaInfo[0][1],self.kalaInfo[0][2],self.kalaInfo[0][3],self.entryNum,self.randomId_receipt,self.kalaNumber,self.fullname,self.selected_date_receipt)
-        self.cur.execute('''CREATE TABLE IF NOT EXISTS receipt (idKala TEXT NOT NULL ,nameKala TEXT NOT NULL ,
-        type TEXT NOT NULL,category TEXT NOT NULL,receiptNum,receiptId,stock,nameUser TEXT NOT NULL,date)''')
-        self.cur.execute('INSERT INTO receipt(idKala,nameKala,type,category,receiptNum,receiptId,stock,nameUser,date) VALUES(?,?,?,?,?,?,?,?,?)',self.data_receipt)
+        self.data=(self.kalaInfo[0][0],self.kalaInfo[0][1],self.fullname_r,self.entryNum,self.kalaInfo[0][7],
+        self.kalaInfo[0][4],'وارد انبار شد',self.selected_date_receipt,self.randomId_receipt)
+        self.cur.execute('''CREATE TABLE IF NOT EXISTS orders (idKala TEXT  NOT NULL ,nameKala TEXT NOT NULL ,nameUser TEXT NOT NULL
+        ,numOrder NOT NULL,stock,purchase TEXT NOT NULL,condition TEXT,date INTEGER NOT NULL,orderId)''')
+        self.cur.execute('INSERT INTO orders(idKala,nameKala,nameUser,numOrder,stock,purchase,condition,date,orderId) VALUES(?,?,?,?,?,?,?,?,?)',self.data)
         self.cur.execute(''' UPDATE kala SET stock = "{}" WHERE id="{}" '''.format(self.kalaNumber,self.idKala))
+        self.cur.execute(''' UPDATE orders SET stock = "{}" WHERE idKala="{}" '''.format(self.kalaNumber,self.idKala))
         self.con.commit()
         self.num_of_rows = len(self.listReceipt.get_children())
         self.listReceipt.insert(parent='',index='end',text='',
-                        values=(self.selected_date_receipt,self.kalaNumber,self.randomId_receipt,self.kalaInfo[0][0],self.kalaInfo[0][1],self.fullname,self.num_of_rows+1))
+                        values=(self.selected_date_receipt,self.entryNum,self.randomId_receipt,self.kalaInfo[0][0],self.kalaInfo[0][1],self.fullname_r,self.num_of_rows+1))
         self.e_kalaNum_receipt.delete(0,END)
         self.e_searchKala_receipt.delete(0,END)
         self.e_searchUser_receipt.delete(0,END)
@@ -1620,7 +1623,6 @@ class App:
         self.lst=[]
         for item in self.listRequest.get_children():
             self.listRequest.delete(item)
-        # self.fullname='محمد پناهی'
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='kala'")
@@ -1963,7 +1965,7 @@ class App:
             for i in self.lst:
                 self.numlist_order=len(self.listOrder.get_children())
                 self.listOrder.insert(parent='',index='end',text='',
-                    values=('01/01',i[4],i[3],i[8],i[2],i[1],i[0],self.count+1))
+                    values=(self.orderDate,i[4],i[3],i[8],i[2],i[1],i[0],self.count+1))
                 self.count +=1
                 
     def select_record_order(self ,event=None):
@@ -2160,5 +2162,87 @@ class App:
         self.con.commit()
         self.data_to_list_exit()
     
+    #________________________________________________________________________________________________________________________________________
+    #__________________________________________________________ order history page __________________________________________________________
+
+    def order_history_page(self):
+        history_page.geometry('1400x800+250+100')
+        history_page.configure(bg='white')
+        history_page.title('menu')
+        history_page.state('normal')
+
+        self.h_orderHistoryImg = PhotoImage(file='image/headerHistory.png')
+
+        self.h_orderHistory = Label(history_page,image=self.h_orderHistoryImg)
+        #list
+        self.listHistory= ttk.Treeview(history_page,show='headings',height=15)
+        self.listHistory['columns']=('date','orderNum','IdSefaresh','userName','NameKala','id','sefareshType','row')
+        #columns
+        self.listHistory.column('date',width=140,anchor=CENTER)
+        self.listHistory.column('IdSefaresh',width=210,anchor=E)
+        self.listHistory.column('orderNum',width=130,anchor=CENTER)
+        self.listHistory.column('userName',width=200,anchor=E)
+        self.listHistory.column('NameKala',width=185,anchor=E)
+        self.listHistory.column('id',width=130,anchor=CENTER)
+        self.listHistory.column('sefareshType',width=170,anchor=E)
+        self.listHistory.column('row',width=130,anchor=CENTER)
+        #heading
+        self.listHistory.heading('date',text=' : تاریخ',anchor=E)
+        self.listHistory.heading('IdSefaresh',text=' : کد سفارش',anchor=E)
+        self.listHistory.heading('orderNum',text=' : تعداد سفارش',anchor=E)
+        self.listHistory.heading('userName',text=' : نام سفارش دهنده',anchor=E)
+        self.listHistory.heading('NameKala',text=' : نام کالا',anchor=E)
+        self.listHistory.heading('id',text=' : کد کالا',anchor=E)
+        self.listHistory.heading('sefareshType',text=' : نوع سفارش',anchor=E)
+        self.listHistory.heading('row',text=' : ردیف',anchor=E)
+        self.style.theme_use('clam')
+        self.style.configure("Treeview.Heading",font=('Lalezar', 16),
+                            padding=[0, 5, 15, 5],background='#474A56',
+                            foreground="white",bd=0,relief='raised'
+                            )
+        self.style.map("Treeview.Heading",
+            background=[('active','#686A75')])
+        self.style.configure("Treeview", highlightthickness=0, 
+                            height=150,
+                            bd=0, font=('AraFProgram', 16),
+                            background="white",foreground="black",
+                            rowheight = 35,fieldbackground="white"
+                            )
+        self.style.map("Treeview",
+            background=[('selected', '#7A8BA7')],
+            foreground=[('selected', 'white')])
+    
+        self.h_orderHistory.place(x=590,y=0)
+        self.listHistory.place(x=50,y=150)
+    
+    def data_to_list_history (self):
+        self.lst=[]
+        for item in self.listHistory.get_children():
+            self.listHistory.delete(item)
+        self.count=0
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='orders'")
+        self.result = self.cur.fetchone()
+        if self.result != None:
+            row=self.cur.execute('SELECT * FROM orders')
+            self.list_history=list(row)
+            for i in self.list_history :
+                if i[6] == 'وارد انبار شد':
+                    self.lst.append(i)
+                elif i[6] == 'تحویل داده شد':
+                    self.lst.append(i)
+            for i in self.lst:
+                if i[6] == 'وارد انبار شد':
+                    self.numlist_order=len(self.listHistory.get_children())
+                    self.listHistory.insert(parent='',index='end',text='',
+                        values=(i[7],i[3],i[8],i[2],i[1],i[0],'ورود',self.count+1))
+                    self.count +=1
+                elif i[6] == 'تحویل داده شد':
+                    self.numlist_order=len(self.listHistory.get_children())
+                    self.listHistory.insert(parent='',index='end',text='',
+                        values=(i[7],i[3],i[8],i[2],i[1],i[0],'خروج',self.count+1))
+                    self.count +=1
+
 O = App(main_page)
 main_page.mainloop()
