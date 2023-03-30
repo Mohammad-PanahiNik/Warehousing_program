@@ -39,7 +39,16 @@ class App:
         self.exit_kala_page()
         self.order_history_page()
         self.data_to_list_history()
+
         self.update_time()
+        self.update_time_product()
+        self.update_time_user()
+        self.update_time_stock()
+        self.update_time_receipt()
+        self.update_time_request()
+        self.update_time_order()
+        self.update_time_exit()
+        self.update_time_history()
 
     def main(self):
         main_page.geometry('1400x800+250+100')
@@ -63,7 +72,7 @@ class App:
         self.historyBtnImg=PhotoImage(file='image/historyOrderBtnImg.png')
         self.bgDateImg=PhotoImage(file='image/bgDateImg.png')
         
-        self.dateFrm=Label(main_page,image=self.bgDateImg, height=90,width=220,bd=0,bg='white')
+        self.dateFrm=Label(main_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
         self.time_label = Label(self.dateFrm)
         self.date_label = Label(self.dateFrm)
         self.b_openNav=Button(main_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch,cursor='hand2')
@@ -83,8 +92,8 @@ class App:
         self.b_exit=Button(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
         self.dateFrm.place(x=0,y=0)
-        self.date_label.place(x=45,y=10)
-        self.time_label.place(x=55,y=50)
+        self.date_label.place(x=15,y=6)
+        self.time_label.place(x=190,y=6)
         self.b_openNav.place(x=1340,y=20)
         self.navFrm.place(x=1400,y=0)
         self.closeFrm.place(x=0,y=0)
@@ -106,8 +115,8 @@ class App:
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label.config(text=f"{self.current_time}",font=('Consolas',18),bg='#6050AB',fg='white')
-        self.date_label.config(text=f"{self.current_date}",font=('Consolas',18),bg='#6050AB',fg='white')
+        self.time_label.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.date_label.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
         self.dateFrm.after(1000, self.update_time)
 
     def switch(self):
@@ -353,6 +362,11 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
         
+
+        
+        self.dateFrm_product = Label(product_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.time_label_product = Label(self.dateFrm_product)
+        self.date_label_product = Label(self.dateFrm_product)
         self.b_openNav_product=Button(product_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_product_nav,cursor='hand2')
         self.navFrm_product=Frame(product_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_product=LabelFrame(self.navFrm_product,width=220,bg='#2E2E2E',bd=0,height=50)
@@ -369,6 +383,10 @@ class App:
         self.b_issuance_product=Button(self.navFrm_product,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_product=Button(self.navFrm_product,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
+        
+        self.dateFrm_product.place(x=0,y=0)
+        self.date_label_product.place(x=15,y=6)
+        self.time_label_product.place(x=190,y=6)
         self.b_openNav_product.place (x=1340,y=20)
         self.navFrm_product.place (x=1400,y=0)
         self.closeFrm_product.place (x=0,y=0)
@@ -429,7 +447,14 @@ class App:
         # self.b_delete_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImg.png'))
         # self.b_edit_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImgH.png'))
         # self.b_edit_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImg.png'))
-    
+    def update_time_product(self):
+        now_product = datetime.now()
+        self.current_time_product = now_product.strftime("%H:%M:%S")
+        self.current_date_product = now_product.strftime("%Y/%m/%d")
+        self.time_label_product.config(text=f"{self.current_time_product}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.date_label_product.config(text=f"{self.current_date_product}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.dateFrm_product.after(1000, self.update_time_product)
+
     def pruduct_to_main(self):
         self.navFrm.place(x=1180, y=0)
         main_page.state('normal')
@@ -660,6 +685,9 @@ class App:
         user_page.configure (bg='#F3F3F3')
         user_page.state ('withdraw')
     
+        self.dateFrm_user=Label(user_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.time_label_user = Label(self.dateFrm_user)
+        self.date_label_user = Label(self.dateFrm_user)
         self.l_headerUser=Label(user_page,image=self.hSabtUserImg)
         self.l_nameUser=Label(user_page,text=' : نام',font=('Lalezar',17))
         self.e_nameUser=Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
@@ -742,6 +770,9 @@ class App:
         self.b_issuance_user=Button(self.navFrm_user,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_user=Button(self.navFrm_user,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
+        self.dateFrm_user.place(x=0,y=0)
+        self.date_label_user.place(x=15,y=6)
+        self.time_label_user.place(x=190,y=6)
         self.b_openNav_user.place(x=1340,y=20)
         self.navFrm_user.place(x=1400,y=0)
         self.closeFrm_user.place(x=0,y=0)
@@ -757,7 +788,6 @@ class App:
         self.b_history_user.place(x=0,y=570)
         self.b_issuance_user.place(x=0,y=635)
         self.b_exit_user.place(x=0,y=700)
-
         self.l_headerUser.place(x=595,y=0)
         self.l_nameUser.place(x=1315,y=100)
         self.e_nameUser.place(x=1015,y=100)
@@ -797,6 +827,14 @@ class App:
         self.b_delete_user.bind('<Button-1>', self.delete_record_user)
         self.b_edit_user.bind('<ButtonRelease-1>', self.edit_record_values_user)
         self.b_sabtTaghirat_user.bind('<Button-1>', self.edit_user)
+    
+    def update_time_user(self):
+        now = datetime.now()
+        self.current_time = now.strftime("%H:%M:%S")
+        self.current_date = now.strftime("%Y/%m/%d")
+        self.time_label_user.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.date_label_user.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.dateFrm_user.after(1000, self.update_time_user)
 
     def switch_user_nav(self):
         if self.btnState is True:
@@ -1037,6 +1075,9 @@ class App:
         stock_page.configure (bg='#F3F3F3')
         stock_page.state ('withdraw')
 
+        self.dateFrm_stock=Label(stock_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.time_label_stock = Label(self.dateFrm_stock)
+        self.date_label_stock = Label(self.dateFrm_stock)
         self.l_headerStock=Label(stock_page,image=self.h_stockImg)
         self.b_filterStock=Button(stock_page,image=self.filterBtnImg,bd=0,activebackground='white',command=self.filter_stock)
         self.c_filterStock = ttk.Combobox(stock_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
@@ -1103,6 +1144,10 @@ class App:
         self.b_history_stock=Button(self.navFrm_stock,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.stock_to_history)
         self.b_issuance_stock=Button(self.navFrm_stock,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_stock=Button(self.navFrm_stock,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
+        
+        self.dateFrm_stock.place(x=0,y=0)
+        self.date_label_stock.place(x=15,y=6)
+        self.time_label_stock.place(x=190,y=6)
         self.b_openNav_stock.place(x=1340,y=20)
         self.navFrm_stock.place(x=1400,y=0)
         self.closeFrm_stock.place(x=0,y=0)
@@ -1125,7 +1170,15 @@ class App:
         self.e_searchStock.place(x=245,y=135)
         self.b_searchStock.place(x=85,y=130)
         self.listStock.place(x=85,y=185)
-        
+                    
+    def update_time_stock(self):
+        now = datetime.now()
+        self.current_time = now.strftime("%H:%M:%S")
+        self.current_date = now.strftime("%Y/%m/%d")
+        self.time_label_stock.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.date_label_stock.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.dateFrm_stock.after(1000, self.update_time_stock)     
+
     def switch_stock_nav(self):
         if self.btnState is True:
             self.navFrm_stock.place(x=1400, y=0)
@@ -1287,12 +1340,15 @@ class App:
         receipt_page.geometry ('1400x800+250+100')
         receipt_page.configure (bg='#F3F3F3')
         receipt_page.state ('withdraw')
-
+        
         self.searchUserFrm = LabelFrame(receipt_page,bg='#DFDFDF',width=1410,height=170,bd=5,relief=SOLID)
         self.h_vorodKala_receipt = Label(self.searchUserFrm,image=self.headerVorodKalaImg)
         self.l_attention_receipt = Label(self.searchUserFrm,text='.توجه : لطفا ابتدا کد ملی متقاضی مورد نظر را وارد کنید',font=('Lalezar',17),bg='#DFDFDF')
         self.e_searchUser_receipt  = Entry(self.searchUserFrm,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_searchUser_receipt = Button(self.searchUserFrm,bg='#DFDFDF',image=self.searchBtnImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.search_idUser_receipt)
+        self.dateFrm_receipt=Label(self.searchUserFrm,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.time_label_receipt = Label(self.dateFrm_receipt)
+        self.date_label_receipt = Label(self.dateFrm_receipt)
         self.e_searchKala_receipt = Entry(receipt_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid',fg='#717171')
         self.e_searchKala_receipt.insert(0,'جستجوی کد کالا')
         self.b_searchKala_receipt = Button(receipt_page,bg='#DFDFDF',image=self.searchBtnImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.search_idKala)
@@ -1383,7 +1439,9 @@ class App:
         self.b_issuance_receipt=Button(self.navFrm_receipt,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_receipt=Button(self.navFrm_receipt,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
-
+        self.dateFrm_receipt.place(x=0,y=0)
+        self.date_label_receipt.place(x=15,y=6)
+        self.time_label_receipt.place(x=190,y=6)
         self.b_openNav_receipt.place(x=1340,y=20)
         self.navFrm_receipt.place(x=1400,y=0)
         self.closeFrm_receipt.place(x=0,y=0)
@@ -1399,8 +1457,6 @@ class App:
         self.b_history_receipt.place(x=0,y=570)
         self.b_issuance_receipt.place(x=0,y=635)
         self.b_exit_receipt.place(x=0,y=700)
-
-
         self.h_vorodKala_receipt.place(x=610,y=0)
         self.searchUserFrm.place(x=-5,y=-10)
         self.l_attention_receipt.place(x=690,y=90)
@@ -1409,7 +1465,6 @@ class App:
         self.e_searchKala_receipt.place(x=1115,y=175)
         self.b_searchKala_receipt.place(x=955,y=170)
         self.infoKalaFrm_receipt.place(x=60,y=225)
-        
         self.l_nameUser_receipt.place(x=1275,y=280)
         self.nameUserLbl_receipt.place(x=1095,y=280)
         self.l_nameKala_receipt.place(x=1255,y=360)
@@ -1435,7 +1490,15 @@ class App:
         self.l_date_receipt.place(x=350,y=10)
         self.date_receipt.place(x=190,y=10)
         self.listReceipt.place(x=85,y=545)
-    
+              
+    def update_time_receipt(self):
+        now = datetime.now()
+        self.current_time = now.strftime("%H:%M:%S")
+        self.current_date = now.strftime("%Y/%m/%d")
+        self.time_label_receipt.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.date_label_receipt.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.dateFrm_receipt.after(1000, self.update_time_receipt)
+
     def switch_receipt_nav(self):
         if self.btnState is True:
             self.navFrm_receipt.place(x=1400, y=0)
@@ -1586,6 +1649,9 @@ class App:
         self.headerReguestImg = PhotoImage(file='image/headerRequestImg.png')
         self.requestBtnImg = PhotoImage(file='image/requestBtnImg.png')
 
+        self.dateFrm_request=Label(request_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.time_label_request = Label(self.dateFrm_request)
+        self.date_label_request = Label(self.dateFrm_request)
         self.h_requestPage = Label(request_page,image=self.headerReguestImg)
         self.b_requestPage = Button(request_page,image=self.requestBtnImg,bd=0,activebackground='white',command=self.order_kala)
         #list
@@ -1640,7 +1706,9 @@ class App:
         self.b_issuance_request=Button(self.navFrm_request,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_request=Button(self.navFrm_request,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
-
+        self.dateFrm_request.place(x=0,y=0)
+        self.date_label_request.place(x=15,y=6)
+        self.time_label_request.place(x=190,y=6)
         self.b_openNav_request.place(x=1340,y=20)
         self.navFrm_request.place(x=1400,y=0)
         self.closeFrm_request.place(x=0,y=0)
@@ -1663,6 +1731,14 @@ class App:
         self.listRequest.place(x=85,y=90)
         self.b_requestPage.place(x=600,y=720)
     
+    def update_time_request(self):
+        now = datetime.now()
+        self.current_time = now.strftime("%H:%M:%S")
+        self.current_date = now.strftime("%Y/%m/%d")
+        self.time_label_request.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.date_label_request.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.dateFrm.after(1000, self.update_time_request)
+
     def switch_request_nav(self):
         if self.btnState is True:
             self.navFrm_request.place(x=1400, y=0)
@@ -1775,7 +1851,7 @@ class App:
         order_page.configure(bg='white')
         order_page.title('menu')
         order_page.state('withdraw')
-
+        
         self.headerOrderImg = PhotoImage(file='image/headerRequestImg.png')
         self.sabtOrderBtnImg = PhotoImage(file='image/sabtOrder.png')
         self.searchBtnImg_order = PhotoImage(file='image/searchBtnImg.png')
@@ -1783,6 +1859,9 @@ class App:
         self.order_baresiImg = PhotoImage(file='image/baresiBtnImg.png')
         self.tickImgBtn = PhotoImage(file='image/tickImgBtn.png')
 
+        self.dateFrm_order=Label(order_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.time_label_order = Label(self.dateFrm_order)
+        self.date_label_order = Label(self.dateFrm_order)
         self.l_headerOrderPage = Label(order_page,image=self.headerOrderImg)
         self.attention_idUser = Label(order_page,text=' . لطفا کد کاربر موردنطر خود را وارد کنید',font=('Lalezar',17),bg='white')
         self.e_idUser_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
@@ -1874,7 +1953,10 @@ class App:
         self.b_history_order=Button(self.navFrm_order,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.order_to_history)
         self.b_issuance_order=Button(self.navFrm_order,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_order=Button(self.navFrm_order,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
-
+        
+        self.dateFrm_order.place(x=0,y=0)
+        self.date_label_order.place(x=15,y=6)
+        self.time_label_order.place(x=190,y=6)
         self.b_openNav_order.place(x=1340,y=20)
         self.navFrm_order.place(x=1400,y=0)
         self.closeFrm_order.place(x=0,y=0)
@@ -1931,7 +2013,15 @@ class App:
         #________bind___________
         self.listOrder.bind('<ButtonRelease-1>',self.select_record_order)
         self.tickBtnOrder.bind('<Button-1>',self.ready_to_delivery)
-    
+                   
+    def update_time_order(self):
+        now = datetime.now()
+        self.current_time = now.strftime("%H:%M:%S")
+        self.current_date = now.strftime("%Y/%m/%d")
+        self.time_label_order.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.date_label_order.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.dateFrm_order.after(1000, self.update_time_order)
+
     def switch_order_nav(self):
         if self.btnState is True:
             self.navFrm_order.place(x=1400, y=0)
@@ -2123,6 +2213,9 @@ class App:
         self.h_sabtExitKalaImg = PhotoImage(file='image/sabtExitKala.png')
         self.exitKalaImg = PhotoImage(file='image/sabtExitBtn.png')
 
+        self.dateFrm_exit=Label(exit_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.time_label_exit = Label(self.dateFrm_exit)
+        self.date_label_exit = Label(self.dateFrm_exit)
         self.h_exitPage = Label(exit_page,image=self.h_sabtExitKalaImg)
         #list
         self.listExit= ttk.Treeview(exit_page,show='headings',height=15)
@@ -2178,7 +2271,10 @@ class App:
         self.b_history_exit=Button(self.navFrm_exit,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.exit_to_history)
         self.b_issuance_exit=Button(self.navFrm_exit,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_exit=Button(self.navFrm_exit,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
-
+        
+        self.dateFrm_exit.place(x=0,y=0)
+        self.date_label_exit.place(x=15,y=6)
+        self.time_label_exit.place(x=190,y=6)
         self.b_openNav_exit.place(x=1340,y=20)
         self.navFrm_exit.place(x=1400,y=0)
         self.closeFrm_exit.place(x=0,y=0)
@@ -2194,13 +2290,20 @@ class App:
         self.b_history_exit.place(x=0,y=570)
         self.b_issuance_exit.place(x=0,y=635)
         self.b_exit_exit.place(x=0,y=700)
-
         self.h_exitPage.place(x=590,y=0)
         self.listExit.place(x=60,y=100)
         self.b_exit_kala.place(x=630,y=720)
 
         self.listExit.bind('<ButtonRelease-1>',self.select_record_exit)
     
+    def update_time_exit(self):
+        now = datetime.now()
+        self.current_time = now.strftime("%H:%M:%S")
+        self.current_date = now.strftime("%Y/%m/%d")
+        self.time_label_exit.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.date_label_exit.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.dateFrm_exit.after(1000, self.update_time_exit)
+
     def switch_exit_nav(self):
         if self.btnState is True:
             self.navFrm_exit.place(x=1400, y=0)
@@ -2316,6 +2419,9 @@ class App:
 
         self.h_orderHistoryImg = PhotoImage(file='image/headerHistory.png')
 
+        self.dateFrm_history=Label(history_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.time_label_history = Label(self.dateFrm_history)
+        self.date_label_history = Label(self.dateFrm_history)
         self.h_orderHistory = Label(history_page,image=self.h_orderHistoryImg)
         #list
         self.listHistory= ttk.Treeview(history_page,show='headings',height=15)
@@ -2355,8 +2461,11 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
     
+        self.dateFrm_history.place(x=0,y=0)
+        self.date_label_history.place(x=15,y=6)
+        self.time_label_history.place(x=190,y=6)
         self.h_orderHistory.place(x=590,y=0)
-        self.listHistory.place(x=50,y=150)
+        self.listHistory.place(x=50,y=150)        
         self.b_openNav_history=Button(history_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_history_nav,cursor='hand2')
         self.navFrm_history=Frame(history_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_history=LabelFrame(self.navFrm_history,width=220,bg='#2E2E2E',bd=0,height=50)
@@ -2372,7 +2481,7 @@ class App:
         self.b_history_history=Button(self.navFrm_history,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
         self.b_issuance_history=Button(self.navFrm_history,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit_history=Button(self.navFrm_history,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
-
+        
         self.b_openNav_history.place(x=1340,y=20)
         self.navFrm_history.place(x=1400,y=0)
         self.closeFrm_history.place(x=0,y=0)
@@ -2388,7 +2497,15 @@ class App:
         self.b_history_history.place(x=0,y=570)
         self.b_issuance_history.place(x=0,y=635)
         self.b_exit_history.place(x=0,y=700)
-    
+                    
+    def update_time_history(self):
+        now = datetime.now()
+        self.current_time = now.strftime("%H:%M:%S")
+        self.current_date = now.strftime("%Y/%m/%d")
+        self.time_label_history.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.date_label_history.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.dateFrm_history.after(1000, self.update_time_history)
+
     def switch_history_nav(self):
         if self.btnState is True:
             self.navFrm_history.place(x=1400, y=0)
