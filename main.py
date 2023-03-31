@@ -22,6 +22,7 @@ request_page = Toplevel()
 order_page = Toplevel()
 exit_page = Toplevel()
 history_page = Toplevel()
+bill_page = Toplevel()
 
 class App:
     def __init__(self,event=None):
@@ -42,7 +43,7 @@ class App:
         self.order_kala_page()
         self.exit_kala_page()
         self.order_history_page()
-        self.data_to_list_history()
+        self.bill_kala_page()
 
         self.update_time()
         self.update_time_product()
@@ -95,7 +96,7 @@ class App:
         self.b_sabtSefareshPage=Button(self.navFrm,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.open_sabtSefaresh_page)
         self.b_sabtExitKalaPage=Button(self.navFrm,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.open_sabtExit_page)
         self.b_historyOrder=Button(self.navFrm,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.open_history_page)
-        self.b_billing=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
+        self.b_bill=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2')
         self.b_exit=Button(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
         self.dateFrm.place(x=0,y=0)
@@ -114,7 +115,7 @@ class App:
         self.b_sabtSefareshPage.place(x=0,y=440)
         self.b_sabtExitKalaPage.place(x=0,y=505)
         self.b_historyOrder.place(x=0,y=570)
-        self.b_billing.place(x=0,y=635)
+        self.b_bill.place(x=0,y=635)
         self.b_exit.place(x=0,y=700)
 
             
@@ -2489,11 +2490,6 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
     
-        self.dateFrm_history.place(x=0,y=0)
-        self.date_label_history.place(x=15,y=6)
-        self.time_label_history.place(x=190,y=6)
-        self.h_orderHistory.place(x=590,y=0)
-        self.listHistory.place(x=50,y=150)        
         self.b_openNav_history=Button(history_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_history_nav,cursor='hand2')
         self.navFrm_history=Frame(history_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_history=LabelFrame(self.navFrm_history,width=220,bg='#2E2E2E',bd=0,height=50)
@@ -2525,6 +2521,11 @@ class App:
         self.b_history_history.place(x=0,y=570)
         self.b_issuance_history.place(x=0,y=635)
         self.b_exit_history.place(x=0,y=700)
+        self.dateFrm_history.place(x=0,y=0)
+        self.date_label_history.place(x=15,y=6)
+        self.time_label_history.place(x=190,y=6)
+        self.h_orderHistory.place(x=590,y=0)
+        self.listHistory.place(x=50,y=150)        
                     
     def update_time_history(self):
         now = datetime.now()
@@ -2631,6 +2632,67 @@ class App:
                     self.listHistory.insert(parent='',index='end',text='',
                         values=(i[7],i[3],i[8],i[2],i[1],i[0],'خروج',self.count+1))
                     self.count +=1
+
+#______________________________________________________________________________________________________________________________________________
+#_________________________________________________________________ bill page __________________________________________________________________
+    def bill_kala_page(self):
+        bill_page.state('normal')
+        bill_page.geometry('1400x800+250+100')
+        bill_page.configure(bg='#F3F3F3')
+
+    
+        self.searchBtnImg_kala = PhotoImage(file='image/searchBtnImg.png')
+        self.h_billImg = PhotoImage(file='image/headerSodorghabz.png')
+        self.billBtnImg = PhotoImage(file='image/sodorGhabzBtn.png')
+
+        self.headerBillPage = Label(bill_page,image=self.h_billImg)
+        self.l_SearchKala_bill = Label(bill_page,text='کد کالا یا کد سفارش مورد نظر خود را وارد کنید',font=('Lalezar',17),bg='#F2F2F2')
+        self.e_SearchKala_bill = Entry(bill_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.b_SearchKala_bill =  Button(bill_page,bg='#F3F3F3',image=self.searchBtnImg_user,activebackground='#F3F3F3',bd=0,cursor='hand2')
+        self.b_blii =  Button(bill_page,bg='#F3F3F3',image=self.billBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
+        #list
+        self.listBill= ttk.Treeview(bill_page,show='headings',height=14)
+        self.listBill['columns']=('date','orderNum','IdSefaresh','userName','NameKala','id','sefareshType','row')
+        #columns
+        self.listBill.column('date',width=140,anchor=CENTER)
+        self.listBill.column('IdSefaresh',width=210,anchor=E)
+        self.listBill.column('orderNum',width=130,anchor=CENTER)
+        self.listBill.column('userName',width=200,anchor=E)
+        self.listBill.column('NameKala',width=185,anchor=E)
+        self.listBill.column('id',width=130,anchor=CENTER)
+        self.listBill.column('sefareshType',width=170,anchor=E)
+        self.listBill.column('row',width=130,anchor=CENTER)
+        #heading
+        self.listBill.heading('date',text=' : تاریخ',anchor=E)
+        self.listBill.heading('IdSefaresh',text=' : کد سفارش',anchor=E)
+        self.listBill.heading('orderNum',text=' : تعداد سفارش',anchor=E)
+        self.listBill.heading('userName',text=' : نام سفارش دهنده',anchor=E)
+        self.listBill.heading('NameKala',text=' : نام کالا',anchor=E)
+        self.listBill.heading('id',text=' : کد کالا',anchor=E)
+        self.listBill.heading('sefareshType',text=' : نوع سفارش',anchor=E)
+        self.listBill.heading('row',text=' : ردیف',anchor=E)
+        self.style.theme_use('clam')
+        self.style.configure("Treeview.Heading",font=('Lalezar', 16),
+                            padding=[0, 5, 15, 5],background='#474A56',
+                            foreground="white",bd=0,relief='raised')
+        self.style.map("Treeview.Heading",
+            background=[('active','#686A75')])
+        self.style.configure("Treeview", highlightthickness=0, 
+                            height=150,
+                            bd=0, font=('AraFProgram', 16),
+                            background="white",foreground="black",
+                            rowheight = 35,fieldbackground="white")
+        self.style.map("Treeview",
+            background=[('selected', '#7A8BA7')],
+            foreground=[('selected', 'white')])
+    
+        self.headerBillPage.place(x=590,y=0)
+        self.l_SearchKala_bill.place(x=1000,y=100)
+        self.e_SearchKala_bill.place(x=780,y=100)
+        self.b_SearchKala_bill.place(x=620,y=95)
+        self.b_blii.place(x=620,y=730)
+        self.listBill.place(x=50,y=160)
+
 
 O = App(main_page)
 main_page.mainloop()
