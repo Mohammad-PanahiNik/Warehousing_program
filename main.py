@@ -2,16 +2,20 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
 import sqlite3 as sql
+import numpy as np
 from tkinter import messagebox
 import uuid
 from datetime import datetime
 from tkcalendar import Calendar, DateEntry
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 main_page = Tk()
 register_page = Toplevel()
 loginn_page = Toplevel()
 product_page = Toplevel()
 user_page = Toplevel()
+chart_page = Toplevel()
 stock_page = Toplevel()
 receipt_page = Toplevel()
 request_page = Toplevel()
@@ -50,11 +54,14 @@ class App:
         self.update_time_exit()
         self.update_time_history()
 
+        self.chartkala_page()
+
+
     def main(self):
         main_page.geometry('1400x800+250+100')
         main_page.configure(bg='white')
         main_page.title('menu')
-        main_page.state('normal')
+        main_page.state('withdraw')
         
         #image
         self.addUserImg=PhotoImage(file='image/adduserImg.png')
@@ -1070,6 +1077,7 @@ class App:
         self.searchBtnImg_stock   = PhotoImage(file='image/searchBtnImg.png')
         self.filterBtnImg = PhotoImage(file='image/filterBtnImg.png')
         self.deleteBtnImg_stock = PhotoImage(file='image/deleteBtnImg.png')
+        self.chartBtnImg = PhotoImage(file='image/chartBtnImg.png')
 
         stock_page.geometry ('1400x800+250+100')
         stock_page.configure (bg='#F3F3F3')
@@ -1086,7 +1094,7 @@ class App:
         self.l_filterStock=Label(stock_page,text=' : گروه کالا',font=('Lalezar',17))
         self.e_searchStock = Entry(stock_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_searchStock= Button(stock_page,image=self.searchBtnImg_stock,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id_stock)
-        self.b_delete_stock=Button(stock_page,image=self.deleteBtnImg_stock,bd=0,activebackground='#F3F3F3',cursor='hand2')
+        self.b_chart_stock=Button(stock_page,image=self.chartBtnImg,bd=0,activebackground='#F3F3F3',cursor='hand2',command=self.chartKala)
 
         #list
         self.listStock= ttk.Treeview(stock_page,show='headings',height=15)
@@ -1127,7 +1135,7 @@ class App:
         
         #___bind___
         self.listStock.bind('<ButtonRelease-1>', self.select_record_stock)
-        self.b_delete_stock.bind('<Button-1>', self.delete_record_stock)
+        # self.b_chart_stock.bind('<ButtonRelease-1>', self.chartkala)
     
         self.b_openNav_stock=Button(stock_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_stock_nav,cursor='hand2')
         self.navFrm_stock=Frame(stock_page,height=800,width=220,bg='#777777',bd=0)
@@ -1269,27 +1277,47 @@ class App:
                 self.listStock.insert(parent='',index='end',text='',
                                     values=(i[4],i[7],i[3],i[2],i[1],i[0],str(self.count+1)))
                 self.count += 1
-    
+
+    def chartkala_page(self,event=None):
+        chart_page.state('withdraw')
+        chart_page.geometry('550x600+700+200')
+        chart_page.protocol("WM_DELETE_WINDOW", lambda : chart_page.state('withdraw'))
+
+    def chartKala(self,event=None):
+        chart_page.state('normal')
+        self.ChartX=[]
+        self.ChartY=[]
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        row = self.cur.execute('SELECT * FROM orders WHERE IdKala="{}"'.format(self.rowlistStock))
+        row=list(row)
+        for i in row:
+            if i[6] == 'وارد انبار شد' or i[6] == 'تحویل داده شد':
+                self.ChartX.append(i[7])
+                self.ChartY.append(i[4])
+        print(self.ChartX,self.ChartY)
+        self.plotFrm = LabelFrame(chart_page,text='Plot',padx=5,pady=10)
+        self.plotFrm.place(x=20,y=20)
+        fig = plt.figure(figsize=(5,5))
+        plt.plot(self.ChartX,self.ChartY,
+                 linewidth=2,
+                 linestyle='--',
+                 marker='o',
+                 markersize=5,
+                 markerfacecolor='blue')
+        plt.grid(which='both')
+        self.bar = FigureCanvasTkAgg(fig,self.plotFrm)
+        self.bar.get_tk_widget().pack(side=LEFT,fill=BOTH)
+
     def select_record_stock(self,event=None):
         self.selected = self.listStock.focus()
         self.values = self.listStock.item(self.selected , "values")
-        self.row_id =self.listStock.identify_row(event.y)
+        self.rowlistStock=self.values[5]
+        self.row_id = self.listStock.identify_row(event.y)
         start = self.listStock.bbox(self.row_id, column=None)
-        self.y1=start[1]+185
-        self.b_delete_stock.place(x=40,y=self.y1)
+        self.y1 = start[1]+185
+        self.b_chart_stock.place(x=40,y=self.y1)
 
-    def delete_record_stock(self,event=None):
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
-        self.code=self.values[5]
-        self.cur.execute("DELETE FROM kala WHERE id='{}'" .format(self.code))
-        self.con.commit()
-        for item in self.listStock.get_children():
-            self.listStock.delete(item)
-        self.lst=[]
-        self.data_to_list_stock()
-        self.b_delete_stock.place(x=-50,y=-50)
-    
     def filter_stock(self):
         self.filterLst=self.c_filterStock.get()
         self.con=sql.connect('mydb.db')
@@ -1617,7 +1645,7 @@ class App:
         ,numOrder NOT NULL,stock,purchase TEXT NOT NULL,condition TEXT,date INTEGER NOT NULL,orderId)''')
         self.cur.execute('INSERT INTO orders(idKala,nameKala,nameUser,numOrder,stock,purchase,condition,date,orderId) VALUES(?,?,?,?,?,?,?,?,?)',self.data)
         self.cur.execute(''' UPDATE kala SET stock = "{}" WHERE id="{}" '''.format(self.kalaNumber,self.idKala))
-        self.cur.execute(''' UPDATE orders SET stock = "{}" WHERE idKala="{}" '''.format(self.kalaNumber,self.idKala))
+        self.cur.execute(''' UPDATE orders SET stock = "{}" WHERE orderId="{}" '''.format(self.kalaNumber,self.randomId_receipt))
         self.con.commit()
         self.num_of_rows = len(self.listReceipt.get_children())
         self.listReceipt.insert(parent='',index='end',text='',
@@ -1850,7 +1878,7 @@ class App:
         order_page.geometry('1400x800+250+100')
         order_page.configure(bg='white')
         order_page.title('menu')
-        order_page.state('withdraw')
+        order_page.state('normal')
         
         self.headerOrderImg = PhotoImage(file='image/headerRequestImg.png')
         self.sabtOrderBtnImg = PhotoImage(file='image/sabtOrder.png')
@@ -2182,7 +2210,7 @@ class App:
             for i in self.lst:
                 self.numlist_order=len(self.listOrder.get_children())
                 self.listOrder.insert(parent='',index='end',text='',
-                    values=(self.orderDate,i[4],i[3],i[8],i[2],i[1],i[0],self.count+1))
+                    values=(i[7],i[4],i[3],i[8],i[2],i[1],i[0],self.count+1))
                 self.count +=1
                 
     def select_record_order(self ,event=None):
@@ -2402,8 +2430,8 @@ class App:
         self.cur=self.con.cursor()
         exitIdCheck=self.values_exit_list[3]
         self.new_stock_exit=int(self.values_exit_list[1])-int(self.values_exit_list[2])
-        self.cur.execute(''' UPDATE orders SET condition = ?   WHERE orderId= ? ''',("تحویل داده شد",exitIdCheck))
-        self.cur.execute(''' UPDATE orders SET stock = ?  WHERE idKala= ? ''',(self.new_stock_exit,self.values_exit_list[6]))
+        self.cur.execute(''' UPDATE orders SET condition = ?   WHERE orderId= ? ''',("تحویل داده شد",exitIdCheck))        
+        self.cur.execute(''' UPDATE orders SET stock = ?  WHERE orderId= ? ''',(self.new_stock_exit,exitIdCheck))
         self.cur.execute(''' UPDATE kala SET stock = ?  WHERE id= ? ''',(self.new_stock_exit,self.values_exit_list[6]))
         self.con.commit()
         self.data_to_list_exit()
@@ -2415,7 +2443,7 @@ class App:
         history_page.geometry('1400x800+250+100')
         history_page.configure(bg='white')
         history_page.title('menu')
-        history_page.state('normal')
+        history_page.state('withdraw')
 
         self.h_orderHistoryImg = PhotoImage(file='image/headerHistory.png')
 
