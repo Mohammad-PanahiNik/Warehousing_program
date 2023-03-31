@@ -27,6 +27,20 @@ bill_page = Toplevel()
 
 class App:
     def __init__(self,event=None):
+        loginn_page.state('withdraw')
+        register_page.state('withdraw')
+        product_page.state ('withdraw')
+        user_page.state ('withdraw')
+        stock_page.state ('withdraw')
+        receipt_page.state ('withdraw')
+        request_page.state('withdraw')
+        order_page.state('withdraw')
+        exit_page.state('withdraw')
+        history_page.state('withdraw')
+        sodorbill_page.state('withdraw')
+        bill_page.state('withdraw')
+        chart_page.state('withdraw')
+        
         self.btnState = False
         self.permission=False
         self.style=ttk.Style()
@@ -46,6 +60,7 @@ class App:
         self.order_history_page()
         self.sodor_bill_kala_page()
         self.bill_kala_page()
+        self.chartkala_page()
 
         self.update_time()
         self.update_time_product()
@@ -57,14 +72,13 @@ class App:
         self.update_time_exit()
         self.update_time_history()
 
-        self.chartkala_page()
 
 
     def main(self):
         main_page.geometry('1400x800+250+100')
         main_page.configure(bg='white')
         main_page.title('menu')
-        main_page.state('withdraw')
+        main_page.state('normal')
         
         #image
         self.addUserImg=PhotoImage(file='image/adduserImg.png')
@@ -204,7 +218,6 @@ class App:
     def warehouse_login_page(self):
         loginn_page.geometry('400x510+750+300')
         loginn_page.config(bg='white')
-        loginn_page.state('withdraw')
 
         #image
         self.logFrmImg = PhotoImage(file='image/loginFrm.png')
@@ -245,7 +258,6 @@ class App:
 #_________________________________________________ register page _____________________________________________________
 
     def warehouse_register_page(self):
-        register_page.state('withdraw')
         register_page.geometry('1000x600+450+200')
 
         # Images
@@ -306,7 +318,6 @@ class App:
         self.sabtTaghirKalaBtn = PhotoImage(file='image/sabtEdit.png')
 
         product_page.geometry ('1400x800+250+100')
-        product_page.state ('withdraw')
         product_page.configure (bg='#F3F3F3')
 
         self.h_sabtKala_kala = Label(product_page,image=self.h_sabtKalaImg)
@@ -691,7 +702,6 @@ class App:
 
         user_page.geometry ('1400x800+250+100')
         user_page.configure (bg='#F3F3F3')
-        user_page.state ('withdraw')
     
         self.dateFrm_user=Label(user_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
         self.time_label_user = Label(self.dateFrm_user)
@@ -1082,7 +1092,6 @@ class App:
 
         stock_page.geometry ('1400x800+250+100')
         stock_page.configure (bg='#F3F3F3')
-        stock_page.state ('withdraw')
 
         self.dateFrm_stock=Label(stock_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
         self.time_label_stock = Label(self.dateFrm_stock)
@@ -1280,7 +1289,6 @@ class App:
                 self.count += 1
 
     def chartkala_page(self,event=None):
-        chart_page.state('withdraw')
         chart_page.geometry('550x600+700+200')
         chart_page.protocol("WM_DELETE_WINDOW", lambda : chart_page.state('withdraw'))
 
@@ -1367,7 +1375,6 @@ class App:
         
         receipt_page.geometry ('1400x800+250+100')
         receipt_page.configure (bg='#F3F3F3')
-        receipt_page.state ('withdraw')
         
         self.searchUserFrm = LabelFrame(receipt_page,bg='#DFDFDF',width=1410,height=170,bd=5,relief=SOLID)
         self.h_vorodKala_receipt = Label(self.searchUserFrm,image=self.headerVorodKalaImg)
@@ -1672,7 +1679,6 @@ class App:
         request_page.geometry('1400x800+250+100')
         request_page.configure(bg='white')
         request_page.title('menu')
-        request_page.state('withdraw')
 
         self.headerReguestImg = PhotoImage(file='image/headerRequestImg.png')
         self.requestBtnImg = PhotoImage(file='image/requestBtnImg.png')
@@ -1878,7 +1884,6 @@ class App:
         order_page.geometry('1400x800+250+100')
         order_page.configure(bg='white')
         order_page.title('menu')
-        order_page.state('withdraw')
         
         self.headerOrderImg = PhotoImage(file='image/headerRequestImg.png')
         self.sabtOrderBtnImg = PhotoImage(file='image/sabtOrder.png')
@@ -2236,7 +2241,6 @@ class App:
         exit_page.geometry('1400x800+250+100')
         exit_page.configure(bg='white')
         exit_page.title('menu')
-        exit_page.state('withdraw')
 
         self.h_sabtExitKalaImg = PhotoImage(file='image/sabtExitKala.png')
         self.exitKalaImg = PhotoImage(file='image/sabtExitBtn.png')
@@ -2443,7 +2447,6 @@ class App:
         history_page.geometry('1400x800+250+100')
         history_page.configure(bg='white')
         history_page.title('menu')
-        history_page.state('withdraw')
 
         self.h_orderHistoryImg = PhotoImage(file='image/headerHistory.png')
 
@@ -2635,10 +2638,8 @@ class App:
 #______________________________________________________________________________________________________________________________________________
 #___________________________________________________________ sodor bill page __________________________________________________________________
     def sodor_bill_kala_page(self):
-        sodorbill_page.state('normal')
         sodorbill_page.geometry('1400x800+250+100')
         sodorbill_page.configure(bg='#F3F3F3')
-
     
         self.searchBtnImg_kala = PhotoImage(file='image/searchBtnImg.png')
         self.h_billImg = PhotoImage(file='image/headerSodorghabz.png')
@@ -2748,7 +2749,6 @@ class App:
 #___________________________________________________________ sodor bill page __________________________________________________________________
 
     def bill_kala_page(self):
-        bill_page.state('withdraw')
         bill_page.geometry('1400x800+250+100')
         bill_page.configure(bg='#F3F3F3')
     
