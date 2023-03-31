@@ -22,6 +22,7 @@ request_page = Toplevel()
 order_page = Toplevel()
 exit_page = Toplevel()
 history_page = Toplevel()
+sodorbill_page = Toplevel()
 bill_page = Toplevel()
 
 class App:
@@ -43,6 +44,7 @@ class App:
         self.order_kala_page()
         self.exit_kala_page()
         self.order_history_page()
+        self.sodor_bill_kala_page()
         self.bill_kala_page()
 
         self.update_time()
@@ -2634,24 +2636,24 @@ class App:
                     self.count +=1
 
 #______________________________________________________________________________________________________________________________________________
-#_________________________________________________________________ bill page __________________________________________________________________
-    def bill_kala_page(self):
-        bill_page.state('normal')
-        bill_page.geometry('1400x800+250+100')
-        bill_page.configure(bg='#F3F3F3')
+#___________________________________________________________ sodor bill page __________________________________________________________________
+    def sodor_bill_kala_page(self):
+        sodorbill_page.state('normal')
+        sodorbill_page.geometry('1400x800+250+100')
+        sodorbill_page.configure(bg='#F3F3F3')
 
     
         self.searchBtnImg_kala = PhotoImage(file='image/searchBtnImg.png')
         self.h_billImg = PhotoImage(file='image/headerSodorghabz.png')
         self.billBtnImg = PhotoImage(file='image/sodorGhabzBtn.png')
 
-        self.headerBillPage = Label(bill_page,image=self.h_billImg)
-        self.l_SearchKala_bill = Label(bill_page,text='کد کالا یا کد سفارش مورد نظر خود را وارد کنید',font=('Lalezar',17),bg='#F2F2F2')
-        self.e_SearchKala_bill = Entry(bill_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_SearchKala_bill =  Button(bill_page,bg='#F3F3F3',image=self.searchBtnImg_user,activebackground='#F3F3F3',bd=0,cursor='hand2')
-        self.b_blii =  Button(bill_page,bg='#F3F3F3',image=self.billBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
+        self.headerBillPage = Label(sodorbill_page,image=self.h_billImg)
+        self.l_SearchKala_bill = Label(sodorbill_page,text='کد کالا یا کد سفارش مورد نظر خود را وارد کنید',font=('Lalezar',17),bg='#F2F2F2')
+        self.e_SearchKala_bill = Entry(sodorbill_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.b_SearchKala_bill =  Button(sodorbill_page,bg='#F3F3F3',image=self.searchBtnImg_user,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.searchIdBill)
+        self.b_blii =  Button(sodorbill_page,bg='#F3F3F3',image=self.billBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
         #list
-        self.listBill= ttk.Treeview(bill_page,show='headings',height=14)
+        self.listBill= ttk.Treeview(sodorbill_page,show='headings',height=14)
         self.listBill['columns']=('date','orderNum','IdSefaresh','userName','NameKala','id','sefareshType','row')
         #columns
         self.listBill.column('date',width=140,anchor=CENTER)
@@ -2693,6 +2695,33 @@ class App:
         self.b_blii.place(x=620,y=730)
         self.listBill.place(x=50,y=160)
 
+        self.listBill.bind('<ButtonRelease-1>',self.select_record_bill)
+    def searchIdBill(self):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.idBill=self.e_SearchKala_bill.get()
+        self.count=0
+        if self.idBill !='':
+            for i in self.listKala.get_children():
+                self.listKala.delete(i)
+            row=self.cur.execute('SELECT * FROM orders WHERE idKala = "{}" or orderId = "{}" '.format(self.idBill,self.idBill))
+            self.listBillInfo=list(row)
+            for i in self.listBillInfo:
+                self.count += 1
+                if i[6] == 'وارد انبار شد':
+                    self.listBill.insert(parent='',index='end',text='',
+                                    values=(i[7],i[3],i[8],i[2],i[1],i[0],'ورود',str(self.count)))
+                elif i[6] == 'تحویل داده شد':
+                    self.listBill.insert(parent='',index='end',text='',
+                                    values=(i[7],i[3],i[8],i[2],i[1],i[0],'خروج',str(self.count)))
+                    
+
+    def select_record_bill(self ,event=None):
+        self.selected_bill = self.listBill.focus()
+        self.values_bill_list = self.listBill.item(self.selected_bill , "values")
+        print(self.values_bill_list[2])
+#______________________________________________________________________________________________________________________________________________
+#___________________________________________________________ sodor bill page __________________________________________________________________
 
 O = App(main_page)
 main_page.mainloop()
