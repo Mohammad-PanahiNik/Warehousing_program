@@ -641,7 +641,6 @@ class App:
         self.cur.execute("SELECT COUNT(*) FROM kala")
         self.rowNum = self.cur.fetchone()[0]
         row = self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(id1))
-        print(row)
         return list(row)
     
     def edit_record_kala_values(self ,event=None):
@@ -672,7 +671,6 @@ class App:
         self.type = self.c_productType_kala.get()
         self.group = self.c_groupType_kala.get()
         self.listKala.item(self.selected ,values = (self.point,self.group,self.type,self.name,self.code,self.row_num))
-        print(self.values)
         self.cur.execute(''' UPDATE kala SET id = "{}" , name = "{}", type = "{}",category = "{}",
         purchase = "{}",description = "{}" WHERE id="{}" '''.format(self.code,self.name,self.type,self.group,self.point,self.desc,self.values[4]))
         self.con.commit()
@@ -1298,7 +1296,6 @@ class App:
             if i[6] == 'وارد انبار شد' or i[6] == 'تحویل داده شد':
                 self.ChartX.append(i[7])
                 self.ChartY.append(i[4])
-        print(self.ChartX,self.ChartY)
         self.plotFrm = LabelFrame(chart_page,text='Plot',padx=5,pady=10)
         self.plotFrm.place(x=20,y=20)
         fig = plt.figure(figsize=(5,5))
@@ -1881,7 +1878,7 @@ class App:
         order_page.geometry('1400x800+250+100')
         order_page.configure(bg='white')
         order_page.title('menu')
-        order_page.state('normal')
+        order_page.state('withdraw')
         
         self.headerOrderImg = PhotoImage(file='image/headerRequestImg.png')
         self.sabtOrderBtnImg = PhotoImage(file='image/sabtOrder.png')
@@ -2651,7 +2648,7 @@ class App:
         self.l_SearchKala_bill = Label(sodorbill_page,text='کد کالا یا کد سفارش مورد نظر خود را وارد کنید',font=('Lalezar',17),bg='#F2F2F2')
         self.e_SearchKala_bill = Entry(sodorbill_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_SearchKala_bill =  Button(sodorbill_page,bg='#F3F3F3',image=self.searchBtnImg_user,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.searchIdBill)
-        self.b_blii =  Button(sodorbill_page,bg='#F3F3F3',image=self.billBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
+        self.b_blii =  Button(sodorbill_page,bg='#F3F3F3',image=self.billBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.sodorBill)
         #list
         self.listBill= ttk.Treeview(sodorbill_page,show='headings',height=14)
         self.listBill['columns']=('date','orderNum','IdSefaresh','userName','NameKala','id','sefareshType','row')
@@ -2714,14 +2711,104 @@ class App:
                 elif i[6] == 'تحویل داده شد':
                     self.listBill.insert(parent='',index='end',text='',
                                     values=(i[7],i[3],i[8],i[2],i[1],i[0],'خروج',str(self.count)))
-                    
+            self.con.close()
+        else:
+            for item in self.listBill.get_children():
+                self.listBill.delete(item)
 
     def select_record_bill(self ,event=None):
         self.selected_bill = self.listBill.focus()
         self.values_bill_list = self.listBill.item(self.selected_bill , "values")
-        print(self.values_bill_list[2])
+        
+    def sodorBill(self):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        row=self.cur.execute('SELECT type,category FROM kala WHERE id = "{}"'.format(self.idBill))
+        row=list(row)
+        row2=self.cur.execute('SELECT stock FROM orders WHERE orderId = "{}"'.format(self.values_bill_list[2]))
+        row2=list(row2)
+        print(row,'11111111111111111111',self.values_bill_list[5])
+        print(row2,'22222222222222222')
+        self.nameUserLbl_bill['text']=self.values_bill_list[3]
+        self.dateLbl_bill['text']=self.values_bill_list[0]
+        self.nameKalaLbl_bill['text']=self.values_bill_list[4]
+        self.orderIdLbl_bill['text']=self.values_bill_list[2]
+        self.orderTypeLbl_bill['text']=self.values_bill_list[6]
+        self.kalaIdLbl_bill['text']=self.values_bill_list[5]
+        self.groupKalaLbl_bill['text']=row[0][1]
+        self.typeKalaLbl_bill['text']=row[0][0]
+        self.kalaIdLbl_bill['text']=self.values_bill_list[5]
+        self.stockKalaLbl_bill['text']=row2[0][0]
+        self.orderNumLbl_bill['text']=self.values_bill_list[1]
+        self.e_SearchKala_bill.delete(0,END)
+        self.searchIdBill()
+        bill_page.state('normal')
+        sodorbill_page.state('withdraw')
 #______________________________________________________________________________________________________________________________________________
 #___________________________________________________________ sodor bill page __________________________________________________________________
+
+    def bill_kala_page(self):
+        bill_page.state('withdraw')
+        bill_page.geometry('1400x800+250+100')
+        bill_page.configure(bg='#F3F3F3')
+    
+    
+        self.h_billPageImg = PhotoImage(file='image/headerBillPage.png')
+        self.printBillBtnImg = PhotoImage(file='image/printBillBtnImg.png')
+        self.backBillBtnImg = PhotoImage(file='image/backBillBtnImg.png')
+
+        self.h_billPage = Label(bill_page,image=self.h_billPageImg)
+        self.bgBill = LabelFrame(bill_page,height=600,width=1200,bg='#EFEEEE',bd=2,relief='solid')
+        self.l_nameUser_bill = Label(bill_page,text=' : نام سفارش دهنده',font=('Lalezar',17),bg='#EFEEEE')
+        self.nameUserLbl_bill = Label(bill_page,text='{: >25}'.format(''),font=('Lalezar',17),bg='#EFEEEE',width=15,fg='#4F4E4E')
+        self.l_date_bill = Label(bill_page,text=' : تاریخ',font=('Lalezar',17),bg='#EFEEEE')
+        self.dateLbl_bill = Label(bill_page,text='{: >11}'.format(''),font=('Lalezar',17),bg='#EFEEEE',width=10,fg='#4F4E4E')
+        self.l_nameKala_bill = Label(bill_page,text=' : نام کالا',font=('Lalezar',17),bg='#EFEEEE')
+        self.nameKalaLbl_bill = Label(bill_page,text='{: >20}'.format(''),font=('Lalezar',17),bg='#EFEEEE',width=17,fg='#4F4E4E')
+        self.l_orderId_bill = Label(bill_page,text=' : کد سفارش',font=('Lalezar',17),bg='#EFEEEE')
+        self.orderIdLbl_bill = Label(bill_page,text='{: >11}'.format(''),font=('Lalezar',17),bg='#EFEEEE',width=10,fg='#4F4E4E')
+        self.l_groupKala_bill = Label(bill_page,text=' : گروه کالا',font=('Lalezar',17),bg='#EFEEEE')
+        self.groupKalaLbl_bill = Label(bill_page,text='{: >20}'.format(''),font=('Lalezar',17),bg='#EFEEEE',width=17,fg='#4F4E4E')
+        self.l_typeKala_bill = Label(bill_page,text=' : نوع کالا',font=('Lalezar',17),bg='#EFEEEE')
+        self.typeKalaLbl_bill = Label(bill_page,text='{: >20}'.format(''),font=('Lalezar',17),bg='#EFEEEE',width=17,fg='#4F4E4E')
+        self.l_orderType_bill = Label(bill_page,text=' : نوع سفارش',font=('Lalezar',17),bg='#EFEEEE')
+        self.orderTypeLbl_bill = Label(bill_page,text='{: >4}'.format(''),font=('Lalezar',17),bg='#EFEEEE',fg='#4F4E4E')
+        self.l_orderNum_bill = Label(bill_page,text=' : تعداد سفارش',font=('Lalezar',17),bg='#EFEEEE')
+        self.orderNumLbl_bill = Label(bill_page,text='{: >5}'.format(''),font=('Lalezar',17),bg='#EFEEEE',fg='#4F4E4E')
+        self.l_stockKala_bill = Label(bill_page,text=' : موجودی کالا',font=('Lalezar',17),bg='#EFEEEE')
+        self.stockKalaLbl_bill = Label(bill_page,text='{: >5}'.format(''),font=('Lalezar',17),bg='#EFEEEE',fg='#4F4E4E')
+        self.l_kalaId_bill = Label(bill_page,text=' : کد کالا',font=('Lalezar',17),bg='#EFEEEE')
+        self.kalaIdLbl_bill = Label(bill_page,text='{: >20}'.format(''),font=('Lalezar',17),width=17,bg='#EFEEEE',fg='#4F4E4E')
+        self.b_printBill =  Button(bill_page,bg='#F3F3F3',image=self.printBillBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
+        self.b_back_bill =  Button(bill_page,bg='#F3F3F3',image=self.backBillBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.backBill)
+        
+        self.h_billPage.place(x=590 , y=0)
+        self.bgBill.place(x=100 , y=80)
+        self.l_nameUser_bill.place(x=1100 , y=140)
+        self.nameUserLbl_bill.place(x=900 , y=140)
+        self.l_date_bill.place(x=310 , y=140)
+        self.dateLbl_bill.place(x=180 , y=140)
+        self.l_nameKala_bill.place(x=1060 , y=265)
+        self.nameKalaLbl_bill.place(x=850 , y=265)
+        self.l_orderId_bill.place(x=405 , y=265)
+        self.orderIdLbl_bill.place(x=270 , y=265)
+        self.l_groupKala_bill.place(x=1050 , y=465)
+        self.groupKalaLbl_bill.place(x=840 , y=465)
+        self.l_typeKala_bill.place(x=430 , y=465)
+        self.typeKalaLbl_bill.place(x=220 , y=465)
+        self.l_orderType_bill.place(x=1025 , y=365)
+        self.orderTypeLbl_bill.place(x=950 , y=365)
+        self.l_orderNum_bill.place(x=380 , y=565)
+        self.orderNumLbl_bill.place(x=300 , y=565)
+        self.l_stockKala_bill.place(x=1020 , y=565)
+        self.stockKalaLbl_bill.place(x=950 , y=565)
+        self.l_kalaId_bill.place(x=440 , y=365)
+        self.kalaIdLbl_bill.place(x=230 , y=365)
+        self.b_printBill.place(x=515 , y=720)
+        self.b_back_bill.place(x=725 , y=720)
+    def backBill(self):
+        bill_page.state('withdraw')
+        sodorbill_page.state('normal')
 
 O = App(main_page)
 main_page.mainloop()
