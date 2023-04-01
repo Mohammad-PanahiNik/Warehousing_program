@@ -6,13 +6,13 @@ import numpy as np
 from tkinter import messagebox
 import uuid
 from datetime import datetime
-from tkcalendar import Calendar, DateEntry
+from tkcalendar import DateEntry
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 main_page = Tk()
 register_page = Toplevel()
-loginn_page = Toplevel()
+login_page = Toplevel()
 product_page = Toplevel()
 user_page = Toplevel()
 chart_page = Toplevel()
@@ -27,8 +27,9 @@ bill_page = Toplevel()
 
 class App:
     def __init__(self,event=None):
-        loginn_page.state('withdraw')
+        main_page.state('withdraw')
         register_page.state('withdraw')
+        login_page.state('withdraw')
         product_page.state ('withdraw')
         user_page.state ('withdraw')
         stock_page.state ('withdraw')
@@ -53,6 +54,7 @@ class App:
         self.add_user_page()
         self.warehouse_receipt_page()
         self.warehouse_login_page()
+        self.check_exist_user()
         self.warehouse_register_page()
         self.request_product_page()
         self.order_kala_page()
@@ -79,7 +81,6 @@ class App:
         main_page.geometry('1400x800+250+100')
         main_page.configure(bg='white')
         main_page.title('menu')
-        main_page.state('normal')
         
         #image
         self.addUserImg=PhotoImage(file='image/adduserImg.png')
@@ -96,7 +97,9 @@ class App:
         self.openBtnImg=PhotoImage(file='image/openNavImg.png')
         self.historyBtnImg=PhotoImage(file='image/historyOrderBtnImg.png')
         self.bgDateImg=PhotoImage(file='image/bgDateImg.png')
+        self.mainBgImg=PhotoImage(file='image/mainPageBg.png')
         
+        self.l_mainPageBg=Label(main_page,image=self.mainBgImg, height=800,width=1400,bd=0)
         self.dateFrm=Label(main_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
         self.time_label = Label(self.dateFrm)
         self.date_label = Label(self.dateFrm)
@@ -116,6 +119,7 @@ class App:
         self.b_bill_main=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2',command=self.open_sodorbill_page)
         self.b_exit=Button(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
+        # self.l_mainPageBg.place(x=0,y=0)
         self.dateFrm.place(x=0,y=0)
         self.date_label.place(x=15,y=6)
         self.time_label.place(x=190,y=6)
@@ -216,33 +220,32 @@ class App:
 #_____________________________________________________________________________________________________________________
 #_________________________________________________login page__________________________________________________________
     def warehouse_login_page(self):
-        loginn_page.geometry('400x510+750+300')
-        loginn_page.config(bg='white')
+        login_page.geometry('400x510+1000+300')
+        login_page.configure(bg='white')
 
-        #image
         self.logFrmImg = PhotoImage(file='image/loginFrm.png')
         self.logoImg = PhotoImage(file='image/logoImg.png')
         self.logBtnImg = PhotoImage(file='image/loginBtn.png')
         self.eyeImg = PhotoImage(file='image/openEye.png')
 
-        self.logoImgLog = Label(loginn_page,image=self.logoImg,bg='white')
-        self.l_userNameLog = Label(loginn_page,text=' : نام کاربری',font=('Lalezar',17),bg='white')
-        self.e_userNameLog = Entry(loginn_page,font=('arial',18),justify=RIGHT,bd=2,relief='solid')
-        self.l_passwordLog = Label(loginn_page,text=' : رمز عبور',font=('Lalezar',17),bg='white')
-        self.e_passwordLog = Entry(loginn_page,font=('arial',18),justify=RIGHT,bd=2,relief='solid',show='*')
-        self.showBtn = Button(loginn_page,image=self.eyeImg,bd=0,activebackground='white')
-        self.b_enterBtn =Button(loginn_page,image=self.logBtnImg ,activebackground='white',bd=0)
+        self.logoImgLog = Label(login_page,image=self.logoImg,bg='white')
+        self.l_userIdLog = Label(login_page,text=' : کد کاربری',font=('Lalezar',17),bg='white')
+        self.e_userIdLog = Entry(login_page,font=('arial',18),justify=RIGHT,bd=2,relief='solid')
+        self.l_passwordLog = Label(login_page,text=' : رمز عبور',font=('Lalezar',17),bg='white')
+        self.e_passwordLog = Entry(login_page,font=('arial',18),justify=RIGHT,bd=2,relief='solid',show='*')
+        self.showBtn = Button(login_page,image=self.eyeImg,bd=0,activebackground='white')
+        self.b_enterBtn =Button(login_page,image=self.logBtnImg ,activebackground='white',bd=0,command=self.logIn)
 
         self.logoImgLog.place(x=135,y=10)
-        self.l_userNameLog.place(x=250,y=175)
-        self.e_userNameLog.place(x=80,y=215)
+        self.l_userIdLog.place(x=250,y=175)
+        self.e_userIdLog.place(x=80,y=215)
         self.l_passwordLog.place(x=270,y=275)
         self.e_passwordLog.place(x=80,y=316)
         self.showBtn.place(x=20,y=310)
         self.b_enterBtn.place(x=120,y=400)
 
-        self.e_userNameLog.focus()
-        self.e_userNameLog.bind('<Return>',lambda event : self.e_passwordLog.focus())
+        self.e_userIdLog.focus()
+        self.e_userIdLog.bind('<Return>',lambda event : self.e_passwordLog.focus())
         self.e_passwordLog.bind('<Return>',lambda event : self.b_enterBtn.focus())
         self.showBtn.bind('<Button-1>',self.funcShow)
 
@@ -254,54 +257,166 @@ class App:
         else:
             self.e_passwordLog['show']='*'
             self.eyeImg['file']='image/openEye.png'
+    
+    def logIn(self):
+        lst=[]
+        self.log_peremision=False
+        userId =self.e_userIdLog.get()
+        userPass =self.e_passwordLog.get()
+        self.con=sql.connect('mydb.db')
+
+        if userId == '' or userPass == '': 
+            messagebox.showerror('ERROR', '!کد کاربری یا رمز عبور را وارد نکرده اید  ')
+            self.e_userIdLog.delete(0,END)
+            self.e_passwordLog.delete(0,END)
+            self.e_userIdLog.focus()
+        else:
+            self.cur=self.con.cursor()
+            row=self.cur.execute('SELECT * FROM user')
+            row=list(row)
+            for i in row:
+                lst.append(i)
+            for i in lst: 
+                if i[0]==userId and i[7]==userPass:
+                    self.log_peremision = True
+            self.check_peremision_log()
+
+    def check_peremision_log(self):
+        if self.log_peremision:
+            main_page.state('normal')
+            login_page.state('withdraw')
+        else:
+            messagebox.showerror('ERROR', '!کد کاربری یا رمز عبور را اشتباه وارد کرده اید  ')
+            self.e_userIdLog.delete(0,END)
+            self.e_passwordLog.delete(0,END)
+            self.e_userIdLog.focus()
+
 #_____________________________________________________________________________________________________________________
 #_________________________________________________ register page _____________________________________________________
 
     def warehouse_register_page(self):
         register_page.geometry('1000x600+450+200')
+        register_page.configure(bg='white')
 
         # Images
         self.signin_mainImg = PhotoImage(file='image/signInMainImg.png')
-        self.logoImg_signIn = PhotoImage(file='image/logoImg.png')
-        self.signInImg_filds = PhotoImage(file='image/signIn_filds.png')
+        self.logoImg_signIn = PhotoImage(file='image/logoImgRegister.png')
         self.signInBtn = PhotoImage(file='image/registerBtn.png')
+        self.imgSelectorBgImg_register = PhotoImage(file='image/imgSelectorBgRegister.png')
+        self.addpersonalBtnImg = PhotoImage(file='image/registerBtn.png')
 
-        self.signinImgFrm  = LabelFrame(register_page,bd=0)
-        self.img_signin = Label(self.signinImgFrm,image=self.signin_mainImg)
-        self.signinFrm  = Label(register_page,bd=0 ,image=self.signInImg_filds)
-        self.signIn_logo  = Label(self.signinFrm,bd=0 ,image=self.logoImg_signIn,bg='white')
-        self.e_Name     = Entry (self.signinFrm,font=('arial',18),bd=0,justify=RIGHT)
-        self.e_Last     = Entry (self.signinFrm,font=('arial',18),bd=0,justify=RIGHT)
-        self.e_user_name     = Entry (self.signinFrm,font=('arial',18),bd=0,justify=RIGHT)
-        self.e_password     = Entry (self.signinFrm,font=('arial',18),bd=0,justify=RIGHT)
-        self.b_signin_btn     = Button (self.signinFrm,image=self.signInBtn,bd=0)
-        self.l_description = Label(self.signinFrm,text=' ! لطفا برای ورود به برنامه ابتدا ثبت نام کنید *   ', bg='white',font=('Lalezar',14),fg='#5D5555')
+        self.img_signin = Label(register_page,image=self.signin_mainImg)
+        self.registerFrm = LabelFrame(register_page,width=570,height=600,bg='#F3F3F3',bd=0)
+        self.l_headerUser_register=Label(register_page,image=self.logoImg_signIn)
+        self.l_nameUser_register=Label(register_page,text=' : نام',font=('Lalezar',17))
+        self.e_nameUser_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.l_lastUser_register=Label(register_page,text=' : نام خانوادگی',font=('Lalezar',17))
+        self.e_lastUser_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.l_nationalCode_register=Label(register_page,text=' : کد ملی',font=('Lalezar',17))
+        self.e_nationalCode_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.l_personnelId_register=Label(register_page,text=' : کد کارمند',font=('Lalezar',17))
+        self.e_personnelId_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.l_phoneNum_register=Label(register_page,text=' : شماره تماس',font=('Lalezar',17))
+        self.e_phoneNum_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.l_imgSelector_register = Label(register_page,text='انتخاب تصویر',font=('Lalezar',17))
+        self.imgSelectorBg_register = Label(register_page,bg='#F3F3F3',image=self.imgSelectorBgImg_register,cursor='hand2',width=130,height=130)
+        self.l_gender_register=Label(register_page,text=' : جنسیت',font=('Lalezar',17))
+        self.c_gender_register=ttk.Combobox(register_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
+                                          justify = 'right',values=["زن", "مرد"])
+        self.c_gender_register.set("یک گزینه را انتخاب کنید")
+        self.l_accountType_register=Label(register_page,text=' : نوع کاربری',font=('Lalezar',17))
+        self.c_accountType_register=ttk.Combobox(register_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
+                                          justify = 'right',values=["ادمین", "مدیر"])
+        self.c_accountType_register.set("یک گزینه را انتخاب کنید")
+        self.l_UserPass_register=Label(register_page,text=' : رمزعبور',font=('Lalezar',17))
+        self.e_UserPass_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.b_addPesonnel_register= Button(register_page,bg='#F3F3F3',image=self.addpersonalBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.addPersonalRegister)
+        self.l_description = Label(register_page,text=' ! لطفا برای ورود به برنامه ابتدا ثبت نام کنید *', bg='white',font=('Lalezar',16),fg='black')
 
-        self.signinImgFrm.grid (row=1,column=1)
-        self.img_signin.grid (row=1,column=1)
-        self.signinFrm.grid (row=1,column=2)
-        self.signIn_logo.place(x=175,y=10)
-        self.e_Name.place(x=100,y=175)
-        self.e_Last.place(x=100,y=264)
-        self.e_user_name.place(x=100,y=353)
-        self.e_password.place(x=100,y=442)
-        self.b_signin_btn.place(x=150,y=495)
-        self.l_description.place(x=80,y=560)
+        self.img_signin.place (x=0,y=0)
+        self.l_headerUser_register.place (x=660,y=0)
+        self.registerFrm.place (x=430,y=0)
+        self.l_nameUser_register.place(x=940,y=95)
+        self.e_nameUser_register.place(x=780,y=130)
+        self.l_lastUser_register.place(x=870,y=180)
+        self.e_lastUser_register.place(x=780,y=220)
+        self.l_nationalCode_register.place(x=910,y=270)
+        self.e_nationalCode_register.place(x=780,y=305)
+        self.l_personnelId_register.place(x=890,y=355)
+        self.e_personnelId_register.place(x=780,y=395)
+        self.l_phoneNum_register.place(x=875,y=440)
+        self.e_phoneNum_register.place(x=780,y=475)
+        self.l_imgSelector_register.place(x=500,y=90)
+        self.imgSelectorBg_register.place(x=495,y=125)
+        self.l_gender_register.place(x=585,y=270)
+        self.c_gender_register.place(x=460,y=310)
+        self.l_accountType_register.place(x=565,y=355)
+        self.c_accountType_register.place(x=460,y=395)
+        self.l_UserPass_register.place(x=590,y=440)
+        self.e_UserPass_register.place(x=460,y=480)
+        self.b_addPesonnel_register.place(x=640,y=535)
+        self.l_description.place(x=50,y=560)
 
         #bind
-        self.e_Name.focus()
-        self.e_Name.bind ('<Return>',lambda event : self.e_Last.focus())
-        self.e_Last.bind ('<Return>',lambda event : self.e_user_name.focus())
-        self.e_user_name.bind ('<Return>',lambda event : self.e_password.focus())
-        self.e_password.bind ('<Return>',lambda event : self.b_signin_btn.focus())
-        self.b_signin_btn.bind ('<Enter>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtnH.png'))
-        self.b_signin_btn.bind ('<Leave>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtn.png'))
+        self.imgSelectorBg_register.bind('<Button-1>', self.funcAddImg_register)
+        # self.e_Name.focus()
+        # self.e_Name.bind ('<Return>',lambda event : self.e_Last.focus())
+        # self.e_Last.bind ('<Return>',lambda event : self.e_user_name.focus())
+        # self.e_user_name.bind ('<Return>',lambda event : self.e_password.focus())
+        # self.e_password.bind ('<Return>',lambda event : self.b_signin_btn.focus())
+        # self.b_signin_btn.bind ('<Enter>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtnH.png'))
+        # self.b_signin_btn.bind ('<Leave>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtn.png'))
 
     def funcBtnHover(self,img,url):
         img['file'] = url
 
-    def f_register(self):
-        pass
+    def addPersonalRegister(self):
+        self.pesonnelName_register=self.e_nameUser_register.get()
+        self.pesonnelLast_register=self.e_lastUser_register.get()
+        self.nationalCode_register=self.e_nationalCode_register.get()
+        self.gender_register=self.c_gender_register.get()
+        self.phoneNum_register=self.e_phoneNum_register.get()
+        self.accountType_register=self.c_accountType_register.get()
+        self.personnelId_register=self.e_personnelId_register.get()
+        self.personnelPass_register=self.e_UserPass_register.get()
+        self.photo_register = self.covert_to_binary_data(self.img_name_register)
+
+        self.e_nameUser_register.delete(0,END)
+        self.e_lastUser_register.delete(0,END)
+        self.e_nationalCode_register.delete(0,END)
+        self.c_gender_register.set("یک گزینه را انتخاب کنید")
+        self.e_phoneNum_register.delete(0,END)
+        self.c_accountType_register.set("یک گزینه را انتخاب کنید")
+        self.e_personnelId_register.delete(0,END)
+        self.e_UserPass_register.delete(0,END)
+        self.imgSelectorBgImg_register['file']='image/imgSelectorBgRegister.png'
+        self.e_nameUser_register.focus()
+
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.data=(self.personnelId_register,self.pesonnelName_register,self.pesonnelLast_register,self.nationalCode_register,self.gender_register
+                   ,self.phoneNum_register,self.accountType_register,self.personnelPass_register,self.photo_register)
+        self.cur.execute('''CREATE TABLE IF NOT EXISTS user (id TEXT PRIMARY KEY NOT NULL ,name TEXT NOT NULL ,last_name TEXT NOT NULL,national_code TEXT NOT NULL
+        ,gender INTEGER NOT NULL,phone_number TEXT NOT NULL,account_type TEXT NOT NULL,personnel_pass TEXT NOT NULL,photo BLOB NOT NULL)''')
+        self.cur.execute('INSERT INTO user(id,name,last_name,national_code,gender,phone_number,account_type,personnel_pass,photo) VALUES(?,?,?,?,?,?,?,?,?)',self.data)
+        self.con.commit()
+        self.con.close()
+        register_page.state('withdraw')
+        main_page.state('normal')
+
+    def funcAddImg_register(self,event=None):
+        self.img_name_register = filedialog.askopenfilename()
+        self.imgSelectorBgImg_register['file']= self.img_name_register
+
+    def check_exist_user(self):
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='user'")
+        result = self.cur.fetchone()
+        if result != None :
+            login_page.state('normal')
+        else:
+            register_page.state('normal')
 
 #______________________________________________________________________________________________________________________
 #_________________________________________________ add product page ____________________________________________________
