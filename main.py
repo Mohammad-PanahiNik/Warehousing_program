@@ -9,6 +9,8 @@ from datetime import datetime
 from tkcalendar import DateEntry
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import io
+from PIL import ImageTk, Image
 
 main_page = Tk()
 register_page = Toplevel()
@@ -25,7 +27,31 @@ history_page = Toplevel()
 sodorbill_page = Toplevel()
 bill_page = Toplevel()
 
+
+class Phone_number:
+    def __set_name__ (self,instance,key):
+        self.key=key
+
+    def __get__ (self,instance,owner):
+        return instance.__dict__[self.key]
+    
+    def __set__ (self,instance,value):
+        if len(value) == 11 and value.isdigit() and value[0] == '0':
+            instance.__dict__[self.key]=value
+        else:
+            instance.__dict__[self.key]='Error!'
+
+    def __delete__ (self,instance):
+        del instance.dict[self.key]
+
 class App:
+    '''
+    production time : 2023/04
+    App builder : Mohammad Panahi Nik
+
+    '''
+    phoneNum=Phone_number()
+
     def __init__(self,event=None):
         main_page.state('withdraw')
         register_page.state('withdraw')
@@ -41,7 +67,6 @@ class App:
         sodorbill_page.state('withdraw')
         bill_page.state('withdraw')
         chart_page.state('withdraw')
-        
         self.btnState = False
         self.permission=False
         self.style=ttk.Style()
@@ -54,8 +79,8 @@ class App:
         self.add_user_page()
         self.warehouse_receipt_page()
         self.warehouse_login_page()
-        self.check_exist_user()
         self.warehouse_register_page()
+        self.check_exist_user()
         self.request_product_page()
         self.order_kala_page()
         self.exit_kala_page()
@@ -75,12 +100,12 @@ class App:
         self.update_time_history()
         self.update_time_bill()
 
-
-
     def main(self):
         main_page.geometry('1400x800+250+100')
         main_page.configure(bg='white')
-        main_page.title('menu')
+        main_page.title('نرم افزار انبارداری')
+        main_page.resizable(False,False)
+        main_page.iconbitmap('image/warehouseIco.ico')
         
         #image
         self.addUserImg=PhotoImage(file='image/adduserImg.png')
@@ -100,13 +125,10 @@ class App:
         self.mainBgImg=PhotoImage(file='image/mainPageBg.png')
         
         self.l_mainPageBg=Label(main_page,image=self.mainBgImg, height=800,width=1400,bd=0)
-        self.dateFrm=Label(main_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
-        self.time_label = Label(self.dateFrm)
-        self.date_label = Label(self.dateFrm)
-        self.b_openNav=Button(main_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch,cursor='hand2')
+        self.dateFrm=Label(main_page,image=self.bgDateImg, height=45,width=320,bd=0,bg='white')
+        self.time_label=Label(self.dateFrm)
+        self.date_label=Label(self.dateFrm)
         self.navFrm=Frame(main_page,height=800,width=220,bg='#777777',bd=0)
-        self.closeFrm=LabelFrame(self.navFrm,width=220,bg='#2E2E2E',bd=0,height=50)
-        self.b_closeNav=Button(self.closeFrm,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch)
         self.b_home_page=Button(self.navFrm,image=self.homePageBtnImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
         self.b_addUser=Button(self.navFrm,image=self.addUserImg,bg='#777777',bd=0,cursor='hand2',command=self.open_addUser_page)
         self.b_addWare=Button(self.navFrm,image=self.addWareImg,bg='#777777',bd=0,cursor='hand2',command=self.open_addKala_page)
@@ -119,42 +141,30 @@ class App:
         self.b_bill_main=Button(self.navFrm,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2',command=self.open_sodorbill_page)
         self.b_exit=Button(self.navFrm,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
-        # self.l_mainPageBg.place(x=0,y=0)
+        self.l_mainPageBg.place(x=0,y=0)
         self.dateFrm.place(x=0,y=0)
-        self.date_label.place(x=15,y=6)
-        self.time_label.place(x=190,y=6)
-        self.b_openNav.place(x=1340,y=20)
-        self.navFrm.place(x=1400,y=0)
-        self.closeFrm.place(x=0,y=0)
-        self.b_closeNav.place(x=15,y=15)
-        self.b_home_page.place(x=0,y=50)
-        self.b_addWare.place(x=0,y=115)
-        self.b_addUser.place(x=0,y=180)
-        self.b_WrStock.place(x=0,y=245)
-        self.b_Receipt.place(x=0,y=310)
-        self.b_request.place(x=0,y=375)
-        self.b_sabtSefareshPage.place(x=0,y=440)
-        self.b_sabtExitKalaPage.place(x=0,y=505)
-        self.b_historyOrder.place(x=0,y=570)
-        self.b_bill_main.place(x=0,y=635)
-        self.b_exit.place(x=0,y=700)
+        self.date_label.place(x=15,y=4)
+        self.time_label.place(x=190,y=4)
+        self.navFrm.place(x=1180,y=0)
+        self.b_home_page.place(x=0,y=0)
+        self.b_addWare.place(x=0,y=65)
+        self.b_addUser.place(x=0,y=130)
+        self.b_WrStock.place(x=0,y=195)
+        self.b_Receipt.place(x=0,y=260)
+        self.b_request.place(x=0,y=325)
+        self.b_sabtSefareshPage.place(x=0,y=390)
+        self.b_sabtExitKalaPage.place(x=0,y=455)
+        self.b_historyOrder.place(x=0,y=520)
+        self.b_bill_main.place(x=0,y=585)
+        self.b_exit.place(x=0,y=650)
 
-            
     def update_time(self):
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label.config(text=f"{self.current_time}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label.config(text=f"{self.current_date}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm.after(1000, self.update_time)
-
-    def switch(self):
-        if self.btnState is True:
-            self.navFrm.place(x=1400, y=0)
-            self.btnState = False
-        else:
-            self.navFrm.place(x=1180, y=0)
-            self.btnState = True
 
     def open_addKala_page(self):
         self.navFrm_product.place(x=1180, y=0)
@@ -222,6 +232,9 @@ class App:
     def warehouse_login_page(self):
         login_page.geometry('400x510+1000+300')
         login_page.configure(bg='white')
+        login_page.title('نرم افزار انبارداری')
+        login_page.resizable(False,False)
+        login_page.iconbitmap('image/warehouseIco.ico')
 
         self.logFrmImg = PhotoImage(file='image/loginFrm.png')
         self.logoImg = PhotoImage(file='image/logoImg.png')
@@ -235,6 +248,8 @@ class App:
         self.e_passwordLog = Entry(login_page,font=('arial',18),justify=RIGHT,bd=2,relief='solid',show='*')
         self.showBtn = Button(login_page,image=self.eyeImg,bd=0,activebackground='white')
         self.b_enterBtn =Button(login_page,image=self.logBtnImg ,activebackground='white',bd=0,command=self.logIn)
+        self.l_register_log = Label(login_page,text='ثبت حساب جدید',font=('Lalezar',17),bg='white',fg='#00348E',cursor='hand2')
+        self.b_enterBtn =Button(login_page,image=self.logBtnImg ,activebackground='white',bd=0,command=self.logIn)
 
         self.logoImgLog.place(x=135,y=10)
         self.l_userIdLog.place(x=250,y=175)
@@ -242,13 +257,21 @@ class App:
         self.l_passwordLog.place(x=270,y=275)
         self.e_passwordLog.place(x=80,y=316)
         self.showBtn.place(x=20,y=310)
-        self.b_enterBtn.place(x=120,y=400)
+        self.l_register_log.place(x=125,y=450)
+        self.b_enterBtn.place(x=120,y=380)
 
         self.e_userIdLog.focus()
+        self.l_register_log.bind('<Button-1>',self.login_to_register )
         self.e_userIdLog.bind('<Return>',lambda event : self.e_passwordLog.focus())
         self.e_passwordLog.bind('<Return>',lambda event : self.b_enterBtn.focus())
         self.showBtn.bind('<Button-1>',self.funcShow)
 
+    def login_to_register(self,event=None):
+        register_page.state('normal')
+        login_page.state('withdraw')
+        self.e_userIdLog.delete(0,END)
+        self.e_passwordLog.delete(0,END)
+        self.e_userIdLog.focus()
 
     def funcShow(self,event=None):
         if self.e_passwordLog['show']=='*':
@@ -272,12 +295,12 @@ class App:
             self.e_userIdLog.focus()
         else:
             self.cur=self.con.cursor()
-            row=self.cur.execute('SELECT * FROM user')
+            row=self.cur.execute('SELECT * FROM admins')
             row=list(row)
             for i in row:
                 lst.append(i)
             for i in lst: 
-                if i[0]==userId and i[7]==userPass:
+                if i[0]==userId and i[3]==userPass:
                     self.log_peremision = True
             self.check_peremision_log()
 
@@ -295,77 +318,51 @@ class App:
 #_________________________________________________ register page _____________________________________________________
 
     def warehouse_register_page(self):
+        
         register_page.geometry('1000x600+450+200')
         register_page.configure(bg='white')
+        register_page.title('نرم افزار انبارداری')
+        register_page.resizable(False,False)
+        register_page.iconbitmap('image/warehouseIco.ico')
 
         # Images
         self.signin_mainImg = PhotoImage(file='image/signInMainImg.png')
         self.logoImg_signIn = PhotoImage(file='image/logoImgRegister.png')
-        self.signInBtn = PhotoImage(file='image/registerBtn.png')
-        self.imgSelectorBgImg_register = PhotoImage(file='image/imgSelectorBgRegister.png')
         self.addpersonalBtnImg = PhotoImage(file='image/registerBtn.png')
 
         self.img_signin = Label(register_page,image=self.signin_mainImg)
-        self.registerFrm = LabelFrame(register_page,width=570,height=600,bg='#F3F3F3',bd=0)
-        self.l_headerUser_register=Label(register_page,image=self.logoImg_signIn)
+        self.registerFrm = LabelFrame(register_page,width=460,height=600,bg='#F6F5F5',bd=0)
+        self.l_headerUser_register=Label(register_page,image=self.logoImg_signIn,bg='#F6F5F5')
         self.l_nameUser_register=Label(register_page,text=' : نام',font=('Lalezar',17))
-        self.e_nameUser_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.e_nameUser_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=25,relief='solid')
         self.l_lastUser_register=Label(register_page,text=' : نام خانوادگی',font=('Lalezar',17))
-        self.e_lastUser_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_nationalCode_register=Label(register_page,text=' : کد ملی',font=('Lalezar',17))
-        self.e_nationalCode_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.e_lastUser_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=25,relief='solid')
         self.l_personnelId_register=Label(register_page,text=' : کد کارمند',font=('Lalezar',17))
-        self.e_personnelId_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_phoneNum_register=Label(register_page,text=' : شماره تماس',font=('Lalezar',17))
-        self.e_phoneNum_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_imgSelector_register = Label(register_page,text='انتخاب تصویر',font=('Lalezar',17))
-        self.imgSelectorBg_register = Label(register_page,bg='#F3F3F3',image=self.imgSelectorBgImg_register,cursor='hand2',width=130,height=130)
-        self.l_gender_register=Label(register_page,text=' : جنسیت',font=('Lalezar',17))
-        self.c_gender_register=ttk.Combobox(register_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
-                                          justify = 'right',values=["زن", "مرد"])
-        self.c_gender_register.set("یک گزینه را انتخاب کنید")
-        self.l_accountType_register=Label(register_page,text=' : نوع کاربری',font=('Lalezar',17))
-        self.c_accountType_register=ttk.Combobox(register_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
-                                          justify = 'right',values=["ادمین", "مدیر"])
-        self.c_accountType_register.set("یک گزینه را انتخاب کنید")
+        self.e_personnelId_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=25,relief='solid')
         self.l_UserPass_register=Label(register_page,text=' : رمزعبور',font=('Lalezar',17))
-        self.e_UserPass_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_addPesonnel_register= Button(register_page,bg='#F3F3F3',image=self.addpersonalBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.addPersonalRegister)
-        self.l_description = Label(register_page,text=' ! لطفا برای ورود به برنامه ابتدا ثبت نام کنید *', bg='white',font=('Lalezar',16),fg='black')
+        self.e_UserPass_register=Entry(register_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=25,relief='solid')
+        self.b_addPesonnel_register= Button(register_page,bg='#F6F5F5',image=self.addpersonalBtnImg,activebackground='#F6F5F5',bd=0,cursor='hand2',command=self.addPersonalRegister)
+        self.l_description = Label(register_page,text='! ابتدا ثبت نام کنید', bg='white',font=('Lalezar',16),fg='black')
 
         self.img_signin.place (x=0,y=0)
-        self.l_headerUser_register.place (x=660,y=0)
-        self.registerFrm.place (x=430,y=0)
-        self.l_nameUser_register.place(x=940,y=95)
-        self.e_nameUser_register.place(x=780,y=130)
-        self.l_lastUser_register.place(x=870,y=180)
-        self.e_lastUser_register.place(x=780,y=220)
-        self.l_nationalCode_register.place(x=910,y=270)
-        self.e_nationalCode_register.place(x=780,y=305)
-        self.l_personnelId_register.place(x=890,y=355)
-        self.e_personnelId_register.place(x=780,y=395)
-        self.l_phoneNum_register.place(x=875,y=440)
-        self.e_phoneNum_register.place(x=780,y=475)
-        self.l_imgSelector_register.place(x=500,y=90)
-        self.imgSelectorBg_register.place(x=495,y=125)
-        self.l_gender_register.place(x=585,y=270)
-        self.c_gender_register.place(x=460,y=310)
-        self.l_accountType_register.place(x=565,y=355)
-        self.c_accountType_register.place(x=460,y=395)
-        self.l_UserPass_register.place(x=590,y=440)
-        self.e_UserPass_register.place(x=460,y=480)
-        self.b_addPesonnel_register.place(x=640,y=535)
-        self.l_description.place(x=50,y=560)
+        self.l_headerUser_register.place (x=700,y=0)
+        self.registerFrm.place (x=540,y=0)
+        self.l_nameUser_register.place(x=875,y=120)
+        self.e_nameUser_register.place(x=640,y=160)
+        self.l_lastUser_register.place(x=805,y=210)
+        self.e_lastUser_register.place(x=640,y=250)
+        self.l_personnelId_register.place(x=825,y=300)
+        self.e_personnelId_register.place(x=640,y=335)
+        self.l_UserPass_register.place(x=840,y=385)
+        self.e_UserPass_register.place(x=640,y=425)
+        self.b_addPesonnel_register.place(x=700,y=485)
+        self.l_description.place(x=705,y=545)
 
-        #bind
-        self.imgSelectorBg_register.bind('<Button-1>', self.funcAddImg_register)
-        # self.e_Name.focus()
-        # self.e_Name.bind ('<Return>',lambda event : self.e_Last.focus())
-        # self.e_Last.bind ('<Return>',lambda event : self.e_user_name.focus())
-        # self.e_user_name.bind ('<Return>',lambda event : self.e_password.focus())
-        # self.e_password.bind ('<Return>',lambda event : self.b_signin_btn.focus())
-        # self.b_signin_btn.bind ('<Enter>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtnH.png'))
-        # self.b_signin_btn.bind ('<Leave>',lambda event : self.funcBtnHover(self.signInBtn,'image/registerBtn.png'))
+        # bind
+        self.e_nameUser_register.focus()
+        self.e_nameUser_register.bind ('<Return>',lambda event : self.e_lastUser_register.focus())
+        self.e_lastUser_register.bind ('<Return>',lambda event : self.e_personnelId_register.focus())
+        self.e_personnelId_register.bind ('<Return>',lambda event : self.e_UserPass_register.focus())
 
     def funcBtnHover(self,img,url):
         img['file'] = url
@@ -373,50 +370,48 @@ class App:
     def addPersonalRegister(self):
         self.pesonnelName_register=self.e_nameUser_register.get()
         self.pesonnelLast_register=self.e_lastUser_register.get()
-        self.nationalCode_register=self.e_nationalCode_register.get()
-        self.gender_register=self.c_gender_register.get()
-        self.phoneNum_register=self.e_phoneNum_register.get()
-        self.accountType_register=self.c_accountType_register.get()
         self.personnelId_register=self.e_personnelId_register.get()
         self.personnelPass_register=self.e_UserPass_register.get()
-        self.photo_register = self.covert_to_binary_data(self.img_name_register)
 
         self.e_nameUser_register.delete(0,END)
         self.e_lastUser_register.delete(0,END)
-        self.e_nationalCode_register.delete(0,END)
-        self.c_gender_register.set("یک گزینه را انتخاب کنید")
-        self.e_phoneNum_register.delete(0,END)
-        self.c_accountType_register.set("یک گزینه را انتخاب کنید")
         self.e_personnelId_register.delete(0,END)
         self.e_UserPass_register.delete(0,END)
-        self.imgSelectorBgImg_register['file']='image/imgSelectorBgRegister.png'
         self.e_nameUser_register.focus()
 
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
-        self.data=(self.personnelId_register,self.pesonnelName_register,self.pesonnelLast_register,self.nationalCode_register,self.gender_register
-                   ,self.phoneNum_register,self.accountType_register,self.personnelPass_register,self.photo_register)
-        self.cur.execute('''CREATE TABLE IF NOT EXISTS user (id TEXT PRIMARY KEY NOT NULL ,name TEXT NOT NULL ,last_name TEXT NOT NULL,national_code TEXT NOT NULL
-        ,gender INTEGER NOT NULL,phone_number TEXT NOT NULL,account_type TEXT NOT NULL,personnel_pass TEXT NOT NULL,photo BLOB NOT NULL)''')
-        self.cur.execute('INSERT INTO user(id,name,last_name,national_code,gender,phone_number,account_type,personnel_pass,photo) VALUES(?,?,?,?,?,?,?,?,?)',self.data)
+        data=(self.personnelId_register,self.pesonnelName_register,self.pesonnelLast_register,self.personnelPass_register)
+        self.cur.execute('''CREATE TABLE IF NOT EXISTS admins (id TEXT PRIMARY KEY NOT NULL ,name TEXT NOT NULL ,
+        last_name TEXT NOT NULL,personnel_pass TEXT NOT NULL)''')
+        self.cur.execute('INSERT INTO admins (id,name,last_name,personnel_pass) VALUES(?,?,?,?)',data)
         self.con.commit()
         self.con.close()
         register_page.state('withdraw')
         main_page.state('normal')
 
-    def funcAddImg_register(self,event=None):
-        self.img_name_register = filedialog.askopenfilename()
-        self.imgSelectorBgImg_register['file']= self.img_name_register
-
     def check_exist_user(self):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
-        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='user'")
+        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='admins'")
         result = self.cur.fetchone()
         if result != None :
             login_page.state('normal')
+            self.l_description['text']='آیا حساب کاربری دارید؟'
+            self.l_register_to_login=Label(register_page,text='ورود',fg='#00348E',cursor='hand2',font=('Lalezar',17))
+            self.l_register_to_login.place(x=660,y=545)
+            self.l_register_to_login.bind('<Button-1>',self.register_to_login)
         else:
             register_page.state('normal')
+
+    def register_to_login(self,event=None):
+        login_page.state('normal')
+        register_page.state('withdraw')
+        self.e_nameUser_register.delete(0,END)
+        self.e_lastUser_register.delete(0,END)
+        self.e_personnelId_register.delete(0,END)
+        self.e_UserPass_register.delete(0,END)
+        self.e_nameUser_register.focus()
 
 #______________________________________________________________________________________________________________________
 #_________________________________________________ add product page ____________________________________________________
@@ -425,7 +420,7 @@ class App:
         self.fildsBgImg = PhotoImage(file='image/fildsBg.png')
         self.kalaImg_kala = PhotoImage(file='image/imgSelectorBg.png')
         self.listKalaBgImg = PhotoImage(file='image/listSkalaBg.png')
-        self.searchBtnImg_kala = PhotoImage(file='image/searchBtnImg.png')
+        self.searchBtnImg_kala1 = PhotoImage(file='image/searchBtnImg.png')
         self.h_sabtKalaImg = PhotoImage(file='image/headerSabtKala.png')
         self.addKalaBtnImg = PhotoImage(file='image/addKalaBtn.png')
         self.deleteBtnImg_kala = PhotoImage(file='image/deleteBtnImg.png')
@@ -433,31 +428,33 @@ class App:
         self.sabtTaghirKalaBtn = PhotoImage(file='image/sabtEdit.png')
 
         product_page.geometry ('1400x800+250+100')
-        product_page.configure (bg='#F3F3F3')
+        product_page.title('نرم افزار انبارداری')
+        product_page.resizable(False,False)
+        product_page.configure(bg='#F6F5F5')
+        product_page.iconbitmap('image/warehouseIco.ico')
 
-        self.h_sabtKala_kala = Label(product_page,image=self.h_sabtKalaImg)
-        self.l_productId_kala = Label(product_page,text=' : کد کالا',font=('Lalezar',17))
+        self.h_sabtKala_kala = Label(product_page,image=self.h_sabtKalaImg,bg='#F6F5F5')
+        self.l_productId_kala = Label(product_page,text=' : کد کالا',font=('Lalezar',17),bg='#F6F5F5')
         self.e_productId_kala = Entry(product_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_productName_kala = Label(product_page,text=' : نام کالا',font=('Lalezar',17))
+        self.l_productName_kala = Label(product_page,text=' : نام کالا',font=('Lalezar',17),bg='#F6F5F5')
         self.e_productName_kala = Entry(product_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_productType_kala = Label(product_page,text=' : نوع کالا',font=('Lalezar',17))
+        self.l_productType_kala = Label(product_page,text=' : نوع کالا',font=('Lalezar',17),bg='#F6F5F5')
         self.c_productType_kala = ttk.Combobox(product_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
-                                            justify = 'right',values=["مواد خام", "کالای خریداری شده",
-                                            "کالای توید شده اولیه", "کالای تولید شده برای فروش"])
-        self.l_groupType_kala = Label(product_page,text=' : گروه کالا',font=('Lalezar',17))
+                                            justify = 'right',values=[ "کالای خریداری شده","کالای مصرفی", "کالای تولید شده برای فروش"])
+        self.l_groupType_kala = Label(product_page,text=' : گروه کالا',font=('Lalezar',17),bg='#F6F5F5')
         self.c_groupType_kala = ttk.Combobox(product_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
-                                          justify = 'right',values=["فلزات", "مواد غذایی"])
+                                          justify = 'right',values=["مواد غذایی","لوازم آشپزخانه","لوازم الکترونیکی"])
         self.c_productType_kala.set("یک گزینه را انتخاب کنید")
         self.c_groupType_kala.set("یک گزینه را انتخاب کنید")
-        self.l_description_kala = Label(product_page,text=' : توضیحات',font=('Lalezar',17))
+        self.l_description_kala = Label(product_page,text=' : توضیحات',font=('Lalezar',17),bg='#F6F5F5')
         self.e_description_kala = Entry(product_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=28,relief='solid')
-        self.l_purchase_kala = Label(product_page,text=' : نقطه خرید',font=('Lalezar',17))
+        self.l_purchase_kala = Label(product_page,text=' : نقطه خرید',font=('Lalezar',17),bg='#F6F5F5')
         self.e_purchase_kala = Entry(product_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_imgSelector_kala = Label(product_page,text='انتخاب تصویر',font=('Lalezar',17))
-        self.imgSelectorBg_kala = Label(product_page,bg='#F3F3F3',image=self.kalaImg_kala,cursor='hand2',width=150,height=150)
-        self.e_search_kala = Entry(product_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_search_kala = Button(product_page,bg='#F3F3F3',image=self.searchBtnImg_kala,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id_kalaPage)
-        self.b_addKala_kala = Button(product_page,bg='#F3F3F3',image=self.addKalaBtnImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.funcAddKala)
+        self.l_imgSelector_kala = Label(product_page,text='انتخاب تصویر',font=('Lalezar',17),bg='#F6F5F5')
+        self.imgSelectorBg_kala = Label(product_page,bg='#F6F5F5',image=self.kalaImg_kala,cursor='hand2',width=150,height=150)
+        self.e_search_kala = Entry(product_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid',bg='#F6F5F5')
+        self.b_search_kala = Button(product_page,bg='#F6F5F5',image=self.searchBtnImg_kala1,activebackground='#F6F5F5',bd=0,cursor='hand2',command=self.search_id_kalaPage)
+        self.b_addKala_kala = Button(product_page,bg='#F6F5F5',image=self.addKalaBtnImg,activebackground='#F6F5F5',bd=0,cursor='hand2',command=self.funcAddKala)
         self.listKalaBg_kala = Label(product_page,bg='white',image=self.listKalaBgImg)
         self.b_delete_kala = Button(product_page,image=self.deleteBtnImg_kala,bd=0,activebackground='white',cursor='hand2')
         self.b_edit_kala = Button(product_page,image=self.editBtnImg_kala,bd=0,activebackground='white',cursor='hand2')
@@ -498,12 +495,10 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
         
-
-        
-        self.dateFrm_product = Label(product_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.dateFrm_product = Label(product_page,image=self.bgDateImg, height=45,width=320,bd=0,bg='white')
         self.time_label_product = Label(self.dateFrm_product)
         self.date_label_product = Label(self.dateFrm_product)
-        self.b_openNav_product=Button(product_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_product_nav,cursor='hand2')
+        self.b_openNav_product=Button(product_page,image=self.openBtnImg,bg='#F6F5F5',activebackground='white',bd=0,command=self.switch_product_nav,cursor='hand2')
         self.navFrm_product=Frame(product_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_product=LabelFrame(self.navFrm_product,width=220,bg='#2E2E2E',bd=0,height=50)
         self.b_closeNav_product=Button(self.closeFrm_product,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_product_nav)
@@ -519,10 +514,9 @@ class App:
         self.b_issuance_product=Button(self.navFrm_product,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2',command=self.product_to_bill)
         self.b_exit_product=Button(self.navFrm_product,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
-        
         self.dateFrm_product.place(x=0,y=0)
-        self.date_label_product.place(x=15,y=6)
-        self.time_label_product.place(x=190,y=6)
+        self.date_label_product.place(x=15,y=4)
+        self.time_label_product.place(x=190,y=4)
         self.b_openNav_product.place (x=1340,y=20)
         self.navFrm_product.place (x=1400,y=0)
         self.closeFrm_product.place (x=0,y=0)
@@ -573,22 +567,15 @@ class App:
         self.b_delete_kala.bind('<Button-1>', self.delete_record_kala)
         self.b_edit_kala.bind('<ButtonRelease-1>', self.edit_record_kala_values)
         self.b_sabtTaghirat_kala.bind('<Button-1>', self.edit_kala)
+        self.e_search_kala.insert(0,'جستجوی کد کالا')
+        self.e_search_kala.bind('<Button-1>',lambda event :self.e_search_kala.delete(0,END))
 
-        #_______ hover button ________
-        # self.e_search_kala.insert(0,'جستجو کد کالا  ')
-        # self.e_search_kala.bind('<Button-1>',lambda event :self.e_search_kala.delete(0,END))
-        # self.b_search_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImgH.png'))
-        # self.b_search_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.searchBtnImg,'image/searchBtnImg.png'))
-        # self.b_delete_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImgH.png'))
-        # self.b_delete_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.deleteBtnImg,'image/deleteBtnImg.png'))
-        # self.b_edit_kala.bind('<Enter>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImgH.png'))
-        # self.b_edit_kala.bind('<Leave>',lambda event : self.funcBtnHover(self.editBtnImg,'image/editBtnImg.png'))
     def update_time_product(self):
         now_product = datetime.now()
         self.current_time_product = now_product.strftime("%H:%M:%S")
         self.current_date_product = now_product.strftime("%Y/%m/%d")
-        self.time_label_product.config(text=f"{self.current_time_product}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label_product.config(text=f"{self.current_date_product}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label_product.config(text=f"{self.current_time_product}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label_product.config(text=f"{self.current_date_product}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm_product.after(1000, self.update_time_product)
 
     def product_to_main(self):
@@ -682,7 +669,10 @@ class App:
 
     def funcAddImg_kala(self,event=None):
         self.img_name = filedialog.askopenfilename()
-        self.kalaImg_kala['file']= self.img_name
+        self.procuct_img = Image.open(self.img_name)
+        self.procuct_image = self.procuct_img.resize((150, 150))
+        self.product_photo = ImageTk.PhotoImage(self.procuct_image)
+        self.imgSelectorBg_kala['image']=self.product_photo
     
     def funcAddKala(self , event=None):
         self.productId=self.e_productId_kala.get()
@@ -698,8 +688,8 @@ class App:
         self.c_productType_kala.set("یک گزینه را انتخاب کنید")
         self.c_groupType_kala.set("یک گزینه را انتخاب کنید")
         self.e_purchase_kala.delete(0,END)
-        self.e_description_kala.delete(0,END)
-        self.kalaImg_kala['file']='image/imgSelectorBg.png'
+        self.e_description_kala.delete(0,END)      
+        self.imgSelectorBg_kala['image']=self.kalaImg_kala
         self.e_productId_kala.focus()
 
         self.con=sql.connect('mydb.db')
@@ -748,17 +738,19 @@ class App:
         self.b_edit_kala.place(x=40,y=self.y2)
 
     def delete_record_kala(self,event=None):
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
-        self.code=self.values[4]
-        self.cur.execute("DELETE FROM kala WHERE id='{}'" .format(self.code))
-        self.con.commit()
-        for item in self.listKala.get_children():
-            self.listKala.delete(item)
-        self.lst=[]
-        self.data_to_list_kala()
-        self.b_delete_kala.place(x=-50,y=-50)
-        self.b_edit_kala.place(x=-50,y=-50)
+        self.peremision_delete_record = messagebox.askquestion("Confirm","آیا از پاک کردن کالا مطمئن هستید؟")
+        if self.peremision_delete_record == 'yes':
+            self.con=sql.connect('mydb.db')
+            self.cur=self.con.cursor()
+            self.code=self.values[4]
+            self.cur.execute("DELETE FROM kala WHERE id='{}'" .format(self.code))
+            self.con.commit()
+            for item in self.listKala.get_children():
+                self.listKala.delete(item)
+            self.lst=[]
+            self.data_to_list_kala()
+            self.b_delete_kala.place(x=-50,y=-50)
+            self.b_edit_kala.place(x=-50,y=-50)
 
     def sql_search_kala(self,id1):
         self.con = sql.connect('mydb.db')
@@ -785,27 +777,47 @@ class App:
         self.e_purchase_kala.insert(0,self.valuelst[0][4])
         self.e_description_kala.insert(0,self.valuelst[0][5])
         self.b_sabtTaghirat_kala.place(x=910,y=340)
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.cur.execute("SELECT photo FROM kala WHERE id = '{}'".format(self.valuelst[0][0]))
+        image_data = self.cur.fetchone()[0]
+        procuct_img = Image.open(io.BytesIO(image_data))
+        procuct_image = procuct_img.resize((150, 150))
+        self.product_photo = ImageTk.PhotoImage(procuct_image)
+        self.imgSelectorBg_kala['image']=self.product_photo
 
     def edit_kala(self,event = None):
-        self.con = sql.connect('mydb.db')
-        self.cur = self.con.cursor()
-        self.code = self.e_productId_kala.get()
-        self.name = self.e_productName_kala.get()
-        self.point = self.e_purchase_kala.get()
-        self.desc = self.e_description_kala.get()
-        self.type = self.c_productType_kala.get()
-        self.group = self.c_groupType_kala.get()
-        self.listKala.item(self.selected ,values = (self.point,self.group,self.type,self.name,self.code,self.row_num))
-        self.cur.execute(''' UPDATE kala SET id = "{}" , name = "{}", type = "{}",category = "{}",
-        purchase = "{}",description = "{}" WHERE id="{}" '''.format(self.code,self.name,self.type,self.group,self.point,self.desc,self.values[4]))
-        self.con.commit()
-        self.b_sabtTaghirat_kala.place(x=-100,y=-100)
-        self.b_delete_kala.place(x=-50,y=-50)
-        self.b_edit_kala.place(x=-50,y=-50)
-        self.valuelst=[]
+        self.peremision_edit_record = messagebox.askquestion("Confirm","آیا از تغییر اطلاعات کالا مطمئن هستید؟")
+        if self.peremision_edit_record == 'yes':
+            self.con = sql.connect('mydb.db')
+            self.cur = self.con.cursor()
+            self.code = self.e_productId_kala.get()
+            self.name = self.e_productName_kala.get()
+            self.point = self.e_purchase_kala.get()
+            self.desc = self.e_description_kala.get()
+            self.type = self.c_productType_kala.get()
+            self.group = self.c_groupType_kala.get()
+            self.listKala.item(self.selected ,values = (self.point,self.group,self.type,self.name,self.code,self.row_num))
+            self.cur.execute(''' UPDATE kala SET id = "{}" , name = "{}", type = "{}",category = "{}",
+            purchase = "{}",description = "{}" WHERE id="{}" '''.format(self.code,self.name,self.type,self.group,self.point,self.desc,self.values[4]))
+            self.con.commit()
+            self.b_sabtTaghirat_kala.place(x=-100,y=-100)
+            self.b_delete_kala.place(x=-50,y=-50)
+            self.b_edit_kala.place(x=-50,y=-50)
+            self.valuelst=[]
+            self.e_productId_kala.delete(0,END)
+            self.e_productName_kala.delete(0,END)
+            self.c_productType_kala.set("یک گزینه را انتخاب کنید")
+            self.c_groupType_kala.set("یک گزینه را انتخاب کنید")
+            self.e_purchase_kala.delete(0,END)
+            self.e_description_kala.delete(0,END)
+            self.e_productId_kala.focus()
+            self.imgSelectorBg_kala['image']=self.kalaImg_kala
+
 #_________________________________________________________________________________________________________________________
 #____________________________________________________ add user page ______________________________________________________
     def add_user_page(self):
+        
         self.hSabtUserImg = PhotoImage(file='image/headerSabtKarmandImg.png')
         self.UserImg = PhotoImage(file='image/imgSelectorBg.png')
         self.searchBtnImg_user = PhotoImage(file='image/searchBtnImg.png')
@@ -813,60 +825,61 @@ class App:
         self.deleteBtnImg_user = PhotoImage(file='image/deleteBtnImg.png')
         self.editBtnImg_user = PhotoImage(file='image/editBtnImg.png')
         self.sabtTaghirBtn_user = PhotoImage(file='image/sabtEdit.png')
-
+        
+        user_page.title('نرم افزار انبارداری')
+        user_page.resizable(False,False)
+        user_page.iconbitmap('image/warehouseIco.ico')
         user_page.geometry ('1400x800+250+100')
-        user_page.configure (bg='#F3F3F3')
+        user_page.configure (bg='#F6F5F5')
     
-        self.dateFrm_user=Label(user_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.dateFrm_user=Label(user_page,image=self.bgDateImg, height=45,width=320,bd=0,bg='white')
         self.time_label_user = Label(self.dateFrm_user)
         self.date_label_user = Label(self.dateFrm_user)
-        self.l_headerUser=Label(user_page,image=self.hSabtUserImg)
-        self.l_nameUser=Label(user_page,text=' : نام',font=('Lalezar',17))
+        self.l_headerUser=Label(user_page,image=self.hSabtUserImg,bg='#F6F5F5')
+        self.l_nameUser=Label(user_page,text=' : نام',font=('Lalezar',17),bg='#F6F5F5')
         self.e_nameUser=Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_lastUser=Label(user_page,text=' : نام خانوادگی',font=('Lalezar',17))
+        self.l_lastUser=Label(user_page,text=' : نام خانوادگی',font=('Lalezar',17),bg='#F6F5F5')
         self.e_lastUser=Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_nationalCode=Label(user_page,text=' : کد ملی',font=('Lalezar',17))
+        self.l_nationalCode=Label(user_page,text=' : کد ملی',font=('Lalezar',17),bg='#F6F5F5')
         self.e_nationalCode=Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_gender=Label(user_page,text=' : جنسیت',font=('Lalezar',17))
+        self.l_gender=Label(user_page,text=' : جنسیت',font=('Lalezar',17),bg='#F6F5F5')
         self.c_gender=ttk.Combobox(user_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
                                           justify = 'right',values=["زن", "مرد"])
         self.c_gender.set("یک گزینه را انتخاب کنید")
-        self.l_phoneNum=Label(user_page,text=' : شماره تماس',font=('Lalezar',17))
+        self.l_phoneNum=Label(user_page,text=' : شماره تماس',font=('Lalezar',17),bg='#F6F5F5')
         self.e_phoneNum=Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_accountType=Label(user_page,text=' : نوع کاربری',font=('Lalezar',17))
+        self.l_accountType=Label(user_page,text=' : نوع کاربری',font=('Lalezar',17),bg='#F6F5F5')
         self.c_accountType=ttk.Combobox(user_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
-                                          justify = 'right',values=["فروشنده","کارمند","ادمین", "مدیر"])
+                                          justify = 'right',values=["فروشنده","کارمند"])
         self.c_accountType.set("یک گزینه را انتخاب کنید")
-        self.l_personnelId=Label(user_page,text=' : کد کارمند',font=('Lalezar',17))
-        self.e_personnelId=Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_UserPass=Label(user_page,text=' : رمزعبور',font=('Lalezar',17))
-        self.e_UserPass=Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.l_imgSelector = Label(user_page,text='انتخاب تصویر',font=('Lalezar',17))
-        self.imgSelectorBg = Label(user_page,bg='#F3F3F3',image=self.UserImg,cursor='hand2',width=150,height=150)
-        self.b_addPesonnel= Button(user_page,bg='#F3F3F3',image=self.addPesonnelImg,activebackground='#F3F3F3',bd=0,cursor='hand2')
-        self.e_searchUser   = Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_searchUser= Button(user_page,bg='#F3F3F3',image=self.searchBtnImg_user,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id_user)
-        self.b_delete_user=Button(user_page,image=self.deleteBtnImg_user,bd=0,activebackground='white',cursor='hand2')
-        self.b_edit_user=Button(user_page,image=self.editBtnImg_user,bd=0,activebackground='white',cursor='hand2')
-        self.b_sabtTaghirat_user=Button(user_page,image=self.sabtTaghirBtn_user,bd=0,activebackground='white')
+        self.l_personnelId = Label(user_page,text=' : کد کارمند',font=('Lalezar',17),bg='#F6F5F5')
+        self.e_personnelId = Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.l_imgSelector = Label(user_page,text='انتخاب تصویر',font=('Lalezar',17),bg='#F6F5F5')
+        self.imgSelectorBg = Label(user_page,bg='#F6F5F5',image=self.UserImg,cursor='hand2',width=150,height=150)
+        self.b_addPesonnel= Button(user_page,bg='#F6F5F5',image=self.addPesonnelImg,activebackground='#F6F5F5',bd=0,cursor='hand2')
+        self.e_searchUser = Entry(user_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
+        self.b_searchUser = Button(user_page,bg='#F6F5F5',image=self.searchBtnImg_user,activebackground='#F6F5F5',bd=0,cursor='hand2',command=self.search_id_user)
+        self.b_delete_user = Button(user_page,image=self.deleteBtnImg_user,bd=0,activebackground='white',cursor='hand2')
+        self.b_edit_user = Button(user_page,image=self.editBtnImg_user,bd=0,activebackground='white',cursor='hand2')
+        self.b_sabtTaghirat_user = Button(user_page,image=self.sabtTaghirBtn_user,bd=0,activebackground='white')
         
         #list
         self.listUser= ttk.Treeview(user_page,show='headings',height=8)
-        self.listUser['columns']=('type','phoneNum','nationalCode','last','name','personnelId','row')
+        self.listUser['columns']=('type','phoneNum','nationalCode','gender','nameUser','personnelId','row')
         #columns
         self.listUser.column('type',width=200,anchor=E)
         self.listUser.column('phoneNum',width=200,anchor=E)
         self.listUser.column('nationalCode',width=200,anchor=E)
-        self.listUser.column('last',width=200,anchor=E)
-        self.listUser.column('name',width=200,anchor=E)
+        self.listUser.column('gender',width=150,anchor=E)
+        self.listUser.column('nameUser',width=250,anchor=E)
         self.listUser.column('personnelId',width=150,anchor=E)
         self.listUser.column('row',width=100,anchor=E)
         #heading
         self.listUser.heading('type',text=' : نوع کاربر',anchor=E)
         self.listUser.heading('phoneNum',text=' : شماره تماس',anchor=E)
         self.listUser.heading('nationalCode',text=' : کد ملی',anchor=E)
-        self.listUser.heading('last',text=' : نام خانوادگی',anchor=E)
-        self.listUser.heading('name',text=' : نام',anchor=E)
+        self.listUser.heading('gender',text=' : جنسیت',anchor=E)
+        self.listUser.heading('nameUser',text=' : نام و نام خانوادگی',anchor=E)
         self.listUser.heading('personnelId',text=' : کد کارمندی',anchor=E)
         self.listUser.heading('row',text=' : ردیف',anchor=E)
         self.style.theme_use('clam')
@@ -886,7 +899,7 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
 
-        self.b_openNav_user=Button(user_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_user_nav,cursor='hand2')
+        self.b_openNav_user=Button(user_page,image=self.openBtnImg,bg='#F6F5F5',activebackground='#F6F5F5',bd=0,command=self.switch_user_nav,cursor='hand2')
         self.navFrm_user=Frame(user_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_user=LabelFrame(self.navFrm_user,width=220,bg='#2E2E2E',bd=0,height=50)
         self.b_closeNav_user=Button(self.closeFrm_user,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_user_nav)
@@ -903,8 +916,8 @@ class App:
         self.b_exit_user=Button(self.navFrm_user,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
         self.dateFrm_user.place(x=0,y=0)
-        self.date_label_user.place(x=15,y=6)
-        self.time_label_user.place(x=190,y=6)
+        self.date_label_user.place(x=15,y=4)
+        self.time_label_user.place(x=190,y=4)
         self.b_openNav_user.place(x=1340,y=20)
         self.navFrm_user.place(x=1400,y=0)
         self.closeFrm_user.place(x=0,y=0)
@@ -925,18 +938,16 @@ class App:
         self.e_nameUser.place(x=1015,y=100)
         self.l_lastUser.place(x=1245,y=175)
         self.e_lastUser.place(x=1015,y=175)
-        self.l_nationalCode.place(x=1285,y=255)
-        self.e_nationalCode.place(x=1015,y=255)
+        self.l_nationalCode.place(x=480,y=175)
+        self.e_nationalCode.place(x=245,y=175)
         self.l_gender.place(x=885,y=100)
         self.c_gender.place(x=630,y=100)
         self.l_phoneNum.place(x=855,y=175)
         self.e_phoneNum.place(x=630,y=175)
-        self.l_accountType.place(x=865,y=250)
-        self.c_accountType.place(x=630,y=250)
+        self.l_accountType.place(x=1255,y=255)
+        self.c_accountType.place(x=1015,y=255)
         self.l_personnelId.place(x=470,y=100)
         self.e_personnelId.place(x=245,y=100)
-        self.l_UserPass.place(x=480,y=175)
-        self.e_UserPass.place(x=245,y=175)
         self.l_imgSelector.place(x=55,y=260)
         self.imgSelectorBg.place(x=45,y=100)
         self.b_addPesonnel.place(x=1160,y=330)
@@ -945,14 +956,13 @@ class App:
         self.e_searchUser.place(x=240,y=375)
 
         #_____ bind _____
+        self.e_searchUser.insert(0,'جستجوی کد کاربر')
+        self.e_searchUser.bind('<Button-1>', lambda event : self.e_searchUser.delete(0,END))
         self.e_nameUser.focus()
         self.e_nameUser.bind('<Return>',lambda event : self.e_lastUser.focus())
-        self.e_lastUser.bind('<Return>',lambda event : self.e_nationalCode.focus())
-        self.e_nationalCode.bind('<Return>',lambda event : self.e_phoneNum.focus())
+        self.e_lastUser.bind('<Return>',lambda event : self.e_phoneNum.focus())
         self.e_phoneNum.bind('<Return>',lambda event : self.e_personnelId.focus())
-        self.e_personnelId.bind('<Return>',lambda event : self.e_UserPass.focus())
-        self.e_UserPass.bind('<Return>',lambda event : self.e_UserPass.focus())
-        self.e_UserPass.bind('<Return>',lambda event : self.funcAddUser)
+        self.e_personnelId.bind('<Return>',lambda event : self.e_nationalCode.focus())
         self.b_addPesonnel.bind('<Button-1>',self.funcAddUser)
         self.imgSelectorBg.bind('<Button-1>', self.funcAddImg)
         self.listUser.bind('<ButtonRelease-1>', self.select_record_user)
@@ -964,8 +974,8 @@ class App:
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label_user.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label_user.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label_user.config(text=f"{self.current_time}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label_user.config(text=f"{self.current_date}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm_user.after(1000, self.update_time_user)
 
     def switch_user_nav(self):
@@ -1038,10 +1048,10 @@ class App:
 
     def funcAddImg(self,event=None):
         self.img_name = filedialog.askopenfilename()
-        self.UserImg['file']= self.img_name
-
-    def funcBtnHover(self,img,url):
-        img['file'] = url
+        self.procuct_img = Image.open(self.img_name)
+        self.procuct_image = self.procuct_img.resize((150, 150))
+        self.product_photo = ImageTk.PhotoImage(self.procuct_image)
+        self.imgSelectorBg['image']=self.product_photo
 
     def covert_to_binary_data(self,filename):
         with open (filename , 'rb') as f:
@@ -1062,43 +1072,45 @@ class App:
             for i in row :
                 self.lst.append(i)
             for i in self.lst:
+                fullname_user=i[1]+' '+i[2]
                 self.listUser.insert(parent='',index='end',iid=self.count,text='',
-                                    values=(i[6],i[5],i[3],i[2],i[1],i[0],str(self.count+1)))
+                                    values=(i[6],i[5],i[3],i[4],fullname_user,i[0],str(self.count+1)))
                 self.count += 1
 
     def funcAddUser(self , event=None):
+        self.phoneNum=self.e_phoneNum.get()
         self.pesonnelName=self.e_nameUser.get()
         self.pesonnelLast=self.e_lastUser.get()
         self.nationalCode=self.e_nationalCode.get()
         self.gender=self.c_gender.get()
-        self.phoneNum=self.e_phoneNum.get()
         self.accountType=self.c_accountType.get()
         self.personnelId=self.e_personnelId.get()
-        self.personnelPass=self.e_UserPass.get()
         self.photo = self.covert_to_binary_data(self.img_name)
+        if self.phoneNum != 'Error!':
+            self.e_nameUser.delete(0,END)
+            self.e_lastUser.delete(0,END)
+            self.e_nationalCode.delete(0,END)
+            self.c_gender.set("یک گزینه را انتخاب کنید")
+            self.e_phoneNum.delete(0,END)
+            self.c_accountType.set("یک گزینه را انتخاب کنید")
+            self.e_personnelId.delete(0,END)
+            self.imgSelectorBg['image']=self.UserImg
+            self.e_nameUser.focus()
 
-        self.e_nameUser.delete(0,END)
-        self.e_lastUser.delete(0,END)
-        self.e_nationalCode.delete(0,END)
-        self.c_gender.set("یک گزینه را انتخاب کنید")
-        self.e_phoneNum.delete(0,END)
-        self.c_accountType.set("یک گزینه را انتخاب کنید")
-        self.e_personnelId.delete(0,END)
-        self.e_UserPass.delete(0,END)
-        self.UserImg['file']='image/imgSelectorBg.png'
-        self.e_nameUser.focus()
+            self.con=sql.connect('mydb.db')
+            self.cur=self.con.cursor()
+            self.data=(self.personnelId,self.pesonnelName,self.pesonnelLast,self.nationalCode,self.gender,self.phoneNum,self.accountType,self.photo)
+            self.cur.execute('''CREATE TABLE IF NOT EXISTS user (id TEXT PRIMARY KEY NOT NULL ,name TEXT NOT NULL ,last_name TEXT NOT NULL,national_code TEXT NOT NULL
+            ,gender INTEGER NOT NULL,phone_number TEXT NOT NULL,account_type TEXT NOT NULL,photo BLOB NOT NULL)''')
+            self.cur.execute('INSERT INTO user(id,name,last_name,national_code,gender,phone_number,account_type,photo) VALUES(?,?,?,?,?,?,?,?)',self.data)
+            self.con.commit()
+            fullname_user=self.pesonnelLast+' '+self.pesonnelName
+            self.numlist=len(self.listUser.get_children())
+            self.listUser.insert(parent='',index='end',text='',values=(self.accountType,self.phoneNum,self.nationalCode,
+                                                                        self.gender,fullname_user,self.personnelId,self.numlist+1))
+        elif self.phoneNum == 'Error!':
+            messagebox.showerror('ERROR', '! شماره تلفن را درست وارد کنید ')
 
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
-        self.data=(self.personnelId,self.pesonnelName,self.pesonnelLast,self.nationalCode,self.gender,self.phoneNum,self.accountType,self.personnelPass,self.photo)
-        self.cur.execute('''CREATE TABLE IF NOT EXISTS user (id TEXT PRIMARY KEY NOT NULL ,name TEXT NOT NULL ,last_name TEXT NOT NULL,national_code TEXT NOT NULL
-        ,gender INTEGER NOT NULL,phone_number TEXT NOT NULL,account_type TEXT NOT NULL,personnel_pass TEXT NOT NULL,photo BLOB NOT NULL)''')
-        self.cur.execute('INSERT INTO user(id,name,last_name,national_code,gender,phone_number,account_type,personnel_pass,photo) VALUES(?,?,?,?,?,?,?,?,?)',self.data)
-        self.con.commit()
-        self.numlist=len(self.listUser.get_children())
-        self.listUser.insert(parent='',index='end',text='',values=(self.accountType,self.phoneNum,self.gender,
-                                                                    self.pesonnelLast,self.pesonnelName,self.personnelId,self.numlist+1))
-    
     def search_id_user(self,event=None):
         self.con=sql.connect('mydb.db')
         self.cur=self.con.cursor()
@@ -1109,9 +1121,10 @@ class App:
                 self.listUser.delete(i)
             self.row=self.cur.execute('SELECT * FROM user WHERE id="{}"'.format(self.idUser))
             self.search_list=list(self.row)
+            fullname_user=self.search_list[0][1]+' '+self.search_list[0][2]
             self.listUser.insert(parent='',index='end',iid=self.count,text='',
-                                    values=(self.search_list[0][4],self.search_list[0][3],self.search_list[0][2],
-                                            self.search_list[0][1],self.search_list[0][0],str(self.count+1)))
+                                    values=(self.search_list[0][6],self.search_list[0][5],self.search_list[0][3],
+                                            self.search_list[0][4],fullname_user,self.search_list[0][0],str(self.count+1)))
         else:
             self.lst=[]
             self.listUser.delete('0')
@@ -1128,17 +1141,19 @@ class App:
         self.b_edit_user.place(x=30,y=self.y2)
 
     def delete_record_user(self,event=None):
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
-        self.code=self.values[5]
-        self.cur.execute("DELETE FROM user WHERE id='{}'" .format(self.code))
-        self.con.commit()
-        for item in self.listUser.get_children():
-            self.listUser.delete(item)
-        self.lst=[]
-        self.data_to_list_user()
-        self.b_delete_user.place(x=-50,y=-50)
-        self.b_edit_user.place(x=-50,y=-50)
+        self.peremision_delete_recordUser = messagebox.askquestion("Confirm","آیا از حذف کاربر مطمِن هستید؟")
+        if self.peremision_delete_recordUser == 'yes':
+            self.con=sql.connect('mydb.db')
+            self.cur=self.con.cursor()
+            self.code=self.values[5]
+            self.cur.execute("DELETE FROM user WHERE id='{}'" .format(self.code))
+            self.con.commit()
+            for item in self.listUser.get_children():
+                self.listUser.delete(item)
+            self.lst=[]
+            self.data_to_list_user()
+            self.b_delete_user.place(x=-50,y=-50)
+            self.b_edit_user.place(x=-50,y=-50)
 
     def sql_search_user(self,id1):
         con = sql.connect('mydb.db')
@@ -1152,11 +1167,8 @@ class App:
         self.e_nameUser.delete(0,END)
         self.e_lastUser.delete(0,END)
         self.e_nationalCode.delete(0,END)
-        self.c_gender.set("یک گزینه را انتخاب کنید")
         self.e_phoneNum.delete(0,END)
-        self.c_accountType.set("یک گزینه را انتخاب کنید")
         self.e_personnelId.delete(0,END)
-        self.e_UserPass.delete(0,END)
         self.values = self.listUser.item(self.selected , "values")
         self.row_num=self.values[6]
         self.valuelst = self.sql_search_user(self.values[5])
@@ -1164,32 +1176,49 @@ class App:
         self.e_nameUser.insert(0,self.valuelst[0][1])
         self.e_lastUser.insert(0,self.valuelst[0][2])
         self.e_nationalCode.insert(0,self.valuelst[0][3])
-        self.c_gender.insert(0,self.valuelst[0][4])
+        self.c_gender.set(self.valuelst[0][4])
         self.e_phoneNum.insert(0,self.valuelst[0][5])
-        self.c_accountType.insert(0,self.valuelst[0][6])
-        self.e_UserPass.insert(0,self.valuelst[0][7])
-        self.b_sabtTaghirat_user.place(x=910,y=340)
+        self.c_accountType.set(self.valuelst[0][6])
+        self.b_sabtTaghirat_user.place(x=950,y=330)
+        self.con=sql.connect('mydb.db')
+        self.cur=self.con.cursor()
+        self.cur.execute("SELECT photo FROM user WHERE id = '{}'".format(self.valuelst[0][0]))
+        image_data = self.cur.fetchone()[0]
+        user_img = Image.open(io.BytesIO(image_data))
+        user_image = user_img.resize((150, 150))
+        self.user_photo = ImageTk.PhotoImage(user_image)
+        self.imgSelectorBg['image']=self.user_photo
 
     def edit_user(self,event = None):
-        self.con = sql.connect('mydb.db')
-        self.cur = self.con.cursor()
-        self.pesonnelName=self.e_nameUser.get()
-        self.pesonnelLast=self.e_lastUser.get()
-        self.nationalCode=self.e_nationalCode.get()
-        self.gender=self.c_gender.get()
-        self.phoneNum=self.e_phoneNum.get()
-        self.accountType=self.c_accountType.get()
-        self.personnelId=self.e_personnelId.get()
-        self.personnelPass=self.e_UserPass.get()
-        self.listUser.item(self.selected ,values = (self.accountType,self.phoneNum,self.nationalCode,self.pesonnelLast,self.pesonnelName,self.personnelId,self.row_num))
-        self.cur.execute(''' UPDATE user SET id = "{}" , name = "{}", last_name = "{}",national_code = "{}",
-        gender = "{}",phone_number = "{}",account_type ="{}",personnel_pass ="{}" WHERE id="{}" '''.format(self.personnelId,
-                                                    self.pesonnelName,self.pesonnelLast,self.nationalCode,self.gender,
-                                                    self.phoneNum,self.accountType,self.personnelPass,self.values[5]))
-        self.con.commit()
-        self.b_sabtTaghirat_user.place(x=-100,y=-100)
-        self.b_delete_user.place(x=-50,y=-50)
-        self.b_edit_user.place(x=-50,y=-50)
+        self.peremision_edit_recordUser = messagebox.askquestion("Confirm","آیا از تغییر اطلاعات کاربر مطمِن هستید؟")
+        if self.peremision_edit_recordUser == 'yes':
+            self.con = sql.connect('mydb.db')
+            self.cur = self.con.cursor()
+            self.pesonnelName=self.e_nameUser.get()
+            self.pesonnelLast=self.e_lastUser.get()
+            self.nationalCode=self.e_nationalCode.get()
+            self.gender=self.c_gender.get()
+            self.phoneNum=self.e_phoneNum.get()
+            self.accountType=self.c_accountType.get()
+            self.personnelId=self.e_personnelId.get()
+            fullname_user=self.pesonnelName+' '+self.pesonnelLast
+            self.listUser.item(self.selected ,values = (self.accountType,self.phoneNum,self.nationalCode,self.gender,fullname_user,self.personnelId,self.row_num))
+            self.cur.execute(''' UPDATE user SET id = "{}" , name = "{}", last_name = "{}",national_code = "{}",
+            gender = "{}",phone_number = "{}",account_type ="{}" WHERE id="{}" '''.format(self.personnelId,
+                                                        self.pesonnelName,self.pesonnelLast,self.nationalCode,self.gender,
+                                                        self.phoneNum,self.accountType,self.values[5]))
+            self.con.commit()
+            self.b_sabtTaghirat_user.place(x=-100,y=-100)
+            self.b_delete_user.place(x=-50,y=-50)
+            self.b_edit_user.place(x=-50,y=-50)
+            self.e_nameUser.delete(0,END)
+            self.e_lastUser.delete(0,END)
+            self.e_nationalCode.delete(0,END)
+            self.e_phoneNum.delete(0,END)
+            self.e_personnelId.delete(0,END)
+            self.c_accountType.set('یک گزینه را انتخاب کنید')
+            self.c_gender.set('یک گزینه را انتخاب کنید')
+            self.imgSelectorBg['image']=self.UserImg
 
 
     #____________________________________________________________________________________________________________________
@@ -1202,10 +1231,13 @@ class App:
         self.deleteBtnImg_stock = PhotoImage(file='image/deleteBtnImg.png')
         self.chartBtnImg = PhotoImage(file='image/chartBtnImg.png')
 
+        stock_page.title('نرم افزار انبارداری')
+        stock_page.resizable(False,False)
+        stock_page.iconbitmap('image/warehouseIco.ico')
         stock_page.geometry ('1400x800+250+100')
-        stock_page.configure (bg='#F3F3F3')
+        stock_page.configure (bg='#F6F5F5')
 
-        self.dateFrm_stock=Label(stock_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.dateFrm_stock=Label(stock_page,image=self.bgDateImg, height=45,width=320,bd=0,bg='white')
         self.time_label_stock = Label(self.dateFrm_stock)
         self.date_label_stock = Label(self.dateFrm_stock)
         self.l_headerStock=Label(stock_page,image=self.h_stockImg)
@@ -1215,8 +1247,8 @@ class App:
         self.c_filterStock.set("یک گزینه را انتخاب کنید")
         self.l_filterStock=Label(stock_page,text=' : گروه کالا',font=('Lalezar',17))
         self.e_searchStock = Entry(stock_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_searchStock= Button(stock_page,image=self.searchBtnImg_stock,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.search_id_stock)
-        self.b_chart_stock=Button(stock_page,image=self.chartBtnImg,bd=0,activebackground='#F3F3F3',cursor='hand2',command=self.chartKala)
+        self.b_searchStock= Button(stock_page,image=self.searchBtnImg_stock,activebackground='#F6F5F5',bd=0,cursor='hand2',command=self.search_id_stock)
+        self.b_chart_stock=Button(stock_page,image=self.chartBtnImg,bd=0,activebackground='#F6F5F5',cursor='hand2',command=self.chartKala)
 
         #list
         self.listStock= ttk.Treeview(stock_page,show='headings',height=15)
@@ -1257,7 +1289,8 @@ class App:
         
         #___bind___
         self.listStock.bind('<ButtonRelease-1>', self.select_record_stock)
-        # self.b_chart_stock.bind('<ButtonRelease-1>', self.chartkala)
+        self.e_searchStock.insert(0,'جستجوی کد کالا')
+        self.e_searchStock.bind('<Button-1>', lambda event : self.e_searchStock.delete(0,END))
     
         self.b_openNav_stock=Button(stock_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_stock_nav,cursor='hand2')
         self.navFrm_stock=Frame(stock_page,height=800,width=220,bg='#777777',bd=0)
@@ -1276,8 +1309,8 @@ class App:
         self.b_exit_stock=Button(self.navFrm_stock,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
         
         self.dateFrm_stock.place(x=0,y=0)
-        self.date_label_stock.place(x=15,y=6)
-        self.time_label_stock.place(x=190,y=6)
+        self.date_label_stock.place(x=15,y=4)
+        self.time_label_stock.place(x=190,y=4)
         self.b_openNav_stock.place(x=1340,y=20)
         self.navFrm_stock.place(x=1400,y=0)
         self.closeFrm_stock.place(x=0,y=0)
@@ -1305,8 +1338,8 @@ class App:
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label_stock.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label_stock.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label_stock.config(text=f"{self.current_time}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label_stock.config(text=f"{self.current_date}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm_stock.after(1000, self.update_time_stock)     
 
     def switch_stock_nav(self):
@@ -1321,28 +1354,28 @@ class App:
         self.navFrm.place(x=1180, y=0)
         main_page .state('normal')
         stock_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def stock_to_kala(self):
         self.navFrm_product.place(x=1180, y=0)
         self.data_to_list_kala()
         product_page.state('normal')
         stock_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def stock_to_user(self):
         self.navFrm_user.place(x=1180, y=0)
         self.data_to_list_user()
         user_page.state('normal')
         stock_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
     
     def stock_to_history(self):
         self.navFrm_history.place(x=1180, y=0)
         self.data_to_list_history()
         history_page.state('normal')
         stock_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def stock_to_bill(self):
         self.navFrm_bill.place(x=1180, y=0)
@@ -1354,28 +1387,28 @@ class App:
         self.navFrm_receipt.place(x=1180, y=0)
         receipt_page.state('normal')
         stock_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def stock_to_request(self):
         self.navFrm_request.place(x=1180, y=0)
         self.data_to_list_request()
         request_page.state('normal')
         stock_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def stock_to_order(self):
         self.navFrm_order.place(x=1180, y=0)
         self.data_to_list_order()
         order_page.state('normal')
         stock_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
     def stock_to_exit(self):
         self.navFrm_exit.place(x=1180, y=0)
         self.data_to_list_exit()
         exit_page.state('normal')
         stock_page.state('withdraw')
-        self.btnState = False
+        self.btnState = True
 
 
     def data_to_list_stock(self):
@@ -1418,6 +1451,7 @@ class App:
         self.plotFrm = LabelFrame(chart_page,text='Plot',padx=5,pady=10)
         self.plotFrm.place(x=20,y=20)
         fig = plt.figure(figsize=(5,5))
+        self.ChartY.sort(reverse=True)
         plt.plot(self.ChartX,self.ChartY,
                  linewidth=2,
                  linestyle='--',
@@ -1484,15 +1518,18 @@ class App:
         self.kalaImg = PhotoImage(file='image/imgSelectorBg.png')
         self.addKalaNumImg = PhotoImage(file='image/addKalaNum.png')
         
+        receipt_page.title('نرم افزار انبارداری')
+        receipt_page.resizable(False,False)
+        receipt_page.iconbitmap('image/warehouseIco.ico')
+        receipt_page.configure (bg='#F6F5F5')
         receipt_page.geometry ('1400x800+250+100')
-        receipt_page.configure (bg='#F3F3F3')
         
         self.searchUserFrm = LabelFrame(receipt_page,bg='#DFDFDF',width=1410,height=170,bd=5,relief=SOLID)
         self.h_vorodKala_receipt = Label(self.searchUserFrm,image=self.headerVorodKalaImg)
         self.l_attention_receipt = Label(self.searchUserFrm,text='.توجه : لطفا ابتدا کد ملی متقاضی مورد نظر را وارد کنید',font=('Lalezar',17),bg='#DFDFDF')
         self.e_searchUser_receipt  = Entry(self.searchUserFrm,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
         self.b_searchUser_receipt = Button(self.searchUserFrm,bg='#DFDFDF',image=self.searchBtnImg,activebackground='#DFDFDF',bd=0,cursor='hand2',command=self.search_idUser_receipt)
-        self.dateFrm_receipt=Label(self.searchUserFrm,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.dateFrm_receipt=Label(self.searchUserFrm,image=self.bgDateImg, height=45,width=320,bd=0,bg='white')
         self.time_label_receipt = Label(self.dateFrm_receipt)
         self.date_label_receipt = Label(self.dateFrm_receipt)
         self.e_searchKala_receipt = Entry(receipt_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid',fg='#717171')
@@ -1515,8 +1552,8 @@ class App:
         self.stockLbl_receipt = Label(receipt_page,text='{: <6}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=6,fg='#4F4E4E')
         self.l_purchase_receipt = Label(receipt_page,text=' : نقطه خرید',font=('Lalezar',17),bg='#EAEAEA')
         self.purchaseLbl_receipt = Label(receipt_page,text='{: <6}'.format(''),font=('Lalezar',17),bg='#EAEAEA',width=6,fg='#4F4E4E')
-        self.l_imgSelector_receipt = Label(receipt_page,text='انتخاب تصویر',font=('Lalezar',17))
-        self.imgSelectorBg_receipt = Label(receipt_page,bg='#F3F3F3',image=self.kalaImg,cursor='hand2',width=150,height=150)
+        self.l_imgSelector_receipt = Label(receipt_page,text='تصویر',font=('Lalezar',17))
+        self.imgSelectorBg_receipt = Label(receipt_page,bg='#F3F3F3',image=self.kalaImg,width=150,height=150)
         self.kalaNumFrm_receipt = LabelFrame(receipt_page,bg='#EAEAEA',width=820,height=70,bd=5,relief=SOLID)
         self.kalaNum_receipt = Label(self.kalaNumFrm_receipt,text=' : تعداد کالا',font=('Lalezar',17),bg='#EAEAEA')
         self.e_kalaNum_receipt = Entry(self.kalaNumFrm_receipt,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid',fg='#717171')
@@ -1585,9 +1622,9 @@ class App:
         self.b_issuance_receipt=Button(self.navFrm_receipt,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2',command=self.receipt_to_bill)
         self.b_exit_receipt=Button(self.navFrm_receipt,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
-        self.dateFrm_receipt.place(x=0,y=0)
-        self.date_label_receipt.place(x=15,y=6)
-        self.time_label_receipt.place(x=190,y=6)
+        self.dateFrm_receipt.place(x=0,y=5)
+        self.date_label_receipt.place(x=15,y=4)
+        self.time_label_receipt.place(x=190,y=4)
         self.b_openNav_receipt.place(x=1340,y=20)
         self.navFrm_receipt.place(x=1400,y=0)
         self.closeFrm_receipt.place(x=0,y=0)
@@ -1606,7 +1643,7 @@ class App:
         self.h_vorodKala_receipt.place(x=610,y=0)
         self.searchUserFrm.place(x=-5,y=-10)
         self.l_attention_receipt.place(x=690,y=90)
-        self.e_searchUser_receipt.place(x=475,y=90)
+        self.e_searchUser_receipt.place(x=475,y=95)
         self.b_searchUser_receipt.place(x=315,y=85)
         self.e_searchKala_receipt.place(x=1115,y=175)
         self.b_searchKala_receipt.place(x=955,y=170)
@@ -1627,7 +1664,7 @@ class App:
         self.stockLbl_receipt.place(x=280,y=280)
         self.l_purchase_receipt.place(x=385,y=360)
         self.purchaseLbl_receipt.place(x=280,y=360)
-        self.l_imgSelector_receipt.place(x=110,y=400)
+        self.l_imgSelector_receipt.place(x=130,y=400)
         self.imgSelectorBg_receipt.place(x=85,y=250)
         self.kalaNumFrm_receipt.place(x=520,y=460)
         self.kalaNum_receipt.place(x=700,y=10)
@@ -1641,8 +1678,8 @@ class App:
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label_receipt.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label_receipt.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label_receipt.config(text=f"{self.current_time}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label_receipt.config(text=f"{self.current_date}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm_receipt.after(1000, self.update_time_receipt)
 
     def switch_receipt_nav(self):
@@ -1741,6 +1778,13 @@ class App:
             if self.idKala !='':
                 self.con=sql.connect('mydb.db')
                 self.cur=self.con.cursor()
+                self.cur.execute("SELECT photo FROM kala WHERE id = '{}'".format(self.idKala))
+                image_data = self.cur.fetchone()[0]
+                kala_img = Image.open(io.BytesIO(image_data))
+                kala_image = kala_img.resize((150, 150))
+                self.kala_photo = ImageTk.PhotoImage(kala_image)
+                self.imgSelectorBg_receipt['image']=self.kala_photo
+
                 self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala))
                 self.kalaInfo=list(self.row)
                 self.nameKalaLbl_receipt['text']=self.kalaInfo[0][1]
@@ -1749,10 +1793,12 @@ class App:
                 self.groupKalaLbl_receipt['text']=self.kalaInfo[0][3]
                 self.stockLbl_receipt['text']=self.kalaInfo[0][7]
                 self.purchaseLbl_receipt['text']=self.kalaInfo[0][4]
+                self.e_searchKala_receipt.delete(0,END)
+                self.e_searchKala_receipt.insert(0,'جستجوی کد کالا')
 
     def funcAddNum(self,event=None):
         self.entryNum=self.e_kalaNum_receipt.get()
-        self.selected_date_receipt = self.date_receipt.get_date()
+        self.selected_date_receipt = self.date_receipt.get()
         self.kalaNumber=int(self.entryNum)+int(self.kalaInfo[0][7])
         self.randomId_receipt=str(uuid.uuid4())
         self.randomId_receipt=self.randomId_receipt[:8]
@@ -1769,6 +1815,7 @@ class App:
                         values=(self.selected_date_receipt,self.entryNum,self.randomId_receipt,self.kalaInfo[0][0],self.kalaInfo[0][1],self.fullname_r,self.num_of_rows+1))
         self.e_kalaNum_receipt.delete(0,END)
         self.e_searchKala_receipt.delete(0,END)
+        self.e_searchKala_receipt.insert(0,'جستجوی کد کالا')
         self.e_searchUser_receipt.delete(0,END)
         self.kalaInfo=[]
         self.fullname=''
@@ -1781,23 +1828,28 @@ class App:
         self.purchaseLbl_receipt['text']=''
         self.stockLbl_receipt['text']=''
         self.permission=False
+        self.imgSelectorBg_receipt['image']=self.kalaImg
+
 
     #_____________________________________________________________________________________________________________________________________________
     #______________________________________________________________ request product _____________________________________________________________
 
     def request_product_page(self):
+        
+        request_page.title('نرم افزار انبارداری')
+        request_page.resizable(False,False)
+        request_page.iconbitmap('image/warehouseIco.ico')
+        request_page.configure (bg='#F6F5F5')
         request_page.geometry('1400x800+250+100')
-        request_page.configure(bg='white')
-        request_page.title('menu')
 
         self.headerReguestImg = PhotoImage(file='image/headerRequestImg.png')
         self.requestBtnImg = PhotoImage(file='image/requestBtnImg.png')
 
-        self.dateFrm_request=Label(request_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.dateFrm_request=Label(request_page,image=self.bgDateImg, height=45,width=320,bd=0,bg='#F6F5F5')
         self.time_label_request = Label(self.dateFrm_request)
         self.date_label_request = Label(self.dateFrm_request)
         self.h_requestPage = Label(request_page,image=self.headerReguestImg)
-        self.b_requestPage = Button(request_page,image=self.requestBtnImg,bd=0,activebackground='white',command=self.order_kala)
+        self.b_requestPage = Button(request_page,image=self.requestBtnImg,bd=0,activebackground='#F6F5F5',command=self.order_kala)
         #list
         self.listRequest= ttk.Treeview(request_page,show='headings',height=15)
         self.listRequest['columns']=('Purchase','number','Category','Type','Name','id','row')
@@ -1834,7 +1886,7 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
         
-        self.b_openNav_request=Button(request_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_request_nav,cursor='hand2')
+        self.b_openNav_request=Button(request_page,image=self.openBtnImg,bg='#F6F5F5',activebackground='#F6F5F5',bd=0,command=self.switch_request_nav,cursor='hand2')
         self.navFrm_request=Frame(request_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_request=LabelFrame(self.navFrm_request,width=220,bg='#2E2E2E',bd=0,height=50)
         self.b_closeNav_request=Button(self.closeFrm_request,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_request_nav)
@@ -1846,13 +1898,13 @@ class App:
         self.b_request_request=Button(self.navFrm_request,image=self.requestImg,bg='#777777',bd=0,cursor='hand2',state='disabled')
         self.b_order_request=Button(self.navFrm_request,image=self.sabtSefareshBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_order)
         self.b_exitKala_request=Button(self.navFrm_request,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_exit)
-        self.b_history_request=Button(self.navFrm_request,image=self.exitKalaBtnMenuImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_history)
+        self.b_history_request=Button(self.navFrm_request,image=self.historyBtnImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_history)
         self.b_issuance_request=Button(self.navFrm_request,image=self.issuanceImg,bg='#777777',bd=0,cursor='hand2',command=self.request_to_bill)
         self.b_exit_request=Button(self.navFrm_request,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
         self.dateFrm_request.place(x=0,y=0)
-        self.date_label_request.place(x=15,y=6)
-        self.time_label_request.place(x=190,y=6)
+        self.date_label_request.place(x=15,y=4)
+        self.time_label_request.place(x=190,y=4)
         self.b_openNav_request.place(x=1340,y=20)
         self.navFrm_request.place(x=1400,y=0)
         self.closeFrm_request.place(x=0,y=0)
@@ -1879,8 +1931,8 @@ class App:
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label_request.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label_request.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label_request.config(text=f"{self.current_time}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label_request.config(text=f"{self.current_date}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm.after(1000, self.update_time_request)
 
     def switch_request_nav(self):
@@ -1990,26 +2042,29 @@ class App:
 #__________________________________________________________________________________________________________________________________________________________________
 #_______________________________________________________________ order page ______________________________________________________________________________
     def order_kala_page(self):
+        order_page.title('نرم افزار انبارداری')
+        order_page.resizable(False,False)
+        order_page.iconbitmap('image/warehouseIco.ico')
+        order_page.configure (bg='#F6F5F5')
         order_page.geometry('1400x800+250+100')
-        order_page.configure(bg='white')
-        order_page.title('menu')
         
-        self.headerOrderImg = PhotoImage(file='image/headerRequestImg.png')
+        self.headerOrderImg = PhotoImage(file='image/headerOrderKala.png')
         self.sabtOrderBtnImg = PhotoImage(file='image/sabtOrder.png')
         self.searchBtnImg_order = PhotoImage(file='image/searchBtnImg.png')
         self.order_imgSelectorPic = PhotoImage(file='image/imgSelectorBg.png')
         self.order_baresiImg = PhotoImage(file='image/baresiBtnImg.png')
         self.tickImgBtn = PhotoImage(file='image/tickImgBtn.png')
 
-        self.dateFrm_order=Label(order_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.dateFrm_order=Label(order_page,image=self.bgDateImg, height=45,width=320,bd=0,bg='#F6F5F5')
         self.time_label_order = Label(self.dateFrm_order)
         self.date_label_order = Label(self.dateFrm_order)
         self.l_headerOrderPage = Label(order_page,image=self.headerOrderImg)
-        self.attention_idUser = Label(order_page,text=' . لطفا کد کاربر موردنطر خود را وارد کنید',font=('Lalezar',17),bg='white')
+        self.attention_idUser = Label(order_page,text=' . لطفا کد کاربر موردنطر خود را وارد کنید',font=('Lalezar',17),bg='#F6F5F5')
         self.e_idUser_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_searchUserBtnOrder = Button(order_page,image=self.order_baresiImg,bd=0,activebackground='white',command=self.search_idUser_order)
+        self.b_searchUserBtnOrder = Button(order_page,image=self.order_baresiImg,bd=0,activebackground='#F6F5F5',command=self.search_idUser_order)
         self.e_idKala_order = Entry(order_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
-        self.b_searchBtnOrder = Button(order_page,image=self.searchBtnImg_order,bd=0,activebackground='white',command=self.search_idKala_order)
+        self.e_idKala_order.insert(0,'جستجوی کد کالا')
+        self.b_searchBtnOrder = Button(order_page,image=self.searchBtnImg_order,bd=0,activebackground='#F6F5F5',command=self.search_idKala_order)
         self.userInfo_order_frm = LabelFrame(order_page,width=510,height=135,bg='#F2F2F2',bd=5,relief=SOLID)
         self.l_nameUser_order = Label(self.userInfo_order_frm,text=' : نام',font=('Lalezar',17),bg='#F2F2F2')
         self.nameUserLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=15,fg='#4F4E4E')
@@ -2018,7 +2073,7 @@ class App:
         self.l_nationalCode_order = Label(self.userInfo_order_frm,text=' : کد ملی',font=('Lalezar',17),bg='#F2F2F2')
         self.nationalCodeLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=15,fg='#4F4E4E')
         self.l_userId_order = Label(self.userInfo_order_frm,text=' : کد کاربری',font=('Lalezar',17),bg='#F2F2F2')
-        self.userIdLbl_order = Label(self.userInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=8,fg='#4F4E4E')
+        self.userIdLbl_order = Label(self.userInfo_order_frm,text='{: >10}'.format(''),font=('Lalezar',17),bg='#F2F2F2',width=8,fg='#4F4E4E')
         self.order_frm_num = LabelFrame(order_page,width=510,height=115,bg='#F2F2F2',bd=5,relief=SOLID)
         self.l_orderNum = Label(self.order_frm_num,text=' : تعداد',font=('Lalezar',17))
         self.e_orderNum = Entry(self.order_frm_num,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
@@ -2031,15 +2086,15 @@ class App:
         self.l_kalaType_order = Label(self.kalaInfo_order_frm,text=' : نوع کالا',font=('Lalezar',17),bg='#D0D0D0')
         self.kalaTypeLbl_order =Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
         self.l_kalaId_order = Label(self.kalaInfo_order_frm,text=' : کد کالا',font=('Lalezar',17),bg='#D0D0D0')
-        self.kalaIdLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
+        self.kalaIdLbl_order = Label(self.kalaInfo_order_frm,text='{: >10}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=10,fg='#4F4E4E')
         self.l_groupKala_order = Label(self.kalaInfo_order_frm,text=' : گروه کالا',font=('Lalezar',17),bg='#D0D0D0')
         self.groupKalaLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
         self.l_kalaNum_order = Label(self.kalaInfo_order_frm,text=' : موجودی',font=('Lalezar',17),bg='#D0D0D0')
         self.kalaNumLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
         self.l_purcase_order = Label(self.kalaInfo_order_frm,text=' : نقطه خرید',font=('Lalezar',17),bg='#D0D0D0')
         self.purcaseLbl_order = Label(self.kalaInfo_order_frm,text='{: ^20}'.format(''),font=('Lalezar',17),bg='#D0D0D0',width=15,fg='#4F4E4E')
-        self.l_imgSelector_order = Label(self.kalaInfo_order_frm,text='انتخاب تصویر',font=('Lalezar',17),bg='#D0D0D0')
-        self.imgSelectorBg_order = Label(self.kalaInfo_order_frm,bg='#D0D0D0',image=self.order_imgSelectorPic,cursor='hand2',width=150,height=150)
+        self.l_imgSelector_order = Label(self.kalaInfo_order_frm,text='تصویر',font=('Lalezar',17),bg='#D0D0D0')
+        self.imgSelectorBg_order = Label(self.kalaInfo_order_frm,bg='#D0D0D0',image=self.order_imgSelectorPic,width=150,height=150)
         self.tickBtnOrder = Button(order_page,bg='#D0D0D0',image=self.tickImgBtn,bd=0,background='white',cursor='hand2')
         #list
         self.listOrder= ttk.Treeview(order_page,show='headings',height=8)
@@ -2080,7 +2135,7 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
         
-        self.b_openNav_order=Button(order_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_order_nav,cursor='hand2')
+        self.b_openNav_order=Button(order_page,image=self.openBtnImg,bg='#F6F5F5',activebackground='#F6F5F5',bd=0,command=self.switch_order_nav,cursor='hand2')
         self.navFrm_order=Frame(order_page,height=800,width=220,bg='#777777',bd=0)
         self.closeFrm_order=LabelFrame(self.navFrm_order,width=220,bg='#2E2E2E',bd=0,height=50)
         self.b_closeNav_order=Button(self.closeFrm_order,image=self.closeBtnImg,bd=0,bg='#2E2E2E',activebackground='#2E2E2E',cursor='hand2',command=self.switch_order_nav)
@@ -2097,8 +2152,8 @@ class App:
         self.b_exit_order=Button(self.navFrm_order,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
         
         self.dateFrm_order.place(x=0,y=0)
-        self.date_label_order.place(x=15,y=6)
-        self.time_label_order.place(x=190,y=6)
+        self.date_label_order.place(x=15,y=4)
+        self.time_label_order.place(x=190,y=4)
         self.b_openNav_order.place(x=1340,y=20)
         self.navFrm_order.place(x=1400,y=0)
         self.closeFrm_order.place(x=0,y=0)
@@ -2116,8 +2171,8 @@ class App:
         self.b_exit_order.place(x=0,y=700)
         self.l_headerOrderPage.place(x=580,y=0)
         self.attention_idUser.place(x=1040,y=90)
-        self.e_idUser_order.place(x=835,y=90)
-        self.b_searchUserBtnOrder.place(x=670,y=85)
+        self.e_idUser_order.place(x=835,y=95)
+        self.b_searchUserBtnOrder.place(x=670,y=88)
         self.b_searchBtnOrder.place(x=50,y=85)
         self.e_idKala_order.place(x=215,y=90)
         self.order_frm_num.place(x=845,y=275)
@@ -2132,8 +2187,8 @@ class App:
         self.l_lastUser_order.place(x=200,y=10)
         self.lastUserLbl_order.place(x=10,y=10)
         self.l_userId_order.place(x=405,y=70)
-        self.userIdLbl_order.place(x=260,y=70)
-        self.l_nationalCode_order.place(x=190,y=70)
+        self.userIdLbl_order.place(x=300,y=70)
+        self.l_nationalCode_order.place(x=220,y=70)
         self.nationalCodeLbl_order.place(x=5,y=70)
         self.kalaInfo_order_frm.place(x=50,y=150)
         self.l_kalaId_order.place(x=690,y=10)
@@ -2148,20 +2203,21 @@ class App:
         self.kalaNumLbl_order.place(x=510,y=170)
         self.l_purcase_order.place(x=400,y=170)
         self.purcaseLbl_order.place(x=220,y=170)
-        self.l_imgSelector_order.place(x=65,y=175)
+        self.l_imgSelector_order.place(x=95,y=175)
         self.imgSelectorBg_order.place(x=50,y=25)
         self.listOrder.place(x=60,y=420)
 
         #________bind___________
         self.listOrder.bind('<ButtonRelease-1>',self.select_record_order)
+        self.e_idKala_order.bind('<Button-1>',lambda event :self.e_idKala_order.delete(0,END))
         self.tickBtnOrder.bind('<Button-1>',self.ready_to_delivery)
-                   
+
     def update_time_order(self):
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label_order.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label_order.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label_order.config(text=f"{self.current_time}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label_order.config(text=f"{self.current_date}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm_order.after(1000, self.update_time_order)
 
     def switch_order_nav(self):
@@ -2171,7 +2227,7 @@ class App:
         else:
             self.navFrm_order.place(x=1180, y=0)
             self.btnState = True
-    
+
     def order_to_main(self):
         self.navFrm.place(x=1180, y=0)
         main_page .state('normal')        
@@ -2184,14 +2240,14 @@ class App:
         product_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
-    
+
     def order_to_stock(self):
         self.navFrm_stock.place(x=1180, y=0)
         self.data_to_list_stock()
         stock_page.state('normal')
         order_page.state('withdraw')
         self.btnState = False
-    
+
     def order_to_history(self):
         self.navFrm_history.place(x=1180, y=0)
         self.data_to_list_history()
@@ -2233,11 +2289,18 @@ class App:
         self.btnState = False
 
     def search_idKala_order(self,event=None):
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
         self.idKala_order=self.e_idKala_order.get()
         if self.permission==True:
             if self.idKala_order !='':
+                self.con=sql.connect('mydb.db')
+                self.cur=self.con.cursor()
+                self.cur.execute("SELECT photo FROM kala WHERE id = '{}'".format(self.idKala_order))
+                image_data = self.cur.fetchone()[0]
+                procuct_img = Image.open(io.BytesIO(image_data))
+                procuct_image = procuct_img.resize((150, 150))
+                self.product_photo = ImageTk.PhotoImage(procuct_image)
+                self.imgSelectorBg_order['image']=self.product_photo
+
                 self.row=self.cur.execute('SELECT * FROM kala WHERE id="{}"'.format(self.idKala_order))
                 self.iInfo_order_list = list(self.row)
                 self.kalaIdLbl_order['text']=self.iInfo_order_list[0][0]
@@ -2256,7 +2319,7 @@ class App:
             if self.nationalId != '':
                 self.row=self.cur.execute('SELECT * FROM user WHERE national_code="{}"'.format(self.nationalId))
                 self.userInfo_order=list(self.row)
-                if self.userInfo_order[0][6]=='فروشنده':
+                if self.userInfo_order[0][6]=='کارمند':
                     self.permission=True
                     self.nameUserLbl_order['text']=self.userInfo_order[0][1]
                     self.lastUserLbl_order['text']=self.userInfo_order[0][2]
@@ -2304,7 +2367,9 @@ class App:
             self.purcaseLbl_order['text']=''
             self.permission=False
             self.e_idUser_order.focus()
-        
+            self.tickBtnOrder.place(x=-50,y=-50)
+            self.imgSelectorBg_order['image']=self.order_imgSelectorPic
+
     def data_to_list_order(self):
         self.lst=[]
         for item in self.listOrder.get_children():
@@ -2346,21 +2411,24 @@ class App:
 #_____________________________________________________________________________________________________________________________________________
 #______________________________________________________________ exit kala page _______________________________________________________________
     def exit_kala_page(self):
+        
+        exit_page.title('نرم افزار انبارداری')
+        exit_page.resizable(False,False)
+        exit_page.iconbitmap('image/warehouseIco.ico')
+        exit_page.configure (bg='#F6F5F5')
         exit_page.geometry('1400x800+250+100')
-        exit_page.configure(bg='white')
-        exit_page.title('menu')
 
         self.h_sabtExitKalaImg = PhotoImage(file='image/sabtExitKala.png')
         self.exitKalaImg = PhotoImage(file='image/sabtExitBtn.png')
 
-        self.dateFrm_exit=Label(exit_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.dateFrm_exit=Label(exit_page,image=self.bgDateImg, height=45,width=320,bd=0,bg='white')
         self.time_label_exit = Label(self.dateFrm_exit)
         self.date_label_exit = Label(self.dateFrm_exit)
         self.h_exitPage = Label(exit_page,image=self.h_sabtExitKalaImg)
         #list
         self.listExit= ttk.Treeview(exit_page,show='headings',height=15)
         self.listExit['columns']=('date','stock','orderNum','orderId','userName','NameKala','id','row')
-        self.b_exit_kala = Button(exit_page,bg='#F3F3F3',image=self.exitKalaImg,activebackground='#F3F3F3',bd=0,cursor='hand2',command=self.sabt_exit_kala)
+        self.b_exit_kala = Button(exit_page,bg='#F6F5F5',image=self.exitKalaImg,activebackground='#F6F5F5',bd=0,cursor='hand2',command=self.sabt_exit_kala)
         #columns
         self.listExit.column('date',width=140,anchor=CENTER)
         self.listExit.column('stock',width=140,anchor=CENTER)
@@ -2413,8 +2481,8 @@ class App:
         self.b_exit_exit=Button(self.navFrm_exit,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
         
         self.dateFrm_exit.place(x=0,y=0)
-        self.date_label_exit.place(x=15,y=6)
-        self.time_label_exit.place(x=190,y=6)
+        self.date_label_exit.place(x=15,y=4)
+        self.time_label_exit.place(x=190,y=4)
         self.b_openNav_exit.place(x=1340,y=20)
         self.navFrm_exit.place(x=1400,y=0)
         self.closeFrm_exit.place(x=0,y=0)
@@ -2440,8 +2508,8 @@ class App:
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label_exit.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label_exit.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label_exit.config(text=f"{self.current_time}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label_exit.config(text=f"{self.current_date}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm_exit.after(1000, self.update_time_exit)
 
     def switch_exit_nav(self):
@@ -2557,7 +2625,7 @@ class App:
 
         self.h_orderHistoryImg = PhotoImage(file='image/headerHistory.png')
 
-        self.dateFrm_history=Label(history_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.dateFrm_history=Label(history_page,image=self.bgDateImg, height=45,width=320,bd=0,bg='white')
         self.time_label_history = Label(self.dateFrm_history)
         self.date_label_history = Label(self.dateFrm_history)
         self.h_orderHistory = Label(history_page,image=self.h_orderHistoryImg)
@@ -2631,8 +2699,8 @@ class App:
         self.b_issuance_history.place(x=0,y=635)
         self.b_exit_history.place(x=0,y=700)
         self.dateFrm_history.place(x=0,y=0)
-        self.date_label_history.place(x=15,y=6)
-        self.time_label_history.place(x=190,y=6)
+        self.date_label_history.place(x=15,y=4)
+        self.time_label_history.place(x=190,y=4)
         self.h_orderHistory.place(x=590,y=0)
         self.listHistory.place(x=50,y=150)        
                     
@@ -2640,8 +2708,8 @@ class App:
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label_history.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label_history.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label_history.config(text=f"{self.current_time}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label_history.config(text=f"{self.current_date}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm_history.after(1000, self.update_time_history)
 
     def switch_history_nav(self):
@@ -2744,9 +2812,13 @@ class App:
 #______________________________________________________________________________________________________________________________________________
 #___________________________________________________________ sodor bill page __________________________________________________________________
     def sodor_bill_kala_page(self):
+        
+        sodorbill_page.title('نرم افزار انبارداری')
+        sodorbill_page.resizable(False,False)
+        sodorbill_page.iconbitmap('image/warehouseIco.ico')
+        sodorbill_page.configure (bg='#F6F5F5')
         sodorbill_page.geometry('1400x800+250+100')
-        sodorbill_page.configure(bg='#F3F3F3')
-    
+        
         self.searchBtnImg_kala = PhotoImage(file='image/searchBtnImg.png')
         self.h_billImg = PhotoImage(file='image/headerSodorghabz.png')
         self.billBtnImg = PhotoImage(file='image/sodorGhabzBtn.png')
@@ -2792,7 +2864,7 @@ class App:
             background=[('selected', '#7A8BA7')],
             foreground=[('selected', 'white')])
         
-        self.dateFrm_bill=Label(sodorbill_page,image=self.bgDateImg, height=40,width=320,bd=0,bg='white')
+        self.dateFrm_bill=Label(sodorbill_page,image=self.bgDateImg, height=45,width=320,bd=0,bg='white')
         self.time_label_bill = Label(self.dateFrm_bill)
         self.date_label_bill = Label(self.dateFrm_bill)
         self.b_openNav_bill=Button(sodorbill_page,image=self.openBtnImg,bg='white',activebackground='white',bd=0,command=self.switch_bill,cursor='hand2')
@@ -2812,8 +2884,8 @@ class App:
         self.b_exit_bill=Button(self.navFrm_bill,image=self.exitImg,bg='#777777',bd=0,cursor='hand2')
 
         self.dateFrm_bill.place(x=0,y=0)
-        self.date_label_bill.place(x=15,y=6)
-        self.time_label_bill.place(x=190,y=6)
+        self.date_label_bill.place(x=15,y=4)
+        self.time_label_bill.place(x=190,y=4)
         self.b_openNav_bill.place(x=1340,y=20)
         self.navFrm_bill.place(x=1400,y=0)
         self.closeFrm_bill.place(x=0,y=0)
@@ -2843,8 +2915,8 @@ class App:
         now = datetime.now()
         self.current_time = now.strftime("%H:%M:%S")
         self.current_date = now.strftime("%Y/%m/%d")
-        self.time_label_bill.config(text=f"{self.current_time}",font=('Consolas',16),bg='#474A56',fg='white')
-        self.date_label_bill.config(text=f"{self.current_date}",font=('Consolas',16),bg='#474A56',fg='white')
+        self.time_label_bill.config(text=f"{self.current_time}",font=('AraFProgram',16),bg='#474A56',fg='white')
+        self.date_label_bill.config(text=f"{self.current_date}",font=('AraFProgram',16),bg='#474A56',fg='white')
         self.dateFrm_bill.after(1000, self.update_time_bill)
 
     def switch_bill(self):
