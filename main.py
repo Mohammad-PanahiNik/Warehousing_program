@@ -1104,7 +1104,7 @@ class App:
             ,gender INTEGER NOT NULL,phone_number TEXT NOT NULL,account_type TEXT NOT NULL,photo BLOB NOT NULL)''')
             self.cur.execute('INSERT INTO user(id,name,last_name,national_code,gender,phone_number,account_type,photo) VALUES(?,?,?,?,?,?,?,?)',self.data)
             self.con.commit()
-            fullname_user=self.pesonnelLast+' '+self.pesonnelName
+            fullname_user=self.pesonnelName+' '+self.pesonnelLast
             self.numlist=len(self.listUser.get_children())
             self.listUser.insert(parent='',index='end',text='',values=(self.accountType,self.phoneNum,self.nationalCode,
                                                                         self.gender,fullname_user,self.personnelId,self.numlist+1))
@@ -1243,7 +1243,7 @@ class App:
         self.l_headerStock=Label(stock_page,image=self.h_stockImg)
         self.b_filterStock=Button(stock_page,image=self.filterBtnImg,bd=0,activebackground='white',command=self.filter_stock)
         self.c_filterStock = ttk.Combobox(stock_page,width = 20 , font = ('B Koodak' , 12),state='readonly',
-                                          justify = 'right',values=["همه ی کالا ها","فلزات", "مواد غذایی"])
+                                          justify = 'right',values=["همه ی کالا ها","لوازم الکترونیکی","لوازم آشپزخانه", "مواد غذایی"])
         self.c_filterStock.set("یک گزینه را انتخاب کنید")
         self.l_filterStock=Label(stock_page,text=' : گروه کالا',font=('Lalezar',17))
         self.e_searchStock = Entry(stock_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid')
@@ -2585,12 +2585,12 @@ class App:
         for item in self.listExit.get_children():
             self.listExit.delete(item)
         self.count=0
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
-        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='orders'")
-        self.result = self.cur.fetchone()
+        con=sql.connect('mydb.db')
+        cur=con.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='orders'")
+        self.result = cur.fetchone()
         if self.result != None:
-            row=self.cur.execute('SELECT * FROM orders')
+            row=cur.execute('SELECT * FROM orders')
             self.list_exit=list(row)
             for i in self.list_exit :
                 if i[6] == 'آماده تحویل':
@@ -2599,20 +2599,22 @@ class App:
                 self.numlist_exit=len(self.listExit.get_children())
                 self.listExit.insert(parent='',index='end',text='',
                     values=(i[7],i[4],i[3],i[8],i[2],i[1],i[0],self.numlist_exit+1))
+            con.close()
 
     def select_record_exit(self ,event=None):
         self.selected_exit = self.listExit.focus()
         self.values_exit_list = self.listExit.item(self.selected_exit , "values")
 
     def sabt_exit_kala(self,event=None):
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
+        con=sql.connect('mydb.db')
+        cur=con.cursor()
         exitIdCheck=self.values_exit_list[3]
         self.new_stock_exit=int(self.values_exit_list[1])-int(self.values_exit_list[2])
-        self.cur.execute(''' UPDATE orders SET condition = ?   WHERE orderId= ? ''',("تحویل داده شد",exitIdCheck))        
-        self.cur.execute(''' UPDATE orders SET stock = ?  WHERE orderId= ? ''',(self.new_stock_exit,exitIdCheck))
-        self.cur.execute(''' UPDATE kala SET stock = ?  WHERE id= ? ''',(self.new_stock_exit,self.values_exit_list[6]))
-        self.con.commit()
+        cur.execute(''' UPDATE orders SET condition = ?   WHERE orderId= ? ''',("تحویل داده شد",exitIdCheck))        
+        cur.execute(''' UPDATE orders SET stock = ?  WHERE orderId= ? ''',(self.new_stock_exit,exitIdCheck))
+        cur.execute(''' UPDATE kala SET stock = ?  WHERE id= ? ''',(self.new_stock_exit,self.values_exit_list[6]))
+        con.commit()
+        con.close()
         self.data_to_list_exit()
     
     #________________________________________________________________________________________________________________________________________
@@ -2784,13 +2786,13 @@ class App:
         self.lst=[]
         for item in self.listHistory.get_children():
             self.listHistory.delete(item)
-        self.count=0
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
-        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='orders'")
-        self.result = self.cur.fetchone()
+        count=0
+        con=sql.connect('mydb.db')
+        cur=con.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='orders'")
+        self.result = cur.fetchone()
         if self.result != None:
-            row=self.cur.execute('SELECT * FROM orders')
+            row=cur.execute('SELECT * FROM orders')
             self.list_history=list(row)
             for i in self.list_history :
                 if i[6] == 'وارد انبار شد':
@@ -2808,6 +2810,7 @@ class App:
                     self.listHistory.insert(parent='',index='end',text='',
                         values=(i[7],i[3],i[8],i[2],i[1],i[0],'خروج',self.count+1))
                     self.count +=1
+            con.close()
 
 #______________________________________________________________________________________________________________________________________________
 #___________________________________________________________ sodor bill page __________________________________________________________________
@@ -2989,14 +2992,14 @@ class App:
         self.btnState = True
 
     def searchIdBill(self):
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
+        con=sql.connect('mydb.db')
+        cur=con.cursor()
         self.idBill=self.e_SearchKala_bill.get()
         self.count=0
         if self.idBill !='':
             for i in self.listKala.get_children():
                 self.listKala.delete(i)
-            row=self.cur.execute('SELECT * FROM orders WHERE idKala = "{}" or orderId = "{}" '.format(self.idBill,self.idBill))
+            row=cur.execute('SELECT * FROM orders WHERE idKala = "{}" or orderId = "{}" '.format(self.idBill,self.idBill))
             self.listBillInfo=list(row)
             for i in self.listBillInfo:
                 self.count += 1
@@ -3006,7 +3009,7 @@ class App:
                 elif i[6] == 'تحویل داده شد':
                     self.listBill.insert(parent='',index='end',text='',
                                     values=(i[7],i[3],i[8],i[2],i[1],i[0],'خروج',str(self.count)))
-            self.con.close()
+            con.close()
         else:
             for item in self.listBill.get_children():
                 self.listBill.delete(item)
@@ -3016,11 +3019,11 @@ class App:
         self.values_bill_list = self.listBill.item(self.selected_bill , "values")
         
     def sodorBill(self):
-        self.con=sql.connect('mydb.db')
-        self.cur=self.con.cursor()
-        row=self.cur.execute('SELECT type,category FROM kala WHERE id = "{}"'.format(self.idBill))
+        con=sql.connect('mydb.db')
+        cur=con.cursor()
+        row=cur.execute('SELECT type,category FROM kala WHERE id = "{}"'.format(self.idBill))
         row=list(row)
-        row2=self.cur.execute('SELECT stock FROM orders WHERE orderId = "{}"'.format(self.values_bill_list[2]))
+        row2=cur.execute('SELECT stock FROM orders WHERE orderId = "{}"'.format(self.values_bill_list[2]))
         row2=list(row2)
         self.nameUserLbl_bill['text']=self.values_bill_list[3]
         self.dateLbl_bill['text']=self.values_bill_list[0]
@@ -3037,6 +3040,7 @@ class App:
         self.searchIdBill()
         bill_page.state('normal')
         sodorbill_page.state('withdraw')
+        con.close()
 #______________________________________________________________________________________________________________________________________________
 #___________________________________________________________ sodor bill page __________________________________________________________________
 
