@@ -48,7 +48,7 @@ class App:
     '''
     production time : 2023/04
     App builder : Mohammad Panahi Nik
-
+    
     '''
     phoneNum=Phone_number()
 
@@ -236,7 +236,6 @@ class App:
         login_page.resizable(False,False)
         login_page.iconbitmap('image/warehouseIco.ico')
 
-        self.logFrmImg = PhotoImage(file='image/loginFrm.png')
         self.logoImg = PhotoImage(file='image/logoImg.png')
         self.logBtnImg = PhotoImage(file='image/loginBtn.png')
         self.eyeImg = PhotoImage(file='image/openEye.png')
@@ -417,9 +416,7 @@ class App:
 #_________________________________________________ add product page ____________________________________________________
 
     def add_product_page(self):
-        self.fildsBgImg = PhotoImage(file='image/fildsBg.png')
         self.kalaImg_kala = PhotoImage(file='image/imgSelectorBg.png')
-        self.listKalaBgImg = PhotoImage(file='image/listSkalaBg.png')
         self.searchBtnImg_kala1 = PhotoImage(file='image/searchBtnImg.png')
         self.h_sabtKalaImg = PhotoImage(file='image/headerSabtKala.png')
         self.addKalaBtnImg = PhotoImage(file='image/addKalaBtn.png')
@@ -455,7 +452,6 @@ class App:
         self.e_search_kala = Entry(product_page,font=('AraFProgram', 16),bd=1,justify=RIGHT,width=18,relief='solid',bg='#F6F5F5')
         self.b_search_kala = Button(product_page,bg='#F6F5F5',image=self.searchBtnImg_kala1,activebackground='#F6F5F5',bd=0,cursor='hand2',command=self.search_id_kalaPage)
         self.b_addKala_kala = Button(product_page,bg='#F6F5F5',image=self.addKalaBtnImg,activebackground='#F6F5F5',bd=0,cursor='hand2',command=self.funcAddKala)
-        self.listKalaBg_kala = Label(product_page,bg='white',image=self.listKalaBgImg)
         self.b_delete_kala = Button(product_page,image=self.deleteBtnImg_kala,bd=0,activebackground='white',cursor='hand2')
         self.b_edit_kala = Button(product_page,image=self.editBtnImg_kala,bd=0,activebackground='white',cursor='hand2')
         self.b_sabtTaghirat_kala = Button(product_page,image=self.sabtTaghirKalaBtn,bd=0,activebackground='white')
